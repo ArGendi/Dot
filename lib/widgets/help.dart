@@ -97,8 +97,22 @@ class _HelpWidgetState extends State<HelpWidget> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('FAQ'),
-                      Icon(Icons.arrow_forward_ios_outlined, size: 15,)
+                      Text('Country'),
+                      Text('Egypt'),
+                    ],
+                  ),
+                ),
+              ),
+              SizedBox(height: 10,),
+              InkWell(
+                onTap: (){},
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text('language'),
+                      Text('English'),
                     ],
                   ),
                 ),

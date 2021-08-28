@@ -1,6 +1,8 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:ecommerce/constants.dart';
 import 'package:ecommerce/models/product.dart';
+import 'package:ecommerce/services/search.dart';
+import 'package:ecommerce/widgets/account.dart';
 import 'package:ecommerce/widgets/deal_panel.dart';
 import 'package:ecommerce/widgets/help.dart';
 import 'package:ecommerce/widgets/home.dart';
@@ -34,7 +36,7 @@ class _HomeState extends State<Home> {
     Container(),
     HelpWidget(),
     Container(),
-    Container(),
+    AccountWidget()
   ];
   var endTime = DateTime.now().millisecondsSinceEpoch + 1000 * 30;
 
@@ -45,18 +47,24 @@ class _HomeState extends State<Home> {
     return Scaffold(
       backgroundColor: Colors.grey.shade200,
       appBar: AppBar(
-        title: Card(
-          elevation: 0,
-          color: Colors.white,
-          child: Padding(
-            padding: const EdgeInsets.all(6.0),
-            child: Row(
-              children: [
-                Icon(
-                  Icons.search,
-                  color: Colors.black,
-                )
-              ],
+        elevation: 0,
+        title: InkWell(
+          onTap: (){
+            showSearch(context: context, delegate: Search());
+          },
+          child: Card(
+            elevation: 0,
+            color: Colors.white,
+            child: Padding(
+              padding: const EdgeInsets.all(6.0),
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.search,
+                    color: Colors.black,
+                  )
+                ],
+              ),
             ),
           ),
         ),
@@ -98,9 +106,11 @@ class _HomeState extends State<Home> {
           currentIndex: _selectedIndex,
           selectedItemColor: primaryColor,
           onTap: (value){
-            setState(() {
-              _selectedIndex = value;
-            });
+            if(value == 1)
+              showSearch(context: context, delegate: Search());
+            else setState(() {
+                _selectedIndex = value;
+              });
           },
         ),
     );
