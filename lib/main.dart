@@ -1,11 +1,13 @@
 import 'package:ecommerce/constants.dart';
 import 'package:ecommerce/providers/active_user_provider.dart';
+import 'package:ecommerce/providers/wishlist_provider.dart';
 import 'package:ecommerce/screens/all_products_screen.dart';
 import 'package:ecommerce/screens/choose_language_screen.dart';
 import 'package:ecommerce/screens/home_screen.dart';
 import 'package:ecommerce/screens/login_screen.dart';
 import 'package:ecommerce/screens/signup_screen.dart';
 import 'package:ecommerce/screens/welcome_screen.dart';
+import 'package:ecommerce/screens/wishlist_screen.dart';
 import 'package:ecommerce/services/helper_function.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -25,6 +27,9 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider<ActiveUserProvider>(
           create: (context) => ActiveUserProvider(),
+        ),
+        ChangeNotifierProvider<WishlistProvider>(
+          create: (context) => WishlistProvider(),
         ),
       ],
       child: MaterialApp(
@@ -54,7 +59,7 @@ class MyApp extends StatelessWidget {
           }
           return supportedLocales.first;
         },
-        home: Home(),
+        home: Wishlist(),
         routes: {
           Welcome.id: (context) => Welcome(),
           Login.id: (context) => Login(),

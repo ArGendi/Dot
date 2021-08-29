@@ -100,8 +100,9 @@ class _HomeWidgetState extends State<HomeWidget> {
             endTime: endTime,
           ),
         ),
+
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
           child: GridView.builder(
             physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
