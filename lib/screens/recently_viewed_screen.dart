@@ -1,38 +1,39 @@
 import 'package:ecommerce/models/product.dart';
-import 'package:ecommerce/providers/wishlist_provider.dart';
+import 'package:ecommerce/providers/recently_viewed_provider.dart';
 import 'package:ecommerce/services/search.dart';
-import 'package:ecommerce/widgets/custom_button.dart';
 import 'package:ecommerce/widgets/detailed_product_card.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class Wishlist extends StatefulWidget {
-  const Wishlist({Key? key}) : super(key: key);
+class RecentlyViewed extends StatefulWidget {
+  const RecentlyViewed({Key? key}) : super(key: key);
 
   @override
-  _WishlistState createState() => _WishlistState();
+  _RecentlyViewedState createState() => _RecentlyViewedState();
 }
 
-class _WishlistState extends State<Wishlist> {
+class _RecentlyViewedState extends State<RecentlyViewed> {
   Widget emptyWishlist(){
     return Padding(
       padding: const EdgeInsets.all(20.0),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Text(
-            'Your wishlist is empty',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
+          Icon(
+            Icons.visibility_off,
+            color: Colors.grey,
+            size: 70,
           ),
           SizedBox(height: 10,),
           Text(
-            'All your wishlist will be saved here in order to add them into the cart at anytime.',
+            'Your Recently Viewed list is empty',
+            style: TextStyle(
+              fontSize: 18,
+            ),
+            textAlign: TextAlign.center,
           ),
-          SizedBox(height: 30,),
-          CustomButton(text: 'Add new Product', onclick: (){})
         ],
       ),
     );
@@ -61,12 +62,12 @@ class _WishlistState extends State<Wishlist> {
   }
 
   deleteItemFromWishlist(Product product){
-    Provider.of<WishlistProvider>(context, listen: false).removeItem(product);
+    Provider.of<RecentlyViewedProvider>(context, listen: false).removeItem(product);
   }
 
   @override
   Widget build(BuildContext context) {
-    var wishlistProvider = Provider.of<WishlistProvider>(context);
+    var recentlyViewedProvider = Provider.of<RecentlyViewedProvider>(context);
     return Scaffold(
       backgroundColor: Colors.grey.shade200,
       appBar: AppBar(
@@ -101,8 +102,8 @@ class _WishlistState extends State<Wishlist> {
           )
         ],
       ),
-      body: wishlistProvider.items.isEmpty ? emptyWishlist() :
-            filledWishlist(wishlistProvider.items),
+      body: recentlyViewedProvider.items.isEmpty ? emptyWishlist() :
+      filledWishlist(recentlyViewedProvider.items),
     );
   }
 }

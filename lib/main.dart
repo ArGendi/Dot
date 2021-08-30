@@ -1,10 +1,15 @@
 import 'package:ecommerce/constants.dart';
 import 'package:ecommerce/providers/active_user_provider.dart';
+import 'package:ecommerce/providers/cart_provider.dart';
+import 'package:ecommerce/providers/recently_viewed_provider.dart';
 import 'package:ecommerce/providers/wishlist_provider.dart';
 import 'package:ecommerce/screens/all_products_screen.dart';
+import 'package:ecommerce/screens/cart_screen.dart';
 import 'package:ecommerce/screens/choose_language_screen.dart';
 import 'package:ecommerce/screens/home_screen.dart';
 import 'package:ecommerce/screens/login_screen.dart';
+import 'package:ecommerce/screens/product_details_screen.dart';
+import 'package:ecommerce/screens/recently_viewed_screen.dart';
 import 'package:ecommerce/screens/signup_screen.dart';
 import 'package:ecommerce/screens/welcome_screen.dart';
 import 'package:ecommerce/screens/wishlist_screen.dart';
@@ -14,6 +19,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 
 import 'app_localization.dart';
+import 'models/product.dart';
 
 void main() async{
   runApp(MyApp());
@@ -30,6 +36,12 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider<WishlistProvider>(
           create: (context) => WishlistProvider(),
+        ),
+        ChangeNotifierProvider<RecentlyViewedProvider>(
+          create: (context) => RecentlyViewedProvider(),
+        ),
+        ChangeNotifierProvider<CartProvider>(
+          create: (context) => CartProvider(),
         ),
       ],
       child: MaterialApp(
@@ -59,7 +71,7 @@ class MyApp extends StatelessWidget {
           }
           return supportedLocales.first;
         },
-        home: Wishlist(),
+        home: Cart(),
         routes: {
           Welcome.id: (context) => Welcome(),
           Login.id: (context) => Login(),

@@ -19,19 +19,25 @@ class _CustomButtonState extends State<CustomButton> {
       onTap: widget.onclick,
       child: Container(
         width: double.infinity,
-        height: 60,
         decoration: BoxDecoration(
           color: primaryColor,
           borderRadius: BorderRadius.circular(5),
         ),
-        child: Center(
-          child: Text(
-            widget.text,
-            style: TextStyle(
-                color: Colors.white,
-                fontSize: 20,
-                fontWeight: FontWeight.bold
-            ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 15),
+          child: Column(
+            children: [
+              Center(
+                child: Text(
+                  widget.text,
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       ),
