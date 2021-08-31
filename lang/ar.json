@@ -1,3 +1,12 @@
 {
-  "Welcome to": "أهلا بك في"
+  "Welcome to": "أهلا بك في",
+  "Sign in": "تسجيل الدخول",
+  "Email Address": "البريد الألكتروني",
+  "Password": "كلمة السر",
+  "Forget your password?": "نسيت كلمة المرور؟",
+  "Tap to reset": "أضغط لاعادة تعيين",
+  "Enter an email address": "ادخل البريد الألكتروني",
+  "Enter a password": "أدخل الرقم السري",
+  "Short password": "رقم السري قصير",
+  "Invalid email format": "هذا ليس بريد ألكتروني"
 }

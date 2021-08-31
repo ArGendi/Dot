@@ -3,6 +3,8 @@ import 'package:ecommerce/widgets/custom_button.dart';
 import 'package:ecommerce/widgets/custom_textfield.dart';
 import 'package:flutter/material.dart';
 
+import '../app_localization.dart';
+
 class Login extends StatefulWidget {
   static String id = 'login';
 
@@ -34,8 +36,10 @@ class _LoginState extends State<Login> {
     }
   }
 
+  //localization!.translate('Welcome to').toString()
   @override
   Widget build(BuildContext context) {
+    var localization = AppLocalization.of(context);
     final size = MediaQuery.of(context).size;
     return Scaffold(
       body: Padding(
@@ -48,7 +52,7 @@ class _LoginState extends State<Login> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(
-                    'Login',
+                    localization!.translate('Sign in').toString(),
                     style: TextStyle(
                       fontSize: 26,
                       fontWeight: FontWeight.bold,
@@ -62,39 +66,39 @@ class _LoginState extends State<Login> {
                   ),
                   SizedBox(height: 30,),
                   CustomTextField(
-                    text: 'Email Address',
+                    text: localization.translate('Email Address').toString(),
                     obscureText: false,
                     textInputType: TextInputType.emailAddress,
                     setValue: _setEmail,
                     validation: (value) {
-                      if (value.isEmpty) return 'Enter an email address';
+                      if (value.isEmpty) return localization.translate('Enter an email address').toString();
                       if (!value.contains('@') || !value.contains('.'))
-                        return 'Invalid email format';
+                        return localization.translate('Invalid email format').toString();
                       return null;
                     },
                   ),
                   SizedBox(height: 10,),
                   CustomTextField(
-                    text: 'Password',
+                    text: localization.translate('Password').toString(),
                     obscureText: true,
                     textInputType: TextInputType.text,
                     setValue: _setPass,
                     validation: (value) {
-                      if (value.isEmpty) return 'Enter a password';
-                      if (value.length < 6) return 'Short password';
+                      if (value.isEmpty) return localization.translate('Enter a password').toString();
+                      if (value.length < 6) return localization.translate('Short password').toString();
                       return null;
                     },
                   ),
                   SizedBox(height: 20,),
                   CustomButton(
-                    text: 'Sign in',
+                    text: localization.translate('Sign in').toString(),
                     onclick: _onSubmit,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        'Forget your password?',
+                        localization.translate('Forget your password?').toString(),
                         style: TextStyle(
                           color: Colors.grey,
                         ),
@@ -102,7 +106,7 @@ class _LoginState extends State<Login> {
                       TextButton(
                         onPressed: (){},
                         child: Text(
-                          'Tap to reset',
+                          localization.translate('Tap to reset').toString(),
                           style: TextStyle(
                               color: Colors.black,
                               fontWeight: FontWeight.bold

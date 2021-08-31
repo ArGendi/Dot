@@ -1,5 +1,6 @@
 import 'package:ecommerce/app_localization.dart';
 import 'package:ecommerce/constants.dart';
+import 'package:ecommerce/screens/choose_language_screen.dart';
 import 'package:ecommerce/widgets/subscribe_panel.dart';
 import 'package:flutter/material.dart';
 
@@ -41,7 +42,7 @@ class _WelcomeState extends State<Welcome> {
           ),
           SubscribePanel(
             onclick: (){
-
+              Navigator.pushNamed(context, ChooseLanguage.id);
             },
           ),
         ],

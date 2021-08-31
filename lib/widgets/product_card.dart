@@ -1,5 +1,6 @@
 import 'package:ecommerce/models/product.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/single_child_widget.dart';
 
 class ProductCard extends StatelessWidget {
   final Product product;
@@ -17,22 +18,25 @@ class ProductCard extends StatelessWidget {
           child: Stack(
             children: [
               Center(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Container(
-                      width: 100,
-                      height: 100,
-                      color: Colors.grey[300],
-                    ),
-                    SizedBox(height: 5,),
-                    Text(
-                        product.name
-                    ),
-                    Text(
-                        '\$ ${product.price}'
-                    ),
-                  ],
+                child: SingleChildScrollView(
+                  physics: NeverScrollableScrollPhysics(),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Container(
+                        width: 100,
+                        height: 100,
+                        color: Colors.grey[300],
+                      ),
+                      SizedBox(height: 5,),
+                      Text(
+                          product.name
+                      ),
+                      Text(
+                          '\$ ${product.price}'
+                      ),
+                    ],
+                  ),
                 ),
               ),
               if(product.sale != 0)

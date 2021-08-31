@@ -39,6 +39,7 @@ class _WishlistState extends State<Wishlist> {
   }
 
   Widget filledWishlist(List<Product> items){
+    List<Product> reversedItems = items.reversed.toList();
     return Padding(
       padding: const EdgeInsets.all(20.0),
       child: ListView.builder(
@@ -47,9 +48,9 @@ class _WishlistState extends State<Wishlist> {
           return Column(
             children: [
               DetailedProductCard(
-                product: items[index],
+                product: reversedItems[index],
                 onDelete: (){
-                  deleteItemFromWishlist(items[index]);
+                  deleteItemFromWishlist(reversedItems[index]);
                 },
               ),
               SizedBox(height: 5,),

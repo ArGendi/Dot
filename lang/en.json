@@ -1,3 +1,12 @@
 {
-  "Welcome to": "Welcome to"
+  "Welcome to": "Welcome to",
+  "Sign in": "Sign in",
+  "Email Address": "Email Address",
+  "Password": "Password",
+  "Forget your password?": "Forget your password?",
+  "Tap to reset": "Tap to reset",
+  "Enter an email address": "Enter an email address",
+  "Enter a password": "Enter a password",
+  "Short password": "Short password",
+  "Invalid email format": "Invalid email format"
 }

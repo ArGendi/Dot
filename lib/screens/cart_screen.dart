@@ -1,12 +1,16 @@
 import 'package:ecommerce/models/product.dart';
 import 'package:ecommerce/providers/cart_provider.dart';
+import 'package:ecommerce/providers/recently_viewed_provider.dart';
 import 'package:ecommerce/services/search.dart';
+import 'package:ecommerce/widgets/checkout.dart';
 import 'package:ecommerce/widgets/custom_button.dart';
+import 'package:ecommerce/widgets/personal_info.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class Cart extends StatefulWidget {
+  static String id = 'cart';
   const Cart({Key? key}) : super(key: key);
 
   @override
@@ -14,6 +18,8 @@ class Cart extends StatefulWidget {
 }
 
 class _CartState extends State<Cart> {
+  bool _isRecentlyViewedAppears = true;
+
   Color? getColor(String colorName){
     Map<String, Color> map = {
       'red': Colors.red,
@@ -54,7 +60,7 @@ class _CartState extends State<Cart> {
     );
   }
 
-  Widget filledCart(CartProvider cartProvider){
+  Widget filledCart(CartProvider cartProvider, RecentlyViewedProvider recentlyViewedProvider){
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -72,7 +78,7 @@ class _CartState extends State<Cart> {
                       children: [
                         Container(
                           width: 100,
-                          height: 150,
+                          height: 140,
                           color: Colors.white,
                         ),
                         SizedBox(width: 10,),
@@ -203,10 +209,44 @@ class _CartState extends State<Cart> {
           child: Padding(
             padding: const EdgeInsets.all(12.0),
             child: Column(
-              children: [CustomButton(
-                text: 'Validate orders',
-                onclick: (){},
-              )],
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if(recentlyViewedProvider.items.length > 0)
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Recently Viewed',
+                          style: TextStyle(
+                            //fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        IconButton(
+                          onPressed: (){
+                            setState(() {
+                              _isRecentlyViewedAppears = !_isRecentlyViewedAppears;
+                            });
+                          },
+                          icon: Icon(
+                              _isRecentlyViewedAppears? Icons.clear_rounded : Icons.arrow_drop_up_outlined
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 5,),
+                    if(_isRecentlyViewedAppears)
+                      recentlyViewedBanner(recentlyViewedProvider),
+                  ],
+                ),
+                CustomButton(
+                  text: 'Validate orders',
+                  onclick: _checkoutBottomSheet,
+                )
+              ],
             ),
           ),
         ),
@@ -214,9 +254,59 @@ class _CartState extends State<Cart> {
     );
   }
 
+  Widget recentlyViewedBanner(RecentlyViewedProvider recentlyViewedProvider){
+    return InkWell(
+      onTap: (){},
+      child: Container(
+        height: 140,
+        child: ListView.builder(
+          shrinkWrap: true,
+          scrollDirection: Axis.horizontal,
+          itemCount: recentlyViewedProvider.items.length,
+          itemBuilder: (BuildContext context, int index) {
+            double priceAfterSale = (recentlyViewedProvider.items[index].price / 100) * (100 - recentlyViewedProvider.items[index].sale);
+            return Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    width: 80,
+                    height: 80,
+                    color: Colors.grey[200],
+                  ),
+                  SizedBox(height: 5,),
+                  Text('\$ ' + priceAfterSale.toStringAsFixed(2)),
+                  SizedBox(width: 5,),
+                  Text(
+                    '\$ ' + recentlyViewedProvider.items[index].price.toStringAsFixed(2),
+                    style: TextStyle(
+                      decoration: TextDecoration.lineThrough,
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
+      ),
+    );
+  }
+
+  _checkoutBottomSheet() {
+    showModalBottomSheet(
+      backgroundColor: Colors.grey[200],
+        isScrollControlled: true,
+        context: context,
+        builder: (context){
+          return PersonalInfo();
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     var cartProvider = Provider.of<CartProvider>(context);
+    var recentlyViewedProvider = Provider.of<RecentlyViewedProvider>(context);
     return Scaffold(
       backgroundColor: Colors.grey[200],
       appBar: AppBar(
@@ -242,7 +332,7 @@ class _CartState extends State<Cart> {
           ),
         ),
       ),
-      body: cartProvider.items.isNotEmpty ? filledCart(cartProvider) : emptyCart(),
+      body: cartProvider.items.isNotEmpty ? filledCart(cartProvider, recentlyViewedProvider) : emptyCart(),
     );
   }
 }

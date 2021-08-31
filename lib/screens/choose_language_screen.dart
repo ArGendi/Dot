@@ -1,5 +1,9 @@
+import 'package:ecommerce/providers/app_language_provider.dart';
+import 'package:ecommerce/screens/home_screen.dart';
+import 'package:ecommerce/services/helper_function.dart';
 import 'package:ecommerce/widgets/subscribe_panel.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../constants.dart';
 
 class ChooseLanguage extends StatefulWidget {
@@ -106,7 +110,7 @@ class _ChooseLanguageState extends State<ChooseLanguage> {
                                       },
                                     ),
                                     Text(
-                                      'Arabic',
+                                      'عربي',
                                       style: TextStyle(
                                         fontSize: 16,
                                       ),
@@ -129,7 +133,13 @@ class _ChooseLanguageState extends State<ChooseLanguage> {
             ),
           ),
           SubscribePanel(
-            onclick: (){},
+            onclick: () async{
+              String lang = isEnglish ? 'en' : 'ar';
+              Provider.of<AppLanguageProvider>(context, listen: false).changeLang(lang);
+              await HelpFunction.saveUserLanguage(lang);
+              Navigator.of(context)
+                  .pushNamedAndRemoveUntil(Home.id, (Route<dynamic> route) => false);
+            },
           ),
         ],
       ),

@@ -46,7 +46,7 @@ class _DetailedProductCardState extends State<DetailedProductCard> {
                         ),
                       ),
                       Text(
-                        '\$ ' + widget.product.price.toStringAsFixed(2),
+                        '\$ ' + priceAfterSale.toStringAsFixed(2),
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 16,
@@ -57,7 +57,7 @@ class _DetailedProductCardState extends State<DetailedProductCard> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            '\$ ' + priceAfterSale.toStringAsFixed(2),
+                            '\$ ' + widget.product.price.toStringAsFixed(2),
                             style: TextStyle(
                               decoration: TextDecoration.lineThrough,
                               fontSize: 16,

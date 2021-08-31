@@ -1,6 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:ecommerce/constants.dart';
 import 'package:ecommerce/models/product.dart';
+import 'package:ecommerce/screens/cart_screen.dart';
 import 'package:ecommerce/services/search.dart';
 import 'package:ecommerce/widgets/account.dart';
 import 'package:ecommerce/widgets/deal_panel.dart';
@@ -70,7 +71,9 @@ class _HomeState extends State<Home> {
         ),
         actions: [
           IconButton(
-            onPressed: (){},
+            onPressed: (){
+              Navigator.pushNamed(context, Cart.id);
+            },
             icon: Icon(
               Icons.shopping_cart,
               color: Colors.white,

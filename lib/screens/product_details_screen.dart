@@ -15,6 +15,16 @@ class ProductDetails extends StatefulWidget {
 }
 
 class _ProductDetailsState extends State<ProductDetails> {
+  String? _townDropdownValue = 'Select town';
+  String? _shopDropdownValue = 'Select our nearest shop';
+  List<String> _towns = ['Select town'];
+  List<String> _shops = ['Select our nearest shop'];
+  List<Product> _similarProducts = [
+    new Product(name: 'name', price: 220, sale: 10),
+    new Product(name: 'name', price: 400, sale: 20),
+    new Product(name: 'name', price: 400, sale: 20),
+  ];
+
   Widget productRate(){
     return Row(
       children: [
@@ -88,7 +98,7 @@ class _ProductDetailsState extends State<ProductDetails> {
             ),
             SizedBox(height: 5,),
             Text(
-              widget.product.price.toStringAsFixed(2),
+                '\$ ' + priceAfterSale.toStringAsFixed(2),
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
@@ -98,7 +108,7 @@ class _ProductDetailsState extends State<ProductDetails> {
             Row(
               children: [
                 Text(
-                  '\$ ' + priceAfterSale.toStringAsFixed(2),
+                  '\$ ' + widget.product.price.toStringAsFixed(2),
                   style: TextStyle(
                     decoration: TextDecoration.lineThrough,
                   ),
@@ -188,12 +198,26 @@ class _ProductDetailsState extends State<ProductDetails> {
     );
   }
 
+  Widget productSpecification(String title, String content){
+    return Row(
+      children: [
+        Text(
+          title + ': ',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        Text(content,),
+      ],
+    );
+  }
+
   Widget productDescriptionCard(){
     return Card(
       elevation: 0,
       color: Colors.white,
       child: Padding(
-        padding: const EdgeInsets.all(12.0),
+        padding: const EdgeInsets.all(15.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -209,7 +233,141 @@ class _ProductDetailsState extends State<ProductDetails> {
               color: Colors.grey,
             ),
             Text(widget.product.description,),
+            SizedBox(height: 20,),
+            Text(
+              'Product specifications',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            Divider(
+              height: 30,
+              color: Colors.grey,
+            ),
+            productSpecification('SKU', widget.product.sku),
+            productSpecification('Color', widget.product.color),
+            productSpecification('Main material', widget.product.mainMaterial),
+            productSpecification('Model', widget.product.model),
+            productSpecification('Product country', widget.product.productCountry),
+            productSpecification('Product line', widget.product.productLine),
+            productSpecification('Size', widget.product.size + ' (L x W x H cm)'),
+            productSpecification('Weight', widget.product.weight.toStringAsFixed(1) + ' (kg)'),
+            productSpecification('Website', widget.product.website),
+            // SizedBox(height: 20,),
+            // Text(
+            //   'information about delivery',
+            //   style: TextStyle(
+            //     fontSize: 16,
+            //     fontWeight: FontWeight.bold,
+            //   ),
+            // ),
+            // Divider(
+            //   height: 30,
+            //   color: Colors.grey,
+            // ),
+            // dropDownMenu(true),
+            // SizedBox(height: 5,),
+            // dropDownMenu(false),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget dropDownMenu(bool isTown){
+    List<String> list = [];
+    if(isTown) list = _towns;
+    else list = _shops;
+    return Container(
+      decoration: BoxDecoration(
+          border: Border.all(color: Colors.grey.shade300),
+          borderRadius: BorderRadius.circular(5)
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 15),
+        child: DropdownButton<String>(
+          value: isTown ? _townDropdownValue : _shopDropdownValue,
+          icon: const Icon(Icons.arrow_drop_down),
+          iconSize: 24,
+          elevation: 16,
+          underline: Container(
+            color: Colors.white,
+          ),
+          onChanged: (String? newValue) {
+            setState(() {
+              if(isTown) _townDropdownValue = newValue;
+              else _shopDropdownValue = newValue;
+            });
+          },
+          items: list.map<DropdownMenuItem<String>>((String value) {
+            return DropdownMenuItem<String>(
+              value: value,
+              child: Text(value),
+            );
+          }).toList(),
+        ),
+      ),
+    );
+  }
+
+  Widget similarProductsCard(){
+    return Container(
+      color: Colors.white,
+      child: Padding(
+        padding: const EdgeInsets.all(15.0),
+        child: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children: [
+              for(int index = 0; index < _similarProducts.length; index+=1)
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        width: 120,
+                        height: 100,
+                        color: Colors.grey[200],
+                      ),
+                      Text(
+                        _similarProducts[index].name,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Text(
+                        '\$ ' + ((_similarProducts[index].price / 100) * (100 - _similarProducts[index].sale)).toStringAsFixed(2),
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      //SizedBox(height: 5,),
+                      Row(
+                        children: [
+                          Text(
+                            '\$ ' + _similarProducts[index].price.toStringAsFixed(2),
+                            style: TextStyle(
+                              decoration: TextDecoration.lineThrough,
+                            ),
+                          ),
+                          SizedBox(width: 5,),
+                          Card(
+                            elevation: 0,
+                            color: Color(0xffffecde),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                              child: Text(_similarProducts[index].sale.toString() + '%'),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                )
+            ],
+          ),
         ),
       ),
     );
@@ -261,7 +419,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                 shrinkWrap: true,
                 children: [
                   firstCard(),
-                  SizedBox(height: 10,),
+                  SizedBox(height: 15,),
                   Text(
                     'Product description',
                     style: TextStyle(
@@ -269,8 +427,33 @@ class _ProductDetailsState extends State<ProductDetails> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  SizedBox(height: 10,),
+                  SizedBox(height: 5,),
                   productDescriptionCard(),
+                  SizedBox(height: 15,),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Similar products',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      InkWell(
+                        onTap: (){},
+                        child: Text(
+                          'See all >',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 10,),
+                  similarProductsCard()
                 ],
               ),
             ),

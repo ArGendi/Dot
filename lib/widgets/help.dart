@@ -84,7 +84,7 @@ class _HelpWidgetState extends State<HelpWidget> {
                             _isNotificationOpen = !_isNotificationOpen;
                           });
                         },
-                      )
+                      ),
                     ],
                   ),
                 ),

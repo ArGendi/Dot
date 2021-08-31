@@ -10,6 +10,15 @@ class Product{
   int availabilityInStock = 12;
   String color = 'red';
   int quantityAddedInCart = 0;
+  String sku = '';
+  String mainMaterial = '';
+  String model = '';
+  String productCountry = '';
+  String productLine = '';
+  String size = '';
+  double weight = 0;
+  String website = '';
+
 
   Product({required this.name, required this.price, required this.sale});
 }
