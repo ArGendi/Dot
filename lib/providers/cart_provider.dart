@@ -9,6 +9,11 @@ class CartProvider extends ChangeNotifier {
 
   List<Product> get items => _items;
 
+  addItem(Product product){
+    _items.add(product);
+    notifyListeners();
+  }
+
   removeItem(Product product){
     _items.remove(product);
     notifyListeners();

@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class Wishlist extends StatefulWidget {
+  static String id = 'wishlist';
   const Wishlist({Key? key}) : super(key: key);
 
   @override

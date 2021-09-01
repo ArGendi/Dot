@@ -98,6 +98,7 @@ class _MyAppState extends State<MyApp> {
         ChooseLanguage.id: (context) => ChooseLanguage(),
         Home.id: (context) => Home(),
         Cart.id: (context) => Cart(),
+        Wishlist.id: (context) => Wishlist(),
       },
     );
   }
