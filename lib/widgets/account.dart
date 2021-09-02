@@ -1,5 +1,8 @@
 import 'package:ecommerce/constants.dart';
 import 'package:ecommerce/providers/active_user_provider.dart';
+import 'package:ecommerce/screens/cart_screen.dart';
+import 'package:ecommerce/screens/recently_viewed_screen.dart';
+import 'package:ecommerce/screens/wishlist_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -76,6 +79,7 @@ class _AccountWidgetState extends State<AccountWidget> {
                       color: Colors.white
                   ),
                 ),
+                if(activeUserProvider.activeUser.email.isNotEmpty)
                 InkWell(
                   onTap: (){},
                   child: Text(
@@ -102,12 +106,18 @@ class _AccountWidgetState extends State<AccountWidget> {
           padding: const EdgeInsets.symmetric(vertical: 20.0),
           child: Column(
             children: [
-              itemInsideCard('My orders', Icons.assignment),
-              itemInsideCard('Messages', Icons.email),
-              itemInsideCard('Notifications', Icons.notifications),
-              itemInsideCard('Product wishlist', Icons.shopping_bag_rounded),
-              itemInsideCard('Recently viewed', Icons.visibility),
-              itemInsideCard('My cart', Icons.shopping_cart),
+              itemInsideCard('My orders', Icons.assignment, (){}),
+              itemInsideCard('Messages', Icons.email, (){}),
+              itemInsideCard('Notifications', Icons.notifications, (){}),
+              itemInsideCard('Product wishlist', Icons.shopping_bag_rounded, (){
+                Navigator.pushNamed(context, Wishlist.id);
+              }),
+              itemInsideCard('Recently viewed', Icons.visibility, (){
+                Navigator.pushNamed(context, RecentlyViewed.id);
+              }),
+              itemInsideCard('My cart', Icons.shopping_cart, (){
+                Navigator.pushNamed(context, Cart.id);
+              }),
             ],
           )
       ),
@@ -150,9 +160,9 @@ class _AccountWidgetState extends State<AccountWidget> {
     );
   }
 
-  Widget itemInsideCard(String text, IconData icon){
+  Widget itemInsideCard(String text, IconData icon, VoidCallback onClick){
     return  InkWell(
-      onTap: (){},
+      onTap: onClick,
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
         child: Row(

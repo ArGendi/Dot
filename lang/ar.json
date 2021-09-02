@@ -8,5 +8,14 @@
   "Enter an email address": "ادخل البريد الألكتروني",
   "Enter a password": "أدخل الرقم السري",
   "Short password": "رقم السري قصير",
-  "Invalid email format": "هذا ليس بريد ألكتروني"
+  "Invalid email format": "هذا ليس بريد ألكتروني",
+  "Sign up": "أنشاء حساب",
+  "First name": "الاسم الاول",
+  "Enter an first name": "أدخل الاسم الاول",
+  "last name": "الاسم الاخير",
+  "Enter an last name": "ادخل الاسم الاخير",
+  "By creating account you accept Terms and Conditions and privacy policy": "بمجرد انشاء حساب فأنت موافق علي الشروط والاحكام الخاصة بنا",
+  "Create account with Google": "انشاء حساب بجوجل",
+  "Create account with Facebook": "انشاء حساب بفيسبوك",
+  "Already have an account?": "هل تملك حساب؟"
 }

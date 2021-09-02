@@ -1,5 +1,6 @@
 import 'package:ecommerce/models/product.dart';
 import 'package:ecommerce/providers/recently_viewed_provider.dart';
+import 'package:ecommerce/screens/wishlist_screen.dart';
 import 'package:ecommerce/services/search.dart';
 import 'package:ecommerce/widgets/detailed_product_card.dart';
 import 'package:flutter/cupertino.dart';
@@ -7,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class RecentlyViewed extends StatefulWidget {
+  static String id = 'recently viewed';
   const RecentlyViewed({Key? key}) : super(key: key);
 
   @override
@@ -52,7 +54,9 @@ class _RecentlyViewedState extends State<RecentlyViewed> {
                 product: reversedItems[index],
                 onDelete: (){
                   deleteItemFromWishlist(reversedItems[index]);
-                },
+                }, onClick: () {
+                Navigator.pushNamed(context, Wishlist.id);
+              },
               ),
               SizedBox(height: 5,),
             ],

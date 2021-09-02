@@ -14,4 +14,9 @@ class RecentlyViewedProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  addItem(Product product){
+    _items.add(product);
+    notifyListeners();
+  }
+
 }

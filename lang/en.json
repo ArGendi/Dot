@@ -8,5 +8,14 @@
   "Enter an email address": "Enter an email address",
   "Enter a password": "Enter a password",
   "Short password": "Short password",
-  "Invalid email format": "Invalid email format"
+  "Invalid email format": "Invalid email format",
+  "Sign up": "Sign up",
+  "First name": "First name",
+  "Enter an first name": "Enter an first name",
+  "last name": "last name",
+  "Enter an last name": "Enter an last name",
+  "By creating account you accept Terms and Conditions and privacy policy": "By creating account you accept Terms and Conditions and privacy policy",
+  "Create account with Google": "Create account with Google",
+  "Create account with Facebook": "Create account with Facebook",
+  "Already have an account?": "Already have an account?"
 }
