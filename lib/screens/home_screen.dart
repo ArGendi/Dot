@@ -8,6 +8,7 @@ import 'package:ecommerce/widgets/deal_panel.dart';
 import 'package:ecommerce/widgets/help.dart';
 import 'package:ecommerce/widgets/home.dart';
 import 'package:ecommerce/widgets/product_card.dart';
+import 'package:ecommerce/widgets/shop.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_countdown_timer/flutter_countdown_timer.dart';
@@ -36,7 +37,7 @@ class _HomeState extends State<Home> {
     HomeWidget(),
     Container(),
     HelpWidget(),
-    Container(),
+    Shop(),
     AccountWidget()
   ];
   var endTime = DateTime.now().millisecondsSinceEpoch + 1000 * 30;

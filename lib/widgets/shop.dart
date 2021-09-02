@@ -17,6 +17,8 @@ class _ShopState extends State<Shop> {
     [
       new Product(name: 'name', price: 220, sale: 10),
       new Product(name: 'name', price: 400, sale: 20),
+      new Product(name: 'name', price: 220, sale: 10),
+      new Product(name: 'name', price: 400, sale: 20),
     ],
     [
       new Product(name: 'name', price: 220, sale: 10),
@@ -34,93 +36,56 @@ class _ShopState extends State<Shop> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.grey[200],
-      appBar: AppBar(
-        elevation: 0,
-        title: InkWell(
-          onTap: (){
-            showSearch(context: context, delegate: Search());
-          },
-          child: Card(
-            elevation: 0,
-            color: Colors.white,
-            child: Padding(
-              padding: const EdgeInsets.all(6.0),
-              child: Row(
-                children: [
-                  Icon(
-                    Icons.search,
-                    color: Colors.black,
-                  )
-                ],
-              ),
-            ),
-          ),
-        ),
-        actions: [
-          IconButton(
-            onPressed: (){
-              Navigator.pushNamed(context, Cart.id);
-            },
-            icon: Icon(
-              Icons.shopping_cart,
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      child: ListView.builder(
+        itemCount: shops.length,
+        itemBuilder: (context, index){
+          return Padding(
+            padding: const EdgeInsets.all(5.0),
+            child: Card(
+              elevation: 0,
               color: Colors.white,
-            ),
-          )
-        ],
-      ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-        child: ListView.builder(
-          itemCount: shops.length,
-          itemBuilder: (context, index){
-            return Padding(
-              padding: const EdgeInsets.all(5.0),
-              child: Card(
-                elevation: 0,
-                color: Colors.white,
-                child: Padding(
-                  padding: const EdgeInsets.all(15.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(shops[index],),
-                      Divider(
-                        height: 20,
-                        color: Colors.grey,
-                      ),
-                      GridView.builder(
-                        physics: const NeverScrollableScrollPhysics(),
-                        shrinkWrap: true,
-                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              child: Padding(
+                padding: const EdgeInsets.all(15.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(shops[index],),
+                    Divider(
+                      height: 20,
+                      color: Colors.grey,
+                    ),
+                    GridView.builder(
+                      physics: const NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 3,
                           crossAxisSpacing: 5,
                           mainAxisSpacing: 5,
                           childAspectRatio: 0.7
-                        ),
-                        itemCount: allProducts[index].length,
-                        itemBuilder: (BuildContext context, int i){
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Expanded(
-                                child: Container(
-                                  color: Colors.grey[200],
-                                ),
+                      ),
+                      itemCount: allProducts[index].length,
+                      itemBuilder: (BuildContext context, int i){
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Expanded(
+                              child: Container(
+                                color: Colors.grey[200],
                               ),
-                              Text(allProducts[index][i].name)
-                            ],
-                          );
-                        },
-                      )
-                    ],
-                  ),
+                            ),
+                            Text(allProducts[index][i].name)
+                          ],
+                        );
+                      },
+                    )
+                  ],
                 ),
               ),
-            );
-          },
-        ),
+            ),
+          );
+        },
       ),
     );
   }

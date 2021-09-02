@@ -93,7 +93,7 @@ class _MyAppState extends State<MyApp> {
         return supportedLocales.first;
       },
       locale: Locale(provider.lang, ''),
-      home: Shop(),//widget.lang != null ? Loading() : Welcome(),
+      home: Home(),//widget.lang != null ? Loading() : Welcome(),
       routes: {
         Welcome.id: (context) => Welcome(),
         Login.id: (context) => Login(),
