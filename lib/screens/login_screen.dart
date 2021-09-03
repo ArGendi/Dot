@@ -1,9 +1,18 @@
+import 'dart:convert';
+
 import 'package:ecommerce/constants.dart';
+import 'package:ecommerce/models/user.dart';
+import 'package:ecommerce/providers/active_user_provider.dart';
+import 'package:ecommerce/screens/forget_password_screen.dart';
+import 'package:ecommerce/services/helper_function.dart';
+import 'package:ecommerce/services/web_services.dart';
 import 'package:ecommerce/widgets/custom_button.dart';
 import 'package:ecommerce/widgets/custom_textfield.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../app_localization.dart';
+import 'loading_screen.dart';
 
 class Login extends StatefulWidget {
   static String id = 'login';
@@ -18,6 +27,9 @@ class _LoginState extends State<Login> {
   final _formKey = GlobalKey<FormState>();
   String _email = '';
   String _password = '';
+  String _errorMsg = '';
+  WebServices _webServices = new WebServices();
+  bool _isLoading = false;
 
   _setEmail(String email) {
     _email = email;
@@ -26,13 +38,42 @@ class _LoginState extends State<Login> {
     _password = password;
   }
 
-  _onSubmit(){
+  _onSubmit() async{
     FocusScope.of(context).unfocus();
     bool valid = _formKey.currentState!.validate();
     if(valid){
       _formKey.currentState!.save();
-      print(_email);
-      print(_password);
+      setState(() {_isLoading = true;});
+      var response = await _webServices.post('https://souk--server.herokuapp.com/api/users/login', {
+        "email": _email.trim(),
+        "password": _password,
+      });
+      if(response.statusCode >= 200 && response.statusCode < 300){
+        var body = jsonDecode(response.body);
+        AppUser user = new AppUser(
+          id: body['_id'],
+          firstName: body['firstName'],
+          lastName: body['lastName'],
+          email: body['email'],
+          token: body['token']
+        );
+        await HelpFunction.saveUserId(body['_id']);
+        await HelpFunction.saveUserToken(body['token']);
+        await HelpFunction.saveUserEmail(body['email']);
+        await HelpFunction.saveUserName(body['firstName']);
+        Provider.of<ActiveUserProvider>(context, listen: false).setActiveUser(user);
+        setState(() {_isLoading = false;});
+        print('login done');
+        Navigator.of(context)
+            .pushNamedAndRemoveUntil(Loading.id, (Route<dynamic> route) => false);
+      }
+      else{
+        setState(() {
+          var body = jsonDecode(response.body);
+          _errorMsg = body['message'];
+          _isLoading = false;
+        });
+      }
     }
   }
 
@@ -64,7 +105,17 @@ class _LoginState extends State<Login> {
                     height: size.height * .45,
                     color: Colors.grey.shade200,
                   ),
-                  SizedBox(height: 30,),
+                  SizedBox(height: 20,),
+                  if(_errorMsg.isNotEmpty)
+                    Text(
+                      _errorMsg,
+                      style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.red
+                      ),
+                    ),
+                  SizedBox(height: 10,),
                   CustomTextField(
                     text: localization.translate('Email Address').toString(),
                     obscureText: false,
@@ -93,6 +144,7 @@ class _LoginState extends State<Login> {
                   CustomButton(
                     text: localization.translate('Sign in').toString(),
                     onclick: _onSubmit,
+                    isLoading: _isLoading,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -104,7 +156,9 @@ class _LoginState extends State<Login> {
                         ),
                       ),
                       TextButton(
-                        onPressed: (){},
+                        onPressed: (){
+                          Navigator.pushNamed(context, ForgetPassword.id);
+                        },
                         child: Text(
                           localization.translate('Tap to reset').toString(),
                           style: TextStyle(

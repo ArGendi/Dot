@@ -29,7 +29,7 @@ class _AccountWidgetState extends State<AccountWidget> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    activeUserProvider.activeUser.name,
+                    activeUserProvider.activeUser.firstName,
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
@@ -79,7 +79,7 @@ class _AccountWidgetState extends State<AccountWidget> {
                       color: Colors.white
                   ),
                 ),
-                if(activeUserProvider.activeUser.email.isNotEmpty)
+                if(activeUserProvider.activeUser.email.isEmpty)
                 InkWell(
                   onTap: (){},
                   child: Text(

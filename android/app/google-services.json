@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "207765258247",
+    "project_id": "dotecommerce-8bca2",
+    "storage_bucket": "dotecommerce-8bca2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:207765258247:android:2bd8428e3721ab3f54aaa2",
+        "android_client_info": {
+          "package_name": "com.example.ecommerce"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "207765258247-2mn5qf9hgu6qbm6t74lg51ehqqub0b3m.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.ecommerce",
+            "certificate_hash": "15028a01bdbd34304b9b82d0420c058a389d475d"
+          }
+        },
+        {
+          "client_id": "207765258247-skurihlgqmt5gj6tt53ua8p8o2ir4jo4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAtEr73_nLuNJ7xSeSvjpTKrKvG1D4mXYY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "207765258247-skurihlgqmt5gj6tt53ua8p8o2ir4jo4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,9 +1,14 @@
-import 'package:ecommerce/models/User.dart';
+import 'package:ecommerce/models/user.dart';
 import 'package:flutter/cupertino.dart';
 
 class ActiveUserProvider extends ChangeNotifier {
-  User _activeUser = new User();
+  AppUser _activeUser = new AppUser();
 
-  User get activeUser => _activeUser;
+  AppUser get activeUser => _activeUser;
+
+  setActiveUser(AppUser user){
+    _activeUser = user;
+    notifyListeners();
+  }
 
 }
