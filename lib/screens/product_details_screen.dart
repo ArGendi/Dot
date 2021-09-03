@@ -1,8 +1,13 @@
 import 'package:ecommerce/models/product.dart';
+import 'package:ecommerce/providers/cart_provider.dart';
+import 'package:ecommerce/providers/wishlist_provider.dart';
+import 'package:ecommerce/screens/cart_screen.dart';
+import 'package:ecommerce/screens/wishlist_screen.dart';
 import 'package:ecommerce/services/search.dart';
 import 'package:ecommerce/widgets/custom_button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../constants.dart';
 
@@ -15,6 +20,7 @@ class ProductDetails extends StatefulWidget {
 }
 
 class _ProductDetailsState extends State<ProductDetails> {
+  bool _addedToCart = false;
   String? _townDropdownValue = 'Select town';
   String? _shopDropdownValue = 'Select our nearest shop';
   List<String> _towns = ['Select town'];
@@ -25,21 +31,37 @@ class _ProductDetailsState extends State<ProductDetails> {
     new Product(name: 'name', price: 400, sale: 20),
   ];
 
-  Widget productRate(){
+  Widget rate(int rate){
     return Row(
       children: [
         for(int i=0; i<5; i++)
           Icon(
             Icons.star,
-            color: i < widget.product.rate ? Colors.amber : Colors.grey.shade300,
+            color: i < rate ? Colors.amber : Colors.grey.shade300,
           )
       ],
     );
   }
 
-  Widget addToCartButton(){
+  _addToWishlist(){
+    Provider.of<WishlistProvider>(context, listen: false).addItem(widget.product);
+  }
+
+  _removeFromWishlist(){
+    Provider.of<WishlistProvider>(context, listen: false).removeItem(widget.product);
+  }
+
+  Widget addToCartButton(BuildContext context){
     return InkWell(
-      onTap: (){},
+      onTap: (){
+        if(widget.product.availabilityInStock > 0 && !_addedToCart) {
+          widget.product.quantityAddedInCart = 1;
+          Provider.of<CartProvider>(context, listen: false).addItem(widget.product);
+          setState(() {
+            _addedToCart = true;
+          });
+        }
+      },
       child: Container(
         width: double.infinity,
         decoration: BoxDecoration(
@@ -56,7 +78,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                 color: Colors.white,
               ),
               Text(
-                'Add to cart',
+                !_addedToCart ? 'Add to cart' : 'Done :)',
                 style: TextStyle(
                     color: Colors.white,
                     fontSize: 18,
@@ -76,6 +98,11 @@ class _ProductDetailsState extends State<ProductDetails> {
 
   Widget firstCard(){
     double priceAfterSale = (widget.product.price / 100) * (100 - widget.product.sale);
+    int totalRate = 0;
+    for(var review in widget.product.reviews){
+      totalRate += review.rate;
+    }
+    double finalRate = totalRate / widget.product.reviews.length;
     return Card(
       elevation: 0,
       color: Colors.white,
@@ -132,9 +159,9 @@ class _ProductDetailsState extends State<ProductDetails> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    productRate(),
+                    rate(widget.product.rate),
                     Text(
-                      '(' + widget.product.numberOfReviews.toString() + ' reviews)',
+                      '(' + widget.product.reviews.length.toString() + ' reviews)',
                       style: TextStyle(
                         color: Colors.blue,
                         fontSize: 16,
@@ -152,7 +179,15 @@ class _ProductDetailsState extends State<ProductDetails> {
                       ),
                     ),
                     IconButton(
-                      onPressed: (){},
+                      onPressed: (){
+                        if(widget.product.isFavourite) {
+                          _removeFromWishlist();
+                        }
+                        else _addToWishlist();
+                        setState(() {
+                          widget.product.isFavourite = !widget.product.isFavourite;
+                        });
+                      },
                       icon: Icon(
                         widget.product.isFavourite? Icons.favorite : Icons.favorite_border,
                         color: primaryColor,
@@ -312,7 +347,8 @@ class _ProductDetailsState extends State<ProductDetails> {
   }
 
   Widget similarProductsCard(){
-    return Container(
+    return Card(
+      elevation: 0,
       color: Colors.white,
       child: Padding(
         padding: const EdgeInsets.all(15.0),
@@ -373,8 +409,82 @@ class _ProductDetailsState extends State<ProductDetails> {
     );
   }
 
+  Widget reviews(){
+    return Card(
+      elevation: 0,
+      color: Colors.white,
+      child: Padding(
+        padding: const EdgeInsets.all(15.0),
+        child: Column(
+          children: [
+            for(int index=0; index < widget.product.reviews.length; index+=1)
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  CircleAvatar(
+                    backgroundColor: Colors.grey[200],
+                    radius: 25,
+                  ),
+                  SizedBox(width: 15,),
+                  Flexible(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          widget.product.reviews[index].userName,
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        //SizedBox(height: 5,),
+                        Text(
+                          widget.product.reviews[index].fromDate,
+                          style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.grey
+                          ),
+                        ),
+                        SizedBox(height: 5,),
+                        Row(
+                          children: [
+                            Text(
+                              widget.product.reviews[index].rate.toString(),
+                              style: TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.grey
+                              ),
+                            ),
+                            SizedBox(width: 5,),
+                            rate(widget.product.reviews[index].rate),
+                          ],
+                        ),
+                        SizedBox(height: 10,),
+                        Text(
+                          widget.product.reviews[index].content,
+                          overflow: TextOverflow.fade,
+                          style: TextStyle(
+                            fontSize: 16,
+                          ),
+                        ),
+                        Divider(
+                          height: 40,
+                          color: Colors.grey,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              )
+          ],
+        )
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    var cartProvider = Provider.of<CartProvider>(context);
     return Scaffold(
       backgroundColor: Colors.grey.shade200,
       appBar: AppBar(
@@ -401,12 +511,14 @@ class _ProductDetailsState extends State<ProductDetails> {
         ),
         actions: [
           IconButton(
-            onPressed: (){},
+            onPressed: (){
+              Navigator.pushNamed(context, Cart.id);
+            },
             icon: Icon(
               Icons.shopping_cart,
               color: Colors.white,
             ),
-          )
+          ),
         ],
       ),
       body: Column(
@@ -453,7 +565,17 @@ class _ProductDetailsState extends State<ProductDetails> {
                     ],
                   ),
                   SizedBox(height: 10,),
-                  similarProductsCard()
+                  similarProductsCard(),
+                  SizedBox(height: 15,),
+                  Text(
+                    'Reviews',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(height: 10,),
+                  reviews(),
                 ],
               ),
             ),
@@ -463,7 +585,7 @@ class _ProductDetailsState extends State<ProductDetails> {
             child: Padding(
               padding: const EdgeInsets.all(12.0),
               child: Column(
-                children: [addToCartButton()],
+                children: [addToCartButton(context)],
               ),
             ),
           ),

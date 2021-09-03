@@ -1,12 +1,17 @@
 import 'package:ecommerce/models/product.dart';
+import 'package:ecommerce/providers/recently_viewed_provider.dart';
 import 'package:ecommerce/providers/wishlist_provider.dart';
+import 'package:ecommerce/screens/recently_viewed_screen.dart';
 import 'package:ecommerce/services/search.dart';
 import 'package:ecommerce/widgets/custom_button.dart';
 import 'package:ecommerce/widgets/detailed_product_card.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'cart_screen.dart';
+
 class Wishlist extends StatefulWidget {
+  static String id = 'wishlist';
   const Wishlist({Key? key}) : super(key: key);
 
   @override
@@ -51,7 +56,10 @@ class _WishlistState extends State<Wishlist> {
                 product: reversedItems[index],
                 onDelete: (){
                   deleteItemFromWishlist(reversedItems[index]);
-                },
+                }, onClick: () {
+                  Provider.of<RecentlyViewedProvider>(context).addItem(reversedItems[index]);
+                  Navigator.pushNamed(context, Wishlist.id);
+              },
               ),
               SizedBox(height: 5,),
             ],
@@ -94,7 +102,9 @@ class _WishlistState extends State<Wishlist> {
         ),
         actions: [
           IconButton(
-            onPressed: (){},
+            onPressed: (){
+              Navigator.pushNamed(context, Cart.id);
+            },
             icon: Icon(
               Icons.shopping_cart,
               color: Colors.white,

@@ -66,7 +66,12 @@ class _CartState extends State<Cart> {
       children: [
         Expanded(
           child: Padding(
-            padding: const EdgeInsets.all(20.0),
+            padding: const EdgeInsets.only(
+              left: 20,
+              right: 20,
+              top: 20,
+              bottom: 5,
+            ),
             child: ListView.builder(
               itemCount: cartProvider.items.length,
               itemBuilder: (context, index){

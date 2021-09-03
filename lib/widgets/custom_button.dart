@@ -5,8 +5,9 @@ import '../constants.dart';
 class CustomButton extends StatefulWidget {
   final String text;
   final VoidCallback onclick;
+  final bool isLoading;
 
-  const CustomButton({Key? key, required this.text, required this.onclick}) : super(key: key);
+  const CustomButton({Key? key, required this.text, required this.onclick, this.isLoading = false}) : super(key: key);
 
   @override
   _CustomButtonState createState() => _CustomButtonState();
@@ -28,7 +29,11 @@ class _CustomButtonState extends State<CustomButton> {
           child: Column(
             children: [
               Center(
-                child: Text(
+                child: widget.isLoading ? CircularProgressIndicator(
+                  strokeWidth: 3,
+                  valueColor: AlwaysStoppedAnimation<Color>(
+                      Colors.white),
+                ) : Text(
                   widget.text,
                   style: TextStyle(
                       color: Colors.white,

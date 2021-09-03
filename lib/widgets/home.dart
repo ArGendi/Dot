@@ -1,7 +1,10 @@
 import 'package:ecommerce/models/product.dart';
+import 'package:ecommerce/providers/recently_viewed_provider.dart';
+import 'package:ecommerce/screens/product_details_screen.dart';
 import 'package:ecommerce/widgets/deal_panel.dart';
 import 'package:ecommerce/widgets/product_card.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class HomeWidget extends StatefulWidget {
   const HomeWidget({Key? key}) : super(key: key);
@@ -113,7 +116,17 @@ class _HomeWidgetState extends State<HomeWidget> {
             ),
             itemCount: products.length,
             itemBuilder: (BuildContext context, int index){
-              return ProductCard(product: products[index],);
+              return InkWell(
+                onTap: (){
+                  Provider.of<RecentlyViewedProvider>(context, listen: false).addItem(products[index]);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => ProductDetails(product: products[index])),
+                  );
+                },
+                child: ProductCard(product: products[index],
+                ),
+              );
             },
           ),
         ),
@@ -137,7 +150,17 @@ class _HomeWidgetState extends State<HomeWidget> {
             ),
             itemCount: products.length,
             itemBuilder: (BuildContext context, int index){
-              return ProductCard(product: products[index],);
+              return InkWell(
+                onTap: (){
+                  Provider.of<RecentlyViewedProvider>(context, listen: false).addItem(products[index]);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => ProductDetails(product: products[index])),
+                  );
+                },
+                child: ProductCard(product: products[index],
+                ),
+              );
             },
           ),
         ),

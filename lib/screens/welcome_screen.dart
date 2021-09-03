@@ -27,13 +27,13 @@ class _WelcomeState extends State<Welcome> {
                 Text(
                   localization!.translate('Welcome to').toString(),
                   style: TextStyle(
-                    fontSize: 18,
+                    fontSize: 20,
                   ),
                 ),
                 Text(
-                  'Mobile App Name',
+                  'Dot',
                   style: TextStyle(
-                    fontSize: 24,
+                    fontSize: 26,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
