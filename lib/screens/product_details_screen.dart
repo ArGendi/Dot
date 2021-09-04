@@ -21,10 +21,10 @@ class ProductDetails extends StatefulWidget {
 
 class _ProductDetailsState extends State<ProductDetails> {
   bool _addedToCart = false;
-  String? _townDropdownValue = 'Select town';
-  String? _shopDropdownValue = 'Select our nearest shop';
-  List<String> _towns = ['Select town'];
-  List<String> _shops = ['Select our nearest shop'];
+  // String? _townDropdownValue = 'Select town';
+  // String? _shopDropdownValue = 'Select our nearest shop';
+  // List<String> _towns = ['Select town'];
+  // List<String> _shops = ['Select our nearest shop'];
   List<Product> _similarProducts = [
     new Product(name: 'name', price: 220, sale: 10),
     new Product(name: 'name', price: 400, sale: 20),
@@ -97,7 +97,8 @@ class _ProductDetailsState extends State<ProductDetails> {
   }
 
   Widget firstCard(){
-    double priceAfterSale = (widget.product.price / 100) * (100 - widget.product.sale);
+    double temp = (1 - (widget.product.discountPrice / widget.product.price)) * 100;
+    int sale = temp.truncate();
     int totalRate = 0;
     for(var review in widget.product.reviews){
       totalRate += review.rate;
@@ -125,13 +126,14 @@ class _ProductDetailsState extends State<ProductDetails> {
             ),
             SizedBox(height: 5,),
             Text(
-                '\$ ' + priceAfterSale.toStringAsFixed(2),
+                '\$ ' + widget.product.discountPrice.toStringAsFixed(2),
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
               ),
             ),
             //SizedBox(height: 5,),
+            if(sale != 0)
             Row(
               children: [
                 Text(
@@ -146,7 +148,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                   color: Color(0xffffecde),
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                    child: Text(widget.product.sale.toString() + '%'),
+                    child: Text(sale.toString() + '%'),
                   ),
                 ),
               ],
@@ -310,41 +312,41 @@ class _ProductDetailsState extends State<ProductDetails> {
     );
   }
 
-  Widget dropDownMenu(bool isTown){
-    List<String> list = [];
-    if(isTown) list = _towns;
-    else list = _shops;
-    return Container(
-      decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey.shade300),
-          borderRadius: BorderRadius.circular(5)
-      ),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 15),
-        child: DropdownButton<String>(
-          value: isTown ? _townDropdownValue : _shopDropdownValue,
-          icon: const Icon(Icons.arrow_drop_down),
-          iconSize: 24,
-          elevation: 16,
-          underline: Container(
-            color: Colors.white,
-          ),
-          onChanged: (String? newValue) {
-            setState(() {
-              if(isTown) _townDropdownValue = newValue;
-              else _shopDropdownValue = newValue;
-            });
-          },
-          items: list.map<DropdownMenuItem<String>>((String value) {
-            return DropdownMenuItem<String>(
-              value: value,
-              child: Text(value),
-            );
-          }).toList(),
-        ),
-      ),
-    );
-  }
+  // Widget dropDownMenu(bool isTown){
+  //   List<String> list = [];
+  //   if(isTown) list = _towns;
+  //   else list = _shops;
+  //   return Container(
+  //     decoration: BoxDecoration(
+  //         border: Border.all(color: Colors.grey.shade300),
+  //         borderRadius: BorderRadius.circular(5)
+  //     ),
+  //     child: Padding(
+  //       padding: const EdgeInsets.symmetric(horizontal: 15),
+  //       child: DropdownButton<String>(
+  //         value: isTown ? _townDropdownValue : _shopDropdownValue,
+  //         icon: const Icon(Icons.arrow_drop_down),
+  //         iconSize: 24,
+  //         elevation: 16,
+  //         underline: Container(
+  //           color: Colors.white,
+  //         ),
+  //         onChanged: (String? newValue) {
+  //           setState(() {
+  //             if(isTown) _townDropdownValue = newValue;
+  //             else _shopDropdownValue = newValue;
+  //           });
+  //         },
+  //         items: list.map<DropdownMenuItem<String>>((String value) {
+  //           return DropdownMenuItem<String>(
+  //             value: value,
+  //             child: Text(value),
+  //           );
+  //         }).toList(),
+  //       ),
+  //     ),
+  //   );
+  // }
 
   Widget similarProductsCard(){
     return Card(

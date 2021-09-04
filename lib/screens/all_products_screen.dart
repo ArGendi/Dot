@@ -1,8 +1,12 @@
 import 'package:ecommerce/models/product.dart';
+import 'package:ecommerce/providers/all_products_provider.dart';
+import 'package:ecommerce/screens/product_details_screen.dart';
 import 'package:ecommerce/widgets/product_card.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class AllProducts extends StatefulWidget {
+  static String id = 'all products';
   const AllProducts({Key? key}) : super(key: key);
 
   @override
@@ -10,15 +14,16 @@ class AllProducts extends StatefulWidget {
 }
 
 class _AllProductsState extends State<AllProducts> {
-  List<Product> products = [
-    Product(name: 'name', price: 200, sale: 10),
-    Product(name: 'name', price: 200, sale: 0),
-    Product(name: 'name', price: 200, sale: 0),
-    Product(name: 'name', price: 200, sale: 0),
-  ];
+  // List<Product> products = [
+  //   Product(name: 'name', price: 200, sale: 10),
+  //   Product(name: 'name', price: 200, sale: 0),
+  //   Product(name: 'name', price: 200, sale: 0),
+  //   Product(name: 'name', price: 200, sale: 0),
+  // ];
 
   @override
   Widget build(BuildContext context) {
+    var provider = Provider.of<AllProductsProvider>(context);
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -55,9 +60,17 @@ class _AllProductsState extends State<AllProducts> {
           crossAxisSpacing: 5,
           mainAxisSpacing: 5,
         ),
-        itemCount: products.length,
+        itemCount: provider.items.length,
         itemBuilder: (BuildContext context, int index){
-          return ProductCard(product: products[index],);
+          return ProductCard(
+            product: provider.items[index],
+            onClick: (){
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ProductDetails(product: provider.items[index])),
+              );
+            },
+          );
         },
       ),
     );

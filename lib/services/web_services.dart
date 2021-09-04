@@ -18,6 +18,17 @@ class WebServices {
     );
     return response;
   }
+
+  Future<http.Response> getWithBearerToken(String url, String token) async {
+    var response = await http.get(
+      Uri.parse(url),
+      headers: {
+        "Content-type": "application/json",
+        'authorization': 'Bearer $token',
+      },
+    );
+    return response;
+  }
   
   Future<http.Response> delete(String url) async{
     var response = await http.delete(

@@ -108,7 +108,10 @@ class Search extends SearchDelegate{
             ),
             itemCount: mostChecked.length,
             itemBuilder: (BuildContext context, int index){
-              return ProductCard(product: mostChecked[index],);
+              return ProductCard(
+                product: mostChecked[index],
+                onClick: (){},
+              );
             },
           ),
           SizedBox(height: 10,),
@@ -124,7 +127,10 @@ class Search extends SearchDelegate{
             ),
             itemCount: general.length,
             itemBuilder: (BuildContext context, int index){
-              return ProductCard(product: general[index],);
+              return ProductCard(
+                product: general[index],
+                onClick: (){},
+              );
             },
           ),
           SizedBox(height: 10,),
@@ -148,7 +154,10 @@ class Search extends SearchDelegate{
             ),
             itemCount: mostViewed.length,
             itemBuilder: (BuildContext context, int index){
-              return ProductCard(product: mostViewed[index],);
+              return ProductCard(
+                product: mostViewed[index],
+                onClick: (){},
+              );
             },
           ),
         ],

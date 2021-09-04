@@ -14,7 +14,7 @@ class AccountWidget extends StatefulWidget {
 }
 
 class _AccountWidgetState extends State<AccountWidget> {
-  Widget infoBelowAppBar(activeUserProvider){
+  Widget infoBelowAppBar(ActiveUserProvider activeUserProvider){
     return Container(
       width: double.infinity,
       color: primaryColor,
@@ -39,7 +39,11 @@ class _AccountWidgetState extends State<AccountWidget> {
                   CircleAvatar(
                     backgroundColor: Colors.white,
                     radius: 22,
-                    //child: Image.network(activeUserProvider.activeUser.imageUrl),
+                    child: activeUserProvider.activeUser.imageUrl.isNotEmpty ?
+                        Image.network(activeUserProvider.activeUser.imageUrl) :
+                        Center(
+                          child: Icon(Icons.person, color: primaryColor,),
+                        ),
                   )
                 ],
               ),

@@ -1,16 +1,21 @@
+import 'dart:typed_data';
+
 import 'package:ecommerce/models/product.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/single_child_widget.dart';
 
 class ProductCard extends StatelessWidget {
   final Product product;
+  final VoidCallback onClick;
 
-  const ProductCard({Key? key, required this.product}) : super(key: key);
+  const ProductCard({Key? key, required this.product, required this.onClick}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    double temp = (1 - (product.discountPrice / product.price)) * 100;
+    int sale = temp.truncate();
     return InkWell(
-      onTap: (){},
+      onTap: onClick,
       child: Container(
         color: Colors.white,
         child: Padding(
@@ -27,19 +32,21 @@ class ProductCard extends StatelessWidget {
                         width: 100,
                         height: 100,
                         color: Colors.grey[300],
+                        child: product.images.isNotEmpty ?
+                            Image.memory(Uint8List.fromList(product.images[0])) : Container(),
                       ),
                       SizedBox(height: 5,),
                       Text(
                           product.name
                       ),
                       Text(
-                          '\$ ${product.price}'
+                          '\$ ${product.discountPrice}'
                       ),
                     ],
                   ),
                 ),
               ),
-              if(product.sale != 0)
+              if(sale != 0)
               Positioned(
                 right: 0,
                 top: 0,
@@ -48,7 +55,7 @@ class ProductCard extends StatelessWidget {
                   color: Color(0xffffecde),
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Text(product.sale.toString() + '%'),
+                    child: Text(sale.toString() + '%'),
                   ),
                 ),
               ),

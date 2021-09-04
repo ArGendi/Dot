@@ -9,7 +9,7 @@ import 'package:ecommerce/widgets/custom_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'loading_screen.dart';
+import '../loading_screens/loading_screen.dart';
 
 class VerifyEmail extends StatefulWidget {
   final String verifyCode;

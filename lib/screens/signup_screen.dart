@@ -3,12 +3,14 @@ import 'package:country_code_picker/country_code_picker.dart';
 import 'package:ecommerce/constants.dart';
 import 'package:ecommerce/models/user.dart';
 import 'package:ecommerce/providers/active_user_provider.dart';
-import 'package:ecommerce/screens/loading_screen.dart';
+import 'package:ecommerce/loading_screens/loading_screen.dart';
 import 'package:ecommerce/screens/verify_email_screen.dart';
+import 'package:ecommerce/services/auth_service.dart';
 import 'package:ecommerce/services/helper_function.dart';
 import 'package:ecommerce/services/web_services.dart';
 import 'package:ecommerce/widgets/custom_button.dart';
 import 'package:ecommerce/widgets/custom_textfield.dart';
+import 'package:ecommerce/widgets/google_fb_button.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_login_facebook/flutter_login_facebook.dart';
@@ -40,7 +42,6 @@ class _SignUpState extends State<SignUp> {
   bool _isFBLoading = false;
   bool _isGoogleLoading = false;
   String _errorMsg = '';
-  final fb = FacebookLogin();
 
   _setFirstName(String firstName) {
     _firstName = firstName;
@@ -61,31 +62,14 @@ class _SignUpState extends State<SignUp> {
     _phoneNumber = phoneNumber;
   }
 
-  loginWithFacebook() async{
-    final res = await fb.logIn(
-      permissions: [
-        FacebookPermission.publicProfile,
-        FacebookPermission.email,
-      ],
-    );
-    switch(res.status){
-      case FacebookLoginStatus.success:
-        print('It worked');
-        setState(() {_isFBLoading = true;});
-        final FacebookAccessToken? fbToken = res.accessToken;
-        final AuthCredential credential = FacebookAuthProvider.credential(fbToken!.token);
-        final profile = await fb.getUserProfile();
-        print('Profile: ' + profile!.firstName.toString());
-        final email = await fb.getUserEmail();
-        print('Email: ' + email!);
-        sendFacebookInfoToBackend(profile.firstName, profile.firstName, email);
-        break;
-      case FacebookLoginStatus.cancel:
-        print('facebook canceled the login here');
-        break;
-      case FacebookLoginStatus.error:
-        print('facebook error here');
-        break;
+  signUpWithFacebook() async{
+    setState(() {_isFBLoading = true;});
+    bool valid = await AuthServices.loginWithFacebook();
+    if(valid){
+      final profile = await AuthServices.fb.getUserProfile();
+      final email = await AuthServices.fb.getUserEmail();
+      //final image = await AuthServices.fb.getProfileImageUrl(width: 100);
+      sendFacebookInfoToBackend(profile!.firstName, profile.lastName, email);
     }
   }
 
@@ -116,34 +100,6 @@ class _SignUpState extends State<SignUp> {
         _isFBLoading = false;
       });
     }
-  }
-
-  Widget googleOrFacebookLoginButton(String text, VoidCallback onclick, bool isFb){
-    return InkWell(
-      onTap: onclick,
-      child: Container(
-        width: double.infinity,
-        height: 60,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(5),
-          border: Border.all(color: primaryColor)
-        ),
-        child: Center(
-          child: (_isFBLoading && isFb) || (_isGoogleLoading && !isFb)? CircularProgressIndicator(
-            strokeWidth: 3,
-            valueColor: AlwaysStoppedAnimation<Color>(
-                primaryColor),
-          ) : Text(
-            text,
-            style: TextStyle(
-                color: primaryColor,
-                fontSize: 16,
-                fontWeight: FontWeight.bold
-            ),
-          ),
-        ),
-      ),
-    );
   }
 
   _onSubmit() async{
@@ -325,9 +281,21 @@ class _SignUpState extends State<SignUp> {
                     isLoading: _isLoading,
                   ),
                   SizedBox(height: 20,),
-                  googleOrFacebookLoginButton(localization.translate('Create account with Google').toString(), (){}, false),
+                  GoogleFbButton(
+                    text: localization.translate('Create account with Google').toString(),
+                    onClick: (){},
+                    isFb: false,
+                    isFBLoading: _isFBLoading,
+                    isGoogleLoading: _isGoogleLoading,
+                  ),
                   SizedBox(height: 10,),
-                  googleOrFacebookLoginButton(localization.translate('Create account with Facebook').toString(), loginWithFacebook, true),
+                  GoogleFbButton(
+                    text: localization.translate('Create account with Facebook').toString(),
+                    onClick: signUpWithFacebook,
+                    isFb: true,
+                    isFBLoading: _isFBLoading,
+                    isGoogleLoading: _isGoogleLoading,
+                  ),
                   SizedBox(height: 20,),
                   Divider(
                     color: Colors.black,

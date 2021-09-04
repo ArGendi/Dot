@@ -124,7 +124,9 @@ class _HomeWidgetState extends State<HomeWidget> {
                     MaterialPageRoute(builder: (context) => ProductDetails(product: products[index])),
                   );
                 },
-                child: ProductCard(product: products[index],
+                child: ProductCard(
+                  product: products[index],
+                  onClick: (){},
                 ),
               );
             },
@@ -158,7 +160,14 @@ class _HomeWidgetState extends State<HomeWidget> {
                     MaterialPageRoute(builder: (context) => ProductDetails(product: products[index])),
                   );
                 },
-                child: ProductCard(product: products[index],
+                child: ProductCard(
+                  product: products[index],
+                  onClick: (){
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => ProductDetails(product: products[index],)),
+                    );
+                  },
                 ),
               );
             },

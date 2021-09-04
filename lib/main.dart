@@ -1,15 +1,17 @@
 import 'package:ecommerce/constants.dart';
 import 'package:ecommerce/providers/active_user_provider.dart';
+import 'package:ecommerce/providers/all_products_provider.dart';
 import 'package:ecommerce/providers/app_language_provider.dart';
 import 'package:ecommerce/providers/cart_provider.dart';
 import 'package:ecommerce/providers/recently_viewed_provider.dart';
 import 'package:ecommerce/providers/wishlist_provider.dart';
+import 'package:ecommerce/loading_screens/all_products_loading_screen.dart';
 import 'package:ecommerce/screens/all_products_screen.dart';
 import 'package:ecommerce/screens/cart_screen.dart';
 import 'package:ecommerce/screens/choose_language_screen.dart';
 import 'package:ecommerce/screens/forget_password_screen.dart';
 import 'package:ecommerce/screens/home_screen.dart';
-import 'package:ecommerce/screens/loading_screen.dart';
+import 'package:ecommerce/loading_screens/loading_screen.dart';
 import 'package:ecommerce/screens/login_screen.dart';
 import 'package:ecommerce/screens/product_details_screen.dart';
 import 'package:ecommerce/screens/recently_viewed_screen.dart';
@@ -45,6 +47,9 @@ void main() async{
       ),
       ChangeNotifierProvider<AppLanguageProvider>(
         create: (context) => AppLanguageProvider(),
+      ),
+      ChangeNotifierProvider<AllProductsProvider>(
+        create: (context) => AllProductsProvider(),
       ),
     ],
     child: MyApp(lang: lang,),
@@ -94,7 +99,7 @@ class _MyAppState extends State<MyApp> {
         return supportedLocales.first;
       },
       locale: Locale(provider.lang, ''),
-      home: SignUp(),//widget.lang != null ? Loading() : Welcome(),
+      home: AllProductsLoading(),//widget.lang != null ? Loading() : Welcome(),
       routes: {
         Welcome.id: (context) => Welcome(),
         Login.id: (context) => Login(),
@@ -106,6 +111,7 @@ class _MyAppState extends State<MyApp> {
         RecentlyViewed.id: (context) => RecentlyViewed(),
         Loading.id: (context) => Loading(),
         ForgetPassword.id: (context) => ForgetPassword(),
+        AllProducts.id: (context) => AllProducts(),
       },
     );
   }

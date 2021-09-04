@@ -10,7 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../app_localization.dart';
-import 'loading_screen.dart';
+import '../loading_screens/loading_screen.dart';
 
 class ForgetPassword extends StatefulWidget {
   static String id = 'forget password';

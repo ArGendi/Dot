@@ -4,15 +4,17 @@ import 'package:ecommerce/constants.dart';
 import 'package:ecommerce/models/user.dart';
 import 'package:ecommerce/providers/active_user_provider.dart';
 import 'package:ecommerce/screens/forget_password_screen.dart';
+import 'package:ecommerce/services/auth_service.dart';
 import 'package:ecommerce/services/helper_function.dart';
 import 'package:ecommerce/services/web_services.dart';
 import 'package:ecommerce/widgets/custom_button.dart';
 import 'package:ecommerce/widgets/custom_textfield.dart';
+import 'package:ecommerce/widgets/google_fb_button.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../app_localization.dart';
-import 'loading_screen.dart';
+import '../loading_screens/loading_screen.dart';
 
 class Login extends StatefulWidget {
   static String id = 'login';
@@ -30,12 +32,55 @@ class _LoginState extends State<Login> {
   String _errorMsg = '';
   WebServices _webServices = new WebServices();
   bool _isLoading = false;
+  bool _isFBLoading = false;
+  bool _isGoogleLoading = false;
 
   _setEmail(String email) {
     _email = email;
   }
   _setPass(String password) {
     _password = password;
+  }
+
+  loginWithFacebook() async{
+    setState(() {_isFBLoading = true;});
+    bool valid = await AuthServices.loginWithFacebook();
+    if(valid){
+      final email = await AuthServices.fb.getUserEmail();
+      sendFacebookInfoToBackend(email);
+    }
+  }
+
+  sendFacebookInfoToBackend(String? email) async{
+    var response = await _webServices.post('https://souk--server.herokuapp.com/api/users/facebooklogin', {
+      "email": email,
+    });
+    if(response.statusCode >= 200 && response.statusCode < 300){
+      var body = jsonDecode(response.body);
+      AppUser user = new AppUser(
+        id: body['_id'],
+        email: body['email'],
+        firstName: body['firstName'],
+        lastName: body['lastName'],
+        token: body['token'],
+      );
+      await HelpFunction.saveUserId(body['_id']);
+      await HelpFunction.saveUserToken(body['token']);
+      await HelpFunction.saveUserEmail(body['email']);
+      await HelpFunction.saveUserName(body['firstName']);
+      Provider.of<ActiveUserProvider>(context, listen: false).setActiveUser(user);
+      setState(() {_isFBLoading = false;});
+      print('facebook login sent to backend');
+      Navigator.of(context)
+          .pushNamedAndRemoveUntil(Loading.id, (Route<dynamic> route) => false);
+    }
+    else{
+      setState(() {
+        var body = jsonDecode(response.body);
+        _errorMsg = body['message'];
+        _isFBLoading = false;
+      });
+    }
   }
 
   _onSubmit() async{
@@ -77,6 +122,18 @@ class _LoginState extends State<Login> {
     }
   }
 
+  dummy() async{
+    String? x = await HelpFunction.getUserToken();
+    print(x);
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    dummy();
+  }
+
   //localization!.translate('Welcome to').toString()
   @override
   Widget build(BuildContext context) {
@@ -92,6 +149,7 @@ class _LoginState extends State<Login> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
+                  SizedBox(height: 30,),
                   Text(
                     localization!.translate('Sign in').toString(),
                     style: TextStyle(
@@ -102,7 +160,7 @@ class _LoginState extends State<Login> {
                   SizedBox(height: 10,),
                   Container(
                     width: size.width * .7,
-                    height: size.height * .45,
+                    height: size.height * .3,
                     color: Colors.grey.shade200,
                   ),
                   SizedBox(height: 20,),
@@ -168,6 +226,21 @@ class _LoginState extends State<Login> {
                         ),
                       )
                     ],
+                  ),
+                  GoogleFbButton(
+                    text: 'Login with Google',
+                    onClick: (){},
+                    isFb: false,
+                    isFBLoading: _isFBLoading,
+                    isGoogleLoading: _isGoogleLoading,
+                  ),
+                  SizedBox(height: 10,),
+                  GoogleFbButton(
+                    text: 'Login with Facebook',
+                    onClick: loginWithFacebook,
+                    isFb: true,
+                    isFBLoading: _isFBLoading,
+                    isGoogleLoading: _isGoogleLoading,
                   ),
                 ],
               ),
