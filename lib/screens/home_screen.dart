@@ -1,5 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:ecommerce/constants.dart';
+import 'package:ecommerce/loading_screens/cart_loading_screen.dart';
 import 'package:ecommerce/models/product.dart';
 import 'package:ecommerce/screens/cart_screen.dart';
 import 'package:ecommerce/services/search.dart';
@@ -73,7 +74,7 @@ class _HomeState extends State<Home> {
         actions: [
           IconButton(
             onPressed: (){
-              Navigator.pushNamed(context, Cart.id);
+              Navigator.pushNamed(context, CartLoading.id);
             },
             icon: Icon(
               Icons.shopping_cart,

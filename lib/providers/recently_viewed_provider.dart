@@ -1,22 +1,28 @@
+import 'package:ecommerce/helpers/db_helper.dart';
 import 'package:ecommerce/models/product.dart';
 import 'package:flutter/cupertino.dart';
 
+import '../constants.dart';
+
 class RecentlyViewedProvider extends ChangeNotifier {
-  List<Product> _items = [
-    new Product(name: 'name', price: 220, sale: 10),
-    new Product(name: 'name', price: 400, sale: 20),
-  ];
+  List<Product> _items = [];
+  DBHelper _dbHelper = new DBHelper();
 
   List<Product> get items => _items;
+
+  addItem(Product product, bool insertInDB){
+    _items.add(product);
+    notifyListeners();
+    if(insertInDB)
+      _dbHelper.insert(recentlyViewedTable, {
+        'id': product.id,
+      });
+  }
 
   removeItem(Product product){
     _items.remove(product);
     notifyListeners();
-  }
-
-  addItem(Product product){
-    _items.add(product);
-    notifyListeners();
+    _dbHelper.deleteRow(wishlistTable, product.id);
   }
 
 }

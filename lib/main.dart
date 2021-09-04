@@ -1,4 +1,5 @@
 import 'package:ecommerce/constants.dart';
+import 'package:ecommerce/loading_screens/recently_viewed_loading_screen.dart';
 import 'package:ecommerce/providers/active_user_provider.dart';
 import 'package:ecommerce/providers/all_products_provider.dart';
 import 'package:ecommerce/providers/app_language_provider.dart';
@@ -26,6 +27,8 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'app_localization.dart';
+import 'loading_screens/cart_loading_screen.dart';
+import 'loading_screens/wishlist_loading_screen.dart';
 import 'models/product.dart';
 
 void main() async{
@@ -99,7 +102,7 @@ class _MyAppState extends State<MyApp> {
         return supportedLocales.first;
       },
       locale: Locale(provider.lang, ''),
-      home: AllProductsLoading(),//widget.lang != null ? Loading() : Welcome(),
+      home: Home(),//widget.lang != null ? Loading() : Welcome(),
       routes: {
         Welcome.id: (context) => Welcome(),
         Login.id: (context) => Login(),
@@ -112,6 +115,9 @@ class _MyAppState extends State<MyApp> {
         Loading.id: (context) => Loading(),
         ForgetPassword.id: (context) => ForgetPassword(),
         AllProducts.id: (context) => AllProducts(),
+        WishlistLoading.id: (context) => WishlistLoading(),
+        CartLoading.id: (context) => CartLoading(),
+        RecentlyViewedLoading.id: (context) => RecentlyViewedLoading(),
       },
     );
   }

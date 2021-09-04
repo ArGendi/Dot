@@ -56,8 +56,9 @@ class _WishlistState extends State<Wishlist> {
                 product: reversedItems[index],
                 onDelete: (){
                   deleteItemFromWishlist(reversedItems[index]);
-                }, onClick: () {
-                  Provider.of<RecentlyViewedProvider>(context).addItem(reversedItems[index]);
+                },
+                onClick: () {
+                  Provider.of<RecentlyViewedProvider>(context).addItem(reversedItems[index], true);
                   Navigator.pushNamed(context, Wishlist.id);
               },
               ),

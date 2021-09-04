@@ -228,14 +228,6 @@ class _LoginState extends State<Login> {
                     ],
                   ),
                   GoogleFbButton(
-                    text: 'Login with Google',
-                    onClick: (){},
-                    isFb: false,
-                    isFBLoading: _isFBLoading,
-                    isGoogleLoading: _isGoogleLoading,
-                  ),
-                  SizedBox(height: 10,),
-                  GoogleFbButton(
                     text: 'Login with Facebook',
                     onClick: loginWithFacebook,
                     isFb: true,

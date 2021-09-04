@@ -1,5 +1,6 @@
 import 'package:ecommerce/models/product.dart';
 import 'package:ecommerce/providers/recently_viewed_provider.dart';
+import 'package:ecommerce/screens/cart_screen.dart';
 import 'package:ecommerce/screens/wishlist_screen.dart';
 import 'package:ecommerce/services/search.dart';
 import 'package:ecommerce/widgets/detailed_product_card.dart';
@@ -99,7 +100,9 @@ class _RecentlyViewedState extends State<RecentlyViewed> {
         ),
         actions: [
           IconButton(
-            onPressed: (){},
+            onPressed: (){
+              Navigator.pushNamed(context, Cart.id);
+            },
             icon: Icon(
               Icons.shopping_cart,
               color: Colors.white,

@@ -282,14 +282,6 @@ class _SignUpState extends State<SignUp> {
                   ),
                   SizedBox(height: 20,),
                   GoogleFbButton(
-                    text: localization.translate('Create account with Google').toString(),
-                    onClick: (){},
-                    isFb: false,
-                    isFBLoading: _isFBLoading,
-                    isGoogleLoading: _isGoogleLoading,
-                  ),
-                  SizedBox(height: 10,),
-                  GoogleFbButton(
                     text: localization.translate('Create account with Facebook').toString(),
                     onClick: signUpWithFacebook,
                     isFb: true,

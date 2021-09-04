@@ -1,3 +1,6 @@
+import 'dart:typed_data';
+
+import 'package:ecommerce/loading_screens/cart_loading_screen.dart';
 import 'package:ecommerce/models/product.dart';
 import 'package:ecommerce/providers/cart_provider.dart';
 import 'package:ecommerce/providers/wishlist_provider.dart';
@@ -21,6 +24,8 @@ class ProductDetails extends StatefulWidget {
 
 class _ProductDetailsState extends State<ProductDetails> {
   bool _addedToCart = false;
+  int _pageIndex = 0;
+  final PageController controller = PageController(initialPage: 0);
   // String? _townDropdownValue = 'Select town';
   // String? _shopDropdownValue = 'Select our nearest shop';
   // List<String> _towns = ['Select town'];
@@ -31,12 +36,12 @@ class _ProductDetailsState extends State<ProductDetails> {
     new Product(name: 'name', price: 400, sale: 20),
   ];
 
-  Widget rate(int rate){
+  Widget rate(double rate){
     return Row(
       children: [
         for(int i=0; i<5; i++)
           Icon(
-            Icons.star,
+            (i < rate && i+1 > rate) ? Icons.star_half : Icons.star,
             color: i < rate ? Colors.amber : Colors.grey.shade300,
           )
       ],
@@ -44,7 +49,7 @@ class _ProductDetailsState extends State<ProductDetails> {
   }
 
   _addToWishlist(){
-    Provider.of<WishlistProvider>(context, listen: false).addItem(widget.product);
+    Provider.of<WishlistProvider>(context, listen: false).addItem(widget.product, true);
   }
 
   _removeFromWishlist(){
@@ -56,7 +61,7 @@ class _ProductDetailsState extends State<ProductDetails> {
       onTap: (){
         if(widget.product.availabilityInStock > 0 && !_addedToCart) {
           widget.product.quantityAddedInCart = 1;
-          Provider.of<CartProvider>(context, listen: false).addItem(widget.product);
+          Provider.of<CartProvider>(context, listen: false).addItem(widget.product, true);
           setState(() {
             _addedToCart = true;
           });
@@ -116,8 +121,35 @@ class _ProductDetailsState extends State<ProductDetails> {
               width: double.infinity,
               height: 200,
               color: Colors.grey.shade200,
+              child: widget.product.images.isNotEmpty ? PageView(
+                scrollDirection: Axis.horizontal,
+                controller: controller,
+                children: [
+                  for(var image in widget.product.images)
+                    Image.memory(Uint8List.fromList(image),),
+                ],
+                onPageChanged: (value){
+                  setState(() {
+                    _pageIndex = value;
+                  });
+                },
+              ) : Container()
             ),
-            SizedBox(height: 20,),
+            SizedBox(height: 10,),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                for(int i=0; i<widget.product.images.length; i++)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 2.0),
+                    child: CircleAvatar(
+                      radius: 3,
+                      backgroundColor: i == _pageIndex ? Colors.black : Colors.grey[300],
+                    ),
+                  )
+              ],
+            ),
+            SizedBox(height: 10,),
             Text(
               widget.product.name,
               style: TextStyle(
@@ -161,7 +193,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    rate(widget.product.rate),
+                    rate(finalRate),
                     Text(
                       '(' + widget.product.reviews.length.toString() + ' reviews)',
                       style: TextStyle(
@@ -171,31 +203,20 @@ class _ProductDetailsState extends State<ProductDetails> {
                     ),
                   ],
                 ),
-                Row(
-                  children: [
-                    IconButton(
-                      onPressed: (){},
-                      icon: Icon(
-                        Icons.share,
-                        color: primaryColor,
-                      ),
-                    ),
-                    IconButton(
-                      onPressed: (){
-                        if(widget.product.isFavourite) {
-                          _removeFromWishlist();
-                        }
-                        else _addToWishlist();
-                        setState(() {
-                          widget.product.isFavourite = !widget.product.isFavourite;
-                        });
-                      },
-                      icon: Icon(
-                        widget.product.isFavourite? Icons.favorite : Icons.favorite_border,
-                        color: primaryColor,
-                      ),
-                    ),
-                  ],
+                IconButton(
+                  onPressed: (){
+                    if(widget.product.isFavourite) {
+                      _removeFromWishlist();
+                    }
+                    else _addToWishlist();
+                    setState(() {
+                      widget.product.isFavourite = !widget.product.isFavourite;
+                    });
+                  },
+                  icon: Icon(
+                    widget.product.isFavourite? Icons.favorite : Icons.favorite_border,
+                    color: primaryColor,
+                  ),
                 ),
               ],
             ),
@@ -415,7 +436,7 @@ class _ProductDetailsState extends State<ProductDetails> {
     return Card(
       elevation: 0,
       color: Colors.white,
-      child: Padding(
+      child: widget.product.reviews.isNotEmpty ? Padding(
         padding: const EdgeInsets.all(15.0),
         child: Column(
           children: [
@@ -458,7 +479,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                               ),
                             ),
                             SizedBox(width: 5,),
-                            rate(widget.product.reviews[index].rate),
+                            rate(widget.product.reviews[index].rate.roundToDouble()),
                           ],
                         ),
                         SizedBox(height: 10,),
@@ -480,7 +501,10 @@ class _ProductDetailsState extends State<ProductDetails> {
               )
           ],
         )
-      ),
+      ) : Center(child: Padding(
+        padding: const EdgeInsets.all(15.0),
+        child: Text('No reviews yet'),
+      ),),
     );
   }
 
@@ -514,7 +538,7 @@ class _ProductDetailsState extends State<ProductDetails> {
         actions: [
           IconButton(
             onPressed: (){
-              Navigator.pushNamed(context, Cart.id);
+              Navigator.pushNamed(context, CartLoading.id);
             },
             icon: Icon(
               Icons.shopping_cart,

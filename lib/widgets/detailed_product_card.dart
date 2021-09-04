@@ -102,7 +102,7 @@ class _DetailedProductCardState extends State<DetailedProductCard> {
                 ),
                 InkWell(
                   onTap: (){
-                    Provider.of<CartProvider>(context, listen: false).addItem(widget.product);
+                    Provider.of<CartProvider>(context, listen: false).addItem(widget.product, true);
                     setState(() {
                       _addedToCart = true;
                     });

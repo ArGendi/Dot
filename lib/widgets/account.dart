@@ -1,4 +1,7 @@
 import 'package:ecommerce/constants.dart';
+import 'package:ecommerce/loading_screens/cart_loading_screen.dart';
+import 'package:ecommerce/loading_screens/recently_viewed_loading_screen.dart';
+import 'package:ecommerce/loading_screens/wishlist_loading_screen.dart';
 import 'package:ecommerce/providers/active_user_provider.dart';
 import 'package:ecommerce/screens/cart_screen.dart';
 import 'package:ecommerce/screens/recently_viewed_screen.dart';
@@ -114,13 +117,13 @@ class _AccountWidgetState extends State<AccountWidget> {
               itemInsideCard('Messages', Icons.email, (){}),
               itemInsideCard('Notifications', Icons.notifications, (){}),
               itemInsideCard('Product wishlist', Icons.shopping_bag_rounded, (){
-                Navigator.pushNamed(context, Wishlist.id);
+                Navigator.pushNamed(context, WishlistLoading.id);
               }),
               itemInsideCard('Recently viewed', Icons.visibility, (){
-                Navigator.pushNamed(context, RecentlyViewed.id);
+                Navigator.pushNamed(context, RecentlyViewedLoading.id);
               }),
               itemInsideCard('My cart', Icons.shopping_cart, (){
-                Navigator.pushNamed(context, Cart.id);
+                Navigator.pushNamed(context, CartLoading.id);
               }),
             ],
           )

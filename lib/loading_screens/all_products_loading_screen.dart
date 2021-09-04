@@ -20,7 +20,6 @@ class AllProductsLoading extends StatefulWidget {
 
 class _AllProductsLoadingState extends State<AllProductsLoading> {
   WebServices _webServices = new WebServices();
-  late ReadBuffer buffer;
 
   Future<void> getData() async{
     var provider = Provider.of<AllProductsProvider>(context, listen: false);

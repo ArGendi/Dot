@@ -39,7 +39,7 @@ class _HomeWidgetState extends State<HomeWidget> {
             itemCount: top.length,
             itemBuilder: (context, index){
               return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
+                padding: const EdgeInsets.symmetric(horizontal: 5),
                 child: Container(
                   width: size.width * 0.7,
                   color: Colors.white,
@@ -118,7 +118,7 @@ class _HomeWidgetState extends State<HomeWidget> {
             itemBuilder: (BuildContext context, int index){
               return InkWell(
                 onTap: (){
-                  Provider.of<RecentlyViewedProvider>(context, listen: false).addItem(products[index]);
+                  Provider.of<RecentlyViewedProvider>(context, listen: false).addItem(products[index], true);
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => ProductDetails(product: products[index])),
@@ -154,7 +154,7 @@ class _HomeWidgetState extends State<HomeWidget> {
             itemBuilder: (BuildContext context, int index){
               return InkWell(
                 onTap: (){
-                  Provider.of<RecentlyViewedProvider>(context, listen: false).addItem(products[index]);
+                  Provider.of<RecentlyViewedProvider>(context, listen: false).addItem(products[index], true);
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => ProductDetails(product: products[index])),

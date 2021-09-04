@@ -128,8 +128,8 @@ class _CartState extends State<Cart> {
                                         fontSize: 16,
                                       ),
                                     ),
-                                  if(color == Colors.grey[200])
-                                    Text('Product has no colors',),
+                                  // if(color == Colors.grey[200])
+                                  //   Text('Product has no colors',),
                                 ],
                               ),
                               SizedBox(height: 10,),
@@ -186,7 +186,7 @@ class _CartState extends State<Cart> {
                                     ),
                                   ),
                                   Text(
-                                    '\$ ' + priceAfterSale.toStringAsFixed(2),
+                                    '\$ ' + cartProvider.items[index].discountPrice.toStringAsFixed(2),
                                     style: TextStyle(
                                       fontSize: 18,
                                       fontWeight: FontWeight.bold,

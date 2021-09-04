@@ -13,7 +13,7 @@ class PaymentInfo extends StatelessWidget {
     double delivery = 15;
     double sum = 0;
     for(var item in cartProvider.items)
-      sum += (item.price / 100) * (100 - item.sale);
+      sum += item.discountPrice;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
