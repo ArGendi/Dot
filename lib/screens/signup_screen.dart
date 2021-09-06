@@ -68,12 +68,12 @@ class _SignUpState extends State<SignUp> {
     if(valid){
       final profile = await AuthServices.fb.getUserProfile();
       final email = await AuthServices.fb.getUserEmail();
-      //final image = await AuthServices.fb.getProfileImageUrl(width: 100);
-      sendFacebookInfoToBackend(profile!.firstName, profile.lastName, email);
+      final image = await AuthServices.fb.getProfileImageUrl(width: 100);
+      sendFacebookInfoToBackend(profile!.firstName, profile.lastName, email, image!);
     }
   }
 
-  sendFacebookInfoToBackend(String? firstName, String? lastName, String? email) async{
+  sendFacebookInfoToBackend(String? firstName, String? lastName, String? email, String image) async{
     var response = await _webServices.post('https://souk--server.herokuapp.com/api/users/facebooksignup', {
       "firstName": firstName,
       "lastName": lastName,
@@ -87,6 +87,7 @@ class _SignUpState extends State<SignUp> {
       await HelpFunction.saveUserToken(body['token']);
       await HelpFunction.saveUserEmail(body['email']);
       await HelpFunction.saveUserName(body['firstName']);
+      await HelpFunction.saveUserImage(image);
       Provider.of<ActiveUserProvider>(context, listen: false).setActiveUser(user);
       setState(() {_isFBLoading = false;});
       print('facebook sent to backend');

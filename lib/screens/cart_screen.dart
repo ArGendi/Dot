@@ -1,10 +1,12 @@
 import 'package:ecommerce/models/product.dart';
 import 'package:ecommerce/providers/cart_provider.dart';
 import 'package:ecommerce/providers/recently_viewed_provider.dart';
+import 'package:ecommerce/services/currency.dart';
 import 'package:ecommerce/services/search.dart';
 import 'package:ecommerce/widgets/checkout.dart';
 import 'package:ecommerce/widgets/custom_button.dart';
 import 'package:ecommerce/widgets/personal_info.dart';
+import 'package:ecommerce/widgets/recently_viewed_banner.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -75,8 +77,8 @@ class _CartState extends State<Cart> {
             child: ListView.builder(
               itemCount: cartProvider.items.length,
               itemBuilder: (context, index){
-                double priceAfterSale = (cartProvider.items[index].price / 100) * (100 - cartProvider.items[index].sale);
-                Color? color = getColor(cartProvider.items[index].color);
+                // double priceAfterSale = (cartProvider.items[index].price / 100) * (100 - cartProvider.items[index].sale);
+                // Color? color = getColor(cartProvider.items[index].color);
                 return Column(
                   children: [
                     Row(
@@ -113,23 +115,15 @@ class _CartState extends State<Cart> {
                                   )
                                 ],
                               ),
+                              if(cartProvider.items[index].color.isNotEmpty)
                               Row(
                                 children: [
-                                  if(color != Colors.grey[200])
-                                    CircleAvatar(
-                                      backgroundColor: color,
-                                      radius: 7,
+                                  Text(
+                                    'color: ' + cartProvider.items[index].color,
+                                    style: TextStyle(
+                                      fontSize: 16,
                                     ),
-                                  SizedBox(width: 5,),
-                                  if(color != Colors.grey[200])
-                                    Text(
-                                      cartProvider.items[index].color,
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                      ),
-                                    ),
-                                  // if(color == Colors.grey[200])
-                                  //   Text('Product has no colors',),
+                                  ),
                                 ],
                               ),
                               SizedBox(height: 10,),
@@ -244,7 +238,7 @@ class _CartState extends State<Cart> {
                     ),
                     SizedBox(height: 5,),
                     if(_isRecentlyViewedAppears)
-                      recentlyViewedBanner(recentlyViewedProvider),
+                      RecentlyViewedBanner(),
                   ],
                 ),
                 CustomButton(
@@ -256,45 +250,6 @@ class _CartState extends State<Cart> {
           ),
         ),
       ],
-    );
-  }
-
-  Widget recentlyViewedBanner(RecentlyViewedProvider recentlyViewedProvider){
-    return InkWell(
-      onTap: (){},
-      child: Container(
-        height: 140,
-        child: ListView.builder(
-          shrinkWrap: true,
-          scrollDirection: Axis.horizontal,
-          itemCount: recentlyViewedProvider.items.length,
-          itemBuilder: (BuildContext context, int index) {
-            double priceAfterSale = (recentlyViewedProvider.items[index].price / 100) * (100 - recentlyViewedProvider.items[index].sale);
-            return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    width: 80,
-                    height: 80,
-                    color: Colors.grey[200],
-                  ),
-                  SizedBox(height: 5,),
-                  Text('\$ ' + priceAfterSale.toStringAsFixed(2)),
-                  SizedBox(width: 5,),
-                  Text(
-                    '\$ ' + recentlyViewedProvider.items[index].price.toStringAsFixed(2),
-                    style: TextStyle(
-                      decoration: TextDecoration.lineThrough,
-                    ),
-                  ),
-                ],
-              ),
-            );
-          },
-        ),
-      ),
     );
   }
 

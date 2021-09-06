@@ -47,11 +47,12 @@ class _LoginState extends State<Login> {
     bool valid = await AuthServices.loginWithFacebook();
     if(valid){
       final email = await AuthServices.fb.getUserEmail();
-      sendFacebookInfoToBackend(email);
+      final image = await AuthServices.fb.getProfileImageUrl(width: 100);
+      sendFacebookInfoToBackend(email, image!);
     }
   }
 
-  sendFacebookInfoToBackend(String? email) async{
+  sendFacebookInfoToBackend(String? email, String image) async{
     var response = await _webServices.post('https://souk--server.herokuapp.com/api/users/facebooklogin', {
       "email": email,
     });
@@ -68,6 +69,7 @@ class _LoginState extends State<Login> {
       await HelpFunction.saveUserToken(body['token']);
       await HelpFunction.saveUserEmail(body['email']);
       await HelpFunction.saveUserName(body['firstName']);
+      await HelpFunction.saveUserImage(image);
       Provider.of<ActiveUserProvider>(context, listen: false).setActiveUser(user);
       setState(() {_isFBLoading = false;});
       print('facebook login sent to backend');

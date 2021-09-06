@@ -5,7 +5,9 @@ import 'package:flutter/cupertino.dart';
 import '../constants.dart';
 
 class RecentlyViewedProvider extends ChangeNotifier {
-  List<Product> _items = [];
+  List<Product> _items = [
+    new Product(name: 'product 1', price: 200)
+  ];
   DBHelper _dbHelper = new DBHelper();
 
   List<Product> get items => _items;

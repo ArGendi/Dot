@@ -1,7 +1,11 @@
 import 'package:ecommerce/constants.dart';
 import 'package:ecommerce/models/product.dart';
+import 'package:ecommerce/providers/all_products_provider.dart';
+import 'package:ecommerce/screens/all_products_screen.dart';
+import 'package:ecommerce/screens/product_details_screen.dart';
 import 'package:ecommerce/widgets/product_card.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class Search extends SearchDelegate{
   List<Product> mostChecked = [
@@ -85,7 +89,32 @@ class Search extends SearchDelegate{
 
   @override
   Widget buildResults(BuildContext context) {
-    return Container();
+    var provider = Provider.of<AllProductsProvider>(context);
+    List<Product> filteredList = provider.items.where((element) => element.name.contains(query)).toList();
+    return Padding(
+      padding: const EdgeInsets.all(20.0),
+      child: GridView.builder(
+        physics: const NeverScrollableScrollPhysics(),
+        shrinkWrap: true,
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          crossAxisSpacing: 5,
+          mainAxisSpacing: 5,
+        ),
+        itemCount: filteredList.length,
+        itemBuilder: (BuildContext context, int index){
+          return ProductCard(
+            product: filteredList[index],
+            onClick: (){
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ProductDetails(product: filteredList[index])),
+              );
+            },
+          );
+        },
+      ),
+    );
     throw UnimplementedError();
   }
 

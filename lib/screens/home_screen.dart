@@ -15,6 +15,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_countdown_timer/flutter_countdown_timer.dart';
 import 'package:package_info/package_info.dart';
 
+import '../app_localization.dart';
+
 class Home extends StatefulWidget {
   static String id = 'home';
 
@@ -45,6 +47,7 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
+    var localization = AppLocalization.of(context);
     var size = MediaQuery.of(context).size;
 
     return Scaffold(
@@ -86,26 +89,26 @@ class _HomeState extends State<Home> {
       body: body[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
           type : BottomNavigationBarType.fixed,
-          items: const <BottomNavigationBarItem>[
+          items: <BottomNavigationBarItem>[
             BottomNavigationBarItem(
               icon: Icon(Icons.home),
-              label: 'Home',
+              label: localization!.translate('Home').toString(),
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.search),
-              label: 'Search',
+              label: localization.translate('Search').toString(),
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.help),
-              label: 'Help',
+              label: localization.translate('Help').toString(),
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.shopping_bag),
-              label: 'Shop',
+              label: localization.translate('Shop').toString(),
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.person),
-              label: 'Account',
+              label: localization.translate('Account').toString(),
             ),
           ],
           currentIndex: _selectedIndex,

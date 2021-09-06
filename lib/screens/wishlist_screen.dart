@@ -24,6 +24,7 @@ class _WishlistState extends State<Wishlist> {
       padding: const EdgeInsets.all(20.0),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Text(
             'Your wishlist is empty',
@@ -37,7 +38,7 @@ class _WishlistState extends State<Wishlist> {
             'All your wishlist will be saved here in order to add them into the cart at anytime.',
           ),
           SizedBox(height: 30,),
-          CustomButton(text: 'Add new Product', onclick: (){})
+          CustomButton(text: 'Add new Product', onclick: (){}),
         ],
       ),
     );

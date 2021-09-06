@@ -4,16 +4,19 @@ import 'package:ecommerce/providers/active_user_provider.dart';
 import 'package:ecommerce/providers/all_products_provider.dart';
 import 'package:ecommerce/providers/app_language_provider.dart';
 import 'package:ecommerce/providers/cart_provider.dart';
+import 'package:ecommerce/providers/orders_provider.dart';
 import 'package:ecommerce/providers/recently_viewed_provider.dart';
 import 'package:ecommerce/providers/wishlist_provider.dart';
 import 'package:ecommerce/loading_screens/all_products_loading_screen.dart';
 import 'package:ecommerce/screens/all_products_screen.dart';
 import 'package:ecommerce/screens/cart_screen.dart';
 import 'package:ecommerce/screens/choose_language_screen.dart';
+import 'package:ecommerce/screens/feedback_screen.dart';
 import 'package:ecommerce/screens/forget_password_screen.dart';
 import 'package:ecommerce/screens/home_screen.dart';
 import 'package:ecommerce/loading_screens/loading_screen.dart';
 import 'package:ecommerce/screens/login_screen.dart';
+import 'package:ecommerce/screens/orders_screen.dart';
 import 'package:ecommerce/screens/product_details_screen.dart';
 import 'package:ecommerce/screens/recently_viewed_screen.dart';
 import 'package:ecommerce/screens/signup_screen.dart';
@@ -53,6 +56,9 @@ void main() async{
       ),
       ChangeNotifierProvider<AllProductsProvider>(
         create: (context) => AllProductsProvider(),
+      ),
+      ChangeNotifierProvider<OrdersProvider>(
+        create: (context) => OrdersProvider(),
       ),
     ],
     child: MyApp(lang: lang,),
@@ -102,7 +108,7 @@ class _MyAppState extends State<MyApp> {
         return supportedLocales.first;
       },
       locale: Locale(provider.lang, ''),
-      home: Home(),//widget.lang != null ? Loading() : Welcome(),
+      home: FeedBack(product: new Product(name: "product 1", discountPrice: 200),),//widget.lang != null ? Loading() : Welcome(),
       routes: {
         Welcome.id: (context) => Welcome(),
         Login.id: (context) => Login(),

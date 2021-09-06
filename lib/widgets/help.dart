@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:package_info/package_info.dart';
 import 'package:provider/provider.dart';
 
+import '../app_localization.dart';
+
 class HelpWidget extends StatefulWidget {
   const HelpWidget({Key? key}) : super(key: key);
 
@@ -23,7 +25,7 @@ class _HelpWidgetState extends State<HelpWidget> {
     _version = packageInfo.version;
   }
 
-  Widget aboutUsCard(){
+  Widget aboutUsCard(AppLocalization localization){
     return Card(
       elevation: 0,
       color: Colors.white,
@@ -38,7 +40,7 @@ class _HelpWidgetState extends State<HelpWidget> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('About our Services'),
+                      Text(localization.translate('About our Services').toString()),
                       Icon(Icons.arrow_forward_ios_outlined, size: 15,)
                     ],
                   ),
@@ -80,7 +82,7 @@ class _HelpWidgetState extends State<HelpWidget> {
     return Colors.grey.shade600;
   }
 
-  _langBottomSheet() {
+  _langBottomSheet(AppLocalization localization) {
     showModalBottomSheet(
         backgroundColor: Colors.grey[200],
         isScrollControlled: true,
@@ -93,7 +95,7 @@ class _HelpWidgetState extends State<HelpWidget> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  'Choose your language',
+                  localization.translate('Choose your language').toString(),
                   style: TextStyle(
                     fontSize: 16,
                   ),
@@ -139,7 +141,7 @@ class _HelpWidgetState extends State<HelpWidget> {
         });
   }
 
-  Widget settingsCard(ActiveUserProvider activeUserProvider, AppLanguageProvider langProvider){
+  Widget settingsCard(ActiveUserProvider activeUserProvider, AppLanguageProvider langProvider, AppLocalization localization){
     return Card(
       elevation: 0,
       color: Colors.white,
@@ -147,6 +149,28 @@ class _HelpWidgetState extends State<HelpWidget> {
           padding: const EdgeInsets.symmetric(vertical: 20.0),
           child: Column(
             children: [
+              // InkWell(
+              //   onTap: (){},
+              //   child: Padding(
+              //     padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+              //     child: Row(
+              //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //       children: [
+              //         Text('Notifications'),
+              //         CupertinoSwitch(
+              //           activeColor: primaryColor,
+              //           value: _isNotificationOpen,
+              //           onChanged: (bool value) {
+              //             setState(() {
+              //               _isNotificationOpen = !_isNotificationOpen;
+              //             });
+              //           },
+              //         ),
+              //       ],
+              //     ),
+              //   ),
+              // ),
+              // SizedBox(height: 10,),
               InkWell(
                 onTap: (){},
                 child: Padding(
@@ -154,29 +178,7 @@ class _HelpWidgetState extends State<HelpWidget> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('Notifications'),
-                      CupertinoSwitch(
-                        activeColor: primaryColor,
-                        value: _isNotificationOpen,
-                        onChanged: (bool value) {
-                          setState(() {
-                            _isNotificationOpen = !_isNotificationOpen;
-                          });
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              SizedBox(height: 10,),
-              InkWell(
-                onTap: (){},
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text('Country'),
+                      Text(localization.translate('Country').toString()),
                       Text(activeUserProvider.activeUser.language),
                     ],
                   ),
@@ -184,13 +186,15 @@ class _HelpWidgetState extends State<HelpWidget> {
               ),
               SizedBox(height: 10,),
               InkWell(
-                onTap: _langBottomSheet,
+                onTap: (){
+                  _langBottomSheet(localization);
+                },
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('language'),
+                      Text(localization.translate('language').toString()),
                       Text(langProvider.lang == 'en' ? 'English' : 'عربي'),
                     ],
                   ),
@@ -202,7 +206,7 @@ class _HelpWidgetState extends State<HelpWidget> {
     );
   }
 
-  Widget infoAboutAppCard(){
+  Widget infoAboutAppCard(AppLocalization localization){
     return Card(
       elevation: 0,
       color: Colors.white,
@@ -215,7 +219,7 @@ class _HelpWidgetState extends State<HelpWidget> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('App version'),
+                  Text(localization.translate('App version').toString()),
                   FutureBuilder(
                     future: getAppInfo(),
                     builder: (context, snapshot){
@@ -234,6 +238,7 @@ class _HelpWidgetState extends State<HelpWidget> {
 
   @override
   Widget build(BuildContext context) {
+    var localization = AppLocalization.of(context);
     var activeUserProvider = Provider.of<ActiveUserProvider>(context);
     var langProvider = Provider.of<AppLanguageProvider>(context);
     return Padding(
@@ -241,43 +246,43 @@ class _HelpWidgetState extends State<HelpWidget> {
       child: ListView(
         shrinkWrap: true,
         children: [
-          Card(
-            elevation: 0,
-            color: Colors.white,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 20.0),
-              child: Center(
-                child: Text('Start direct message here'),
-              ),
-            ),
-          ),
-          SizedBox(height: 20,),
+          // Card(
+          //   elevation: 0,
+          //   color: Colors.white,
+          //   child: Padding(
+          //     padding: const EdgeInsets.symmetric(vertical: 20.0),
+          //     child: Center(
+          //       child: Text('Start direct message here'),
+          //     ),
+          //   ),
+          // ),
+          // SizedBox(height: 20,),
           Text(
-            'About Us',
+            localization!.translate('About Us').toString(),
             style: TextStyle(
               fontWeight: FontWeight.bold,
             ),
           ),
           SizedBox(height: 5,),
-          aboutUsCard(),
+          aboutUsCard(localization),
           SizedBox(height: 10,),
           Text(
-            'Settings',
+            localization.translate('Settings').toString(),
             style: TextStyle(
               fontWeight: FontWeight.bold,
             ),
           ),
           SizedBox(height: 10,),
-          settingsCard(activeUserProvider, langProvider),
+          settingsCard(activeUserProvider, langProvider, localization),
           SizedBox(height: 10,),
           Text(
-            'Info about the app',
+            localization.translate('Info about the app').toString(),
             style: TextStyle(
               fontWeight: FontWeight.bold,
             ),
           ),
           SizedBox(height: 10,),
-          infoAboutAppCard(),
+          infoAboutAppCard(localization),
         ],
       ),
     );

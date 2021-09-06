@@ -9,6 +9,8 @@ import 'package:ecommerce/screens/wishlist_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../app_localization.dart';
+
 class AccountWidget extends StatefulWidget {
   const AccountWidget({Key? key}) : super(key: key);
 
@@ -17,7 +19,7 @@ class AccountWidget extends StatefulWidget {
 }
 
 class _AccountWidgetState extends State<AccountWidget> {
-  Widget infoBelowAppBar(ActiveUserProvider activeUserProvider){
+  Widget infoBelowAppBar(ActiveUserProvider activeUserProvider, AppLocalization localization){
     return Container(
       width: double.infinity,
       color: primaryColor,
@@ -43,7 +45,13 @@ class _AccountWidgetState extends State<AccountWidget> {
                     backgroundColor: Colors.white,
                     radius: 22,
                     child: activeUserProvider.activeUser.imageUrl.isNotEmpty ?
-                        Image.network(activeUserProvider.activeUser.imageUrl) :
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(200),
+                          child: Image.network(
+                            activeUserProvider.activeUser.imageUrl,
+                            fit: BoxFit.fill,
+                          ),
+                        ) :
                         Center(
                           child: Icon(Icons.person, color: primaryColor,),
                         ),
@@ -55,7 +63,7 @@ class _AccountWidgetState extends State<AccountWidget> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'Account',
+                    localization.translate('Account').toString(),
                     style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -71,7 +79,7 @@ class _AccountWidgetState extends State<AccountWidget> {
               ),
             SizedBox(height: 10,),
             Text(
-              'Hello !!',
+              localization.translate('Hello !!').toString(),
               style: TextStyle(
                   fontWeight: FontWeight.bold,
                   color: Colors.white
@@ -81,7 +89,7 @@ class _AccountWidgetState extends State<AccountWidget> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Thanks for patronizing us',
+                  localization.translate('We are happy to be here :)').toString(),
                   style: TextStyle(
                       color: Colors.white
                   ),
@@ -90,7 +98,7 @@ class _AccountWidgetState extends State<AccountWidget> {
                 InkWell(
                   onTap: (){},
                   child: Text(
-                    'Sign in now',
+                    localization.translate('Sign in now').toString(),
                     style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
@@ -105,7 +113,7 @@ class _AccountWidgetState extends State<AccountWidget> {
     );
   }
 
-  Widget detailsCard(){
+  Widget detailsCard(AppLocalization localization){
     return Card(
       elevation: 0,
       color: Colors.white,
@@ -113,16 +121,16 @@ class _AccountWidgetState extends State<AccountWidget> {
           padding: const EdgeInsets.symmetric(vertical: 20.0),
           child: Column(
             children: [
-              itemInsideCard('My orders', Icons.assignment, (){}),
-              itemInsideCard('Messages', Icons.email, (){}),
-              itemInsideCard('Notifications', Icons.notifications, (){}),
-              itemInsideCard('Product wishlist', Icons.shopping_bag_rounded, (){
+              itemInsideCard(localization.translate('My orders').toString(), Icons.assignment, (){}),
+              itemInsideCard(localization.translate('Messages').toString(), Icons.email, (){}),
+              //itemInsideCard('Notifications', Icons.notifications, (){}),
+              itemInsideCard(localization.translate('Product wishlist').toString(), Icons.shopping_bag_rounded, (){
                 Navigator.pushNamed(context, WishlistLoading.id);
               }),
-              itemInsideCard('Recently viewed', Icons.visibility, (){
+              itemInsideCard(localization.translate('Recently viewed').toString(), Icons.visibility, (){
                 Navigator.pushNamed(context, RecentlyViewedLoading.id);
               }),
-              itemInsideCard('My cart', Icons.shopping_cart, (){
+              itemInsideCard(localization.translate('My cart').toString(), Icons.shopping_cart, (){
                 Navigator.pushNamed(context, CartLoading.id);
               }),
             ],
@@ -131,7 +139,7 @@ class _AccountWidgetState extends State<AccountWidget> {
     );
   }
 
-  Widget mySettingsCard(){
+  Widget mySettingsCard(AppLocalization localization){
     return Card(
       elevation: 0,
       color: Colors.white,
@@ -145,7 +153,7 @@ class _AccountWidgetState extends State<AccountWidget> {
                   padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
                   child: Row(
                     children: [
-                      Text('Details'),
+                      Text(localization.translate('Details').toString()),
                     ],
                   ),
                 ),
@@ -156,7 +164,7 @@ class _AccountWidgetState extends State<AccountWidget> {
                   padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
                   child: Row(
                     children: [
-                      Text('Address'),
+                      Text(localization.translate('Address').toString()),
                     ],
                   ),
                 ),
@@ -191,11 +199,12 @@ class _AccountWidgetState extends State<AccountWidget> {
 
   @override
   Widget build(BuildContext context) {
+    var localization = AppLocalization.of(context);
     var activeUserProvider = Provider.of<ActiveUserProvider>(context);
     return ListView(
       shrinkWrap: true,
       children: [
-        infoBelowAppBar(activeUserProvider),
+        infoBelowAppBar(activeUserProvider, localization!),
         SizedBox(height: 10,),
         Padding(
           padding: const EdgeInsets.all(20.0),
@@ -203,22 +212,22 @@ class _AccountWidgetState extends State<AccountWidget> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Details',
+                localization.translate('Details').toString(),
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                 ),
               ),
               SizedBox(height: 10,),
-              detailsCard(),
+              detailsCard(localization),
               SizedBox(height: 10,),
               Text(
-                'My settings',
+                localization.translate('My settings').toString(),
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                 ),
               ),
               SizedBox(height: 10,),
-              mySettingsCard(),
+              mySettingsCard(localization),
             ],
           ),
         ),

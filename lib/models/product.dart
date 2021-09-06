@@ -29,10 +29,13 @@ class Product{
   int tax = 0;
   String seller = '';
   List<Review> reviews = [];
+  String orderDate = '';
+  String deliveryDate = '';
+  String status = '';
 
   Product({this.name = 'product', this.price = 0, this.sale = 0, this.rate =0,this.isFavourite=false, this.availabilityInStock=0,
           this.quantityAddedInCart = 0, this.website = '', this.weight = 0, this.size = '', this.productLine = '', this.productCountry = '',
-          this.model = '', this.mainMaterial = '', this.color = '', this.sku = '', this.description = ''});
+          this.model = '', this.mainMaterial = '', this.color = '', this.sku = '', this.description = '', this.discountPrice = 0});
 
   setProductFromJsom(Map<String, dynamic> json){
     rate = json['rating'];

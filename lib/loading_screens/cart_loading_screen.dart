@@ -4,6 +4,7 @@ import 'package:ecommerce/helpers/db_helper.dart';
 import 'package:ecommerce/models/product.dart';
 import 'package:ecommerce/providers/cart_provider.dart';
 import 'package:ecommerce/screens/cart_screen.dart';
+import 'package:ecommerce/services/currency.dart';
 import 'package:ecommerce/services/web_services.dart';
 import 'package:ecommerce/widgets/custom_button.dart';
 import 'package:flutter/material.dart';

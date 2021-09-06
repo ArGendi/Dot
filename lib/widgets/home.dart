@@ -1,9 +1,12 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:ecommerce/models/product.dart';
 import 'package:ecommerce/providers/recently_viewed_provider.dart';
 import 'package:ecommerce/screens/product_details_screen.dart';
 import 'package:ecommerce/widgets/deal_panel.dart';
 import 'package:ecommerce/widgets/product_card.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class HomeWidget extends StatefulWidget {
@@ -22,10 +25,19 @@ class _HomeWidgetState extends State<HomeWidget> {
     Product(name: 'name', price: 200, sale: 0),
     Product(name: 'name', price: 200, sale: 0),
   ];
+  List<String> images = [
+    'assets/images/home_banner_1.jpeg',
+    'assets/images/home_banner_2.jpeg'
+  ];
   var endTime = DateTime.now().millisecondsSinceEpoch + 1000 * 30;
 
   @override
   Widget build(BuildContext context) {
+    Locale locale = Localizations.localeOf(context);
+    print(locale.toString());
+    var format = NumberFormat.simpleCurrency(locale: 'ar');
+    print("CURRENCY SYMBOL ${format.currencySymbol}"); // $
+    print("CURRENCY NAME ${format.currencyName}");
     var size = MediaQuery.of(context).size;
 
     return ListView(
@@ -33,20 +45,47 @@ class _HomeWidgetState extends State<HomeWidget> {
       children: [
         Container(
           height: 150,
-          child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            shrinkWrap: true,
-            itemCount: top.length,
-            itemBuilder: (context, index){
-              return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 5),
-                child: Container(
-                  width: size.width * 0.7,
-                  color: Colors.white,
+          child: CarouselSlider.builder(
+            itemCount: images.length,
+            itemBuilder: (BuildContext context, int index, int pageViewIndex) =>
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 2),
+                child: Image.asset(
+                  images[index],
+                  fit: BoxFit.fill,
                 ),
-              );
-            },
+              ),
+            options: CarouselOptions(
+              //aspectRatio: 16/9,
+              viewportFraction: 0.7,
+              initialPage: 0,
+              enableInfiniteScroll: true,
+              autoPlay: true,
+              autoPlayInterval: Duration(seconds: 5),
+              autoPlayAnimationDuration: Duration(milliseconds: 1000),
+              autoPlayCurve: Curves.fastOutSlowIn,
+              scrollDirection: Axis.horizontal,
+            ),
           ),
+          // child: ListView.builder(
+          //   controller: _scrollController,
+          //   scrollDirection: Axis.horizontal,
+          //   shrinkWrap: true,
+          //   itemCount: images.length,
+          //   itemBuilder: (context, index){
+          //     return Padding(
+          //       padding: const EdgeInsets.symmetric(horizontal: 2),
+          //       child: Container(
+          //         width: size.width * 0.7,
+          //         color: Colors.white,
+          //         child: Image.asset(
+          //           images[index],
+          //           fit: BoxFit.cover,
+          //         ),
+          //       ),
+          //     );
+          //   },
+          // ),
         ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),

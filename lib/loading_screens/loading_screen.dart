@@ -1,5 +1,5 @@
 import 'dart:convert';
-
+import 'package:http/http.dart' as http;
 import 'package:ecommerce/constants.dart';
 import 'package:ecommerce/models/product.dart';
 import 'package:ecommerce/models/user.dart';
@@ -24,6 +24,7 @@ class Loading extends StatefulWidget {
 class _LoadingState extends State<Loading> {
   WebServices _webServices = new WebServices();
   bool _loadingFailed = false;
+  List<dynamic> currencies = [];
 
   Future<bool> getData() async{
     setState(() {_loadingFailed = false;});
@@ -65,6 +66,7 @@ class _LoadingState extends State<Loading> {
     String? email = await HelpFunction.getUserEmail();
     String? name = await HelpFunction.getUserName();
     String? token = await HelpFunction.getUserToken();
+    String? image = await HelpFunction.getUserImage();
     print(id);
     print(token);
     AppUser user = new AppUser(
@@ -72,6 +74,7 @@ class _LoadingState extends State<Loading> {
       email: email != null ? email : '',
       token: token != null ? token : '',
       firstName: name != null ? name : '',
+      imageUrl: image != null ? image : '',
     );
     Provider.of<ActiveUserProvider>(context, listen: false).setActiveUser(user);
     bool receivedData = await getData();
@@ -90,11 +93,21 @@ class _LoadingState extends State<Loading> {
     }
   }
 
+  loadCurrencies() async {
+    String uri = "https://api.exchangeratesapi.io/latest";
+    var response = await http
+        .get(Uri.parse(uri), headers: {"Accept": "application/json"});
+    var responseBody = json.decode(response.body);
+    Map curMap = responseBody['rates'];
+    print(response.body);
+  }
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     getLang();
+    //loadCurrencies();
   }
 
   @override
