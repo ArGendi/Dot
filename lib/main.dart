@@ -16,6 +16,7 @@ import 'package:ecommerce/screens/forget_password_screen.dart';
 import 'package:ecommerce/screens/home_screen.dart';
 import 'package:ecommerce/loading_screens/loading_screen.dart';
 import 'package:ecommerce/screens/login_screen.dart';
+import 'package:ecommerce/screens/order_details_screen.dart';
 import 'package:ecommerce/screens/orders_screen.dart';
 import 'package:ecommerce/screens/product_details_screen.dart';
 import 'package:ecommerce/screens/recently_viewed_screen.dart';
@@ -108,7 +109,7 @@ class _MyAppState extends State<MyApp> {
         return supportedLocales.first;
       },
       locale: Locale(provider.lang, ''),
-      home: FeedBack(product: new Product(name: "product 1", discountPrice: 200),),//widget.lang != null ? Loading() : Welcome(),
+      home: Orders(),//widget.lang != null ? Loading() : Welcome(),
       routes: {
         Welcome.id: (context) => Welcome(),
         Login.id: (context) => Login(),
@@ -124,6 +125,7 @@ class _MyAppState extends State<MyApp> {
         WishlistLoading.id: (context) => WishlistLoading(),
         CartLoading.id: (context) => CartLoading(),
         RecentlyViewedLoading.id: (context) => RecentlyViewedLoading(),
+        Orders.id: (context) => Orders(),
       },
     );
   }

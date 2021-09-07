@@ -1,6 +1,9 @@
+import 'package:ecommerce/constants.dart';
 import 'package:ecommerce/loading_screens/cart_loading_screen.dart';
+import 'package:ecommerce/models/order.dart';
 import 'package:ecommerce/models/product.dart';
 import 'package:ecommerce/providers/orders_provider.dart';
+import 'package:ecommerce/screens/order_details_screen.dart';
 import 'package:ecommerce/services/search.dart';
 import 'package:ecommerce/widgets/custom_button.dart';
 import 'package:ecommerce/widgets/recently_viewed_banner.dart';
@@ -9,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class Orders extends StatefulWidget {
+  static String id = 'orders';
   const Orders({Key? key}) : super(key: key);
 
   @override
@@ -156,7 +160,7 @@ class _OrdersState extends State<Orders> {
                   itemBuilder: (context, index){
                     return Column(
                       children: [
-                        orderDetails(provider.openedOrders[index], index),
+                        orderCard(provider.openedOrders[index], index),
                         Divider(
                           height: 20,
                           color: Colors.grey[500],
@@ -172,7 +176,7 @@ class _OrdersState extends State<Orders> {
                   itemBuilder: (context, index){
                     return Column(
                       children: [
-                        orderDetails(provider.closedOrders[index], index),
+                        orderCard(provider.closedOrders[index], index),
                         Divider(
                           height: 20,
                           color: Colors.grey[500],
@@ -188,15 +192,19 @@ class _OrdersState extends State<Orders> {
     );
   }
 
-  Widget orderDetails(Product product, int index){
-    return Column(
-      children: [
-        if(index == 0)
-          Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
+  Widget orderCard(Order order, int index){
+    return InkWell(
+      onTap: (){
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => OrderDetails(order: order)),
+        );
+      },
+      child: Column(
+        children: [
+          if(index == 0)
             Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Container(
                   width: 80,
@@ -206,109 +214,93 @@ class _OrdersState extends State<Orders> {
                     borderRadius: BorderRadius.circular(5),
                   ),
                 ),
-                SizedBox(width: 10,),
                 Text(
-                  '\$ ' + product.discountPrice.toStringAsFixed(2),
+                  'Date of order',
                   style: TextStyle(
+                    fontSize: 11,
                     fontWeight: FontWeight.bold,
-                    color: Colors.grey[200],
+                  ),
+                ),
+                Text(
+                  'Delivery date',
+                  style: TextStyle(
+                    fontSize: 11,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text(
+                  'status',
+                  style: TextStyle(
+                    fontSize: 11,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ],
             ),
-            Text(
-              'Date of order',
-              style: TextStyle(
-                fontSize: 11,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            Text(
-              'Delivery date',
-              style: TextStyle(
-                fontSize: 11,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            Text(
-              'status',
-              style: TextStyle(
-                fontSize: 11,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ],
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Container(
-                  width: 80,
-                  height: 100,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(5),
-                  ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(
+                width: 80,
+                height: 100,
+                decoration: BoxDecoration(
+                  color: primaryColor,
+                  borderRadius: BorderRadius.circular(5),
                 ),
-                SizedBox(width: 10,),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                          border: Border.all(color: Colors.grey)
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 6),
-                        child: Center(
-                          child: Text(product.quantityAddedInCart.toString()),
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        order.products.length.toString(),
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
-                    ),
-                    SizedBox(height: 5,),
-                    Text(
-                      '\$ ' + product.discountPrice.toStringAsFixed(2),
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold
+                      Text(
+                        order.products.length > 1 ? 'Items' : 'Item',
+                        style: TextStyle(
+                          //fontSize: 12,
+                          color: Colors.white
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            Text(
-              '31/3/2012',
-              style: TextStyle(
-                fontSize: 12,
-              ),
-            ),
-            Text(
-              '5/4/2012',
-              style: TextStyle(
-                fontSize: 12,
-              ),
-            ),
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.red[100],
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(5.0),
-                child: Text(
-                  'Arrived',
-                  style: TextStyle(
-                    fontSize: 12,
+                    ],
                   ),
                 ),
               ),
-            ),
-          ],
-        ),
-      ],
+              Text(
+                '31/3/2012',
+                style: TextStyle(
+                  fontSize: 13,
+                ),
+              ),
+              Text(
+                '5/4/2012',
+                style: TextStyle(
+                  fontSize: 13,
+                ),
+              ),
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.red[100],
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(5.0),
+                  child: Text(
+                    'Arrived',
+                    style: TextStyle(
+                      fontSize: 12,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 
@@ -351,7 +343,8 @@ class _OrdersState extends State<Orders> {
           )
         ],
       ),
-      body: filledOrders(provider),
+      body: provider.openedOrders.isEmpty && provider.closedOrders.isEmpty ?
+             emptyOrders() : filledOrders(provider),
     );
   }
 }

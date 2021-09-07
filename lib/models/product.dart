@@ -31,7 +31,6 @@ class Product{
   List<Review> reviews = [];
   String orderDate = '';
   String deliveryDate = '';
-  String status = '';
 
   Product({this.name = 'product', this.price = 0, this.sale = 0, this.rate =0,this.isFavourite=false, this.availabilityInStock=0,
           this.quantityAddedInCart = 0, this.website = '', this.weight = 0, this.size = '', this.productLine = '', this.productCountry = '',
