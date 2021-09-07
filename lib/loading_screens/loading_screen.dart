@@ -1,4 +1,7 @@
 import 'dart:convert';
+import 'package:ecommerce/models/category.dart';
+import 'package:ecommerce/providers/categories_provider.dart';
+import 'package:ecommerce/providers/sales_products_provider.dart';
 import 'package:http/http.dart' as http;
 import 'package:ecommerce/constants.dart';
 import 'package:ecommerce/models/product.dart';
@@ -26,10 +29,40 @@ class _LoadingState extends State<Loading> {
   bool _loadingFailed = false;
   List<dynamic> currencies = [];
 
-  Future<bool> getData() async{
+  Future<bool> getCategories() async{
     setState(() {_loadingFailed = false;});
-    var provider = Provider.of<AllProductsProvider>(context, listen: false);
+    var provider = Provider.of<CategoriesProvider>(context, listen: false);
     if(provider.items.isEmpty) {
+      var response = await _webServices.get(
+          'https://souk--server.herokuapp.com/api/category');
+      if (response.statusCode == 200) {
+        print('getting all categories');
+        var body = jsonDecode(response.body);
+        for(var category in body['data']){
+          Category category = new Category(
+            id: body['_id'],
+            name: body['name'],
+            image: body['image'],
+          );
+          provider.addItem(category);
+        }
+        return true;
+      }
+      else {
+        print('error get all categories');
+        setState(() {_loadingFailed = true;});
+        return false;
+      }
+    }
+    return true;
+  }
+
+  Future<bool> getProducts() async{
+    setState(() {_loadingFailed = false;});
+    var productsProvider = Provider.of<AllProductsProvider>(context, listen: false);
+    var categoryProvider = Provider.of<CategoriesProvider>(context, listen: false);
+    var salesProvider = Provider.of<SalesProvider>(context, listen: false);
+    if(productsProvider.items.isEmpty) {
       var response = await _webServices.get(
           'https://souk--server.herokuapp.com/api/product');
       if (response.statusCode == 200) {
@@ -39,12 +72,16 @@ class _LoadingState extends State<Loading> {
           Product product = new Product();
           product.setProductFromJsom(item);
           // missing assign reviews
-          for(var image in item['images']) {
-            List<dynamic> imageData = image['data'];
-            List<int> buffer = imageData.cast<int>();
-            product.images.add(buffer);
-          }
-          provider.addItem(product);
+          // for(var image in item['images']) {
+          //   List<dynamic> imageData = image['data'];
+          //   List<int> buffer = imageData.cast<int>();
+          // }
+          productsProvider.addItem(product);
+          int categoryIndex = categoryProvider.items.indexWhere((element) => element.id == product.categoryId);
+          if(categoryIndex > 0)
+            categoryProvider.items[categoryIndex].products.add(product);
+          if(product.discountPrice < product.price)
+            salesProvider.addItem(product);
         }
         print('set all products');
         return true;
@@ -56,6 +93,48 @@ class _LoadingState extends State<Loading> {
       }
     }
     return true;
+  }
+
+  fillProducts(){
+    var provider = Provider.of<AllProductsProvider>(context, listen: false);
+    Product product = new Product(
+      name: 'Product 1', price: 220, discountPrice: 150,
+      description: 'product 1 description',
+      sku: 'dh9ddh8dhjh3l3nf',
+      availabilityInStock: 12,
+      color: 'black',
+      mainMaterial: 'iron',
+      model: 'model 2',
+      productCountry: 'England',
+      productLine: 'n8hf8fg80fn0f',
+      size: "12 x 15 x 10",
+      weight: 10,
+      website: 'http://www.demo.com'
+    );
+    product.images.add('assets/images/1.PNG');
+    product.images.add('assets/images/2.PNG');
+    provider.addItem(product);
+    int num = 2;
+    for(int i=0; i<3; i++){
+      Product prod = new Product(
+          name: 'Product $num', price: 200, discountPrice: 190,
+          description: 'product $num description',
+          sku: 'dh9ddh8dhjh3l3nf',
+          availabilityInStock: 12,
+          color: 'black',
+          mainMaterial: 'iron',
+          model: 'model 2',
+          productCountry: 'England',
+          productLine: 'n8hf8fg80fn0f',
+          size: "12 x 15 x 10",
+          weight: 10,
+          website: 'http://www.demo.com'
+      );
+      num += 1;
+      prod.images.add('assets/images/$num.PNG');
+      provider.addItem(prod);
+    }
+
   }
 
   getLang() async{
@@ -77,9 +156,12 @@ class _LoadingState extends State<Loading> {
       imageUrl: image != null ? image : '',
     );
     Provider.of<ActiveUserProvider>(context, listen: false).setActiveUser(user);
-    bool receivedData = await getData();
-    if(receivedData)
-      Navigator.pushReplacementNamed(context, Home.id);
+    bool recCategories = await getCategories();
+    if(recCategories){
+      bool recProducts = await getProducts();
+      if(recProducts)
+        Navigator.pushReplacementNamed(context, Home.id);
+    }
   }
 
   dummy() async{
@@ -107,7 +189,6 @@ class _LoadingState extends State<Loading> {
     // TODO: implement initState
     super.initState();
     getLang();
-    //loadCurrencies();
   }
 
   @override

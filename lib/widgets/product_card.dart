@@ -33,7 +33,7 @@ class ProductCard extends StatelessWidget {
                         height: 100,
                         color: Colors.grey[300],
                         child: product.images.isNotEmpty ?
-                            Image.memory(Uint8List.fromList(product.images[0])) : Container(),
+                            Image.asset(product.images[0]) : Container(),
                       ),
                       SizedBox(height: 5,),
                       Text(

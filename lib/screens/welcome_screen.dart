@@ -31,7 +31,7 @@ class _WelcomeState extends State<Welcome> {
                   ),
                 ),
                 Text(
-                  'Dot',
+                  'DotNow',
                   style: TextStyle(
                     fontSize: 26,
                     fontWeight: FontWeight.bold,

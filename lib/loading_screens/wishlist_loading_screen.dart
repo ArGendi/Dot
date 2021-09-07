@@ -41,7 +41,7 @@ class _WishlistLoadingState extends State<WishlistLoading> {
           for(var image in body['data'][0]['images']) {
             List<dynamic> imageData = image['data'];
             List<int> buffer = imageData.cast<int>();
-            product.images.add(buffer);
+            //product.images.add(buffer);
           }
           provider.addItem(product, false);
           Navigator.pushReplacementNamed(context, Wishlist.id);

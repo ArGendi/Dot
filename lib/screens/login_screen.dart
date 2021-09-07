@@ -159,13 +159,17 @@ class _LoginState extends State<Login> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  SizedBox(height: 10,),
-                  Container(
-                    width: size.width * .7,
-                    height: size.height * .3,
-                    color: Colors.grey.shade200,
+                  //SizedBox(height: 10,),
+                  Image.asset(
+                    'assets/images/logo.png',
+                    width: 300,
                   ),
-                  SizedBox(height: 20,),
+                  // Container(
+                  //   width: size.width * .7,
+                  //   height: size.height * .3,
+                  //   color: Colors.grey.shade200,
+                  // ),
+                  //SizedBox(height: 20,),
                   if(_errorMsg.isNotEmpty)
                     Text(
                       _errorMsg,

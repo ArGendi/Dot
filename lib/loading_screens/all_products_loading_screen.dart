@@ -36,7 +36,7 @@ class _AllProductsLoadingState extends State<AllProductsLoading> {
           for(var image in item['images']) {
             List<dynamic> imageData = image['data'];
             List<int> buffer = imageData.cast<int>();
-            product.images.add(buffer);
+            //product.images.add(buffer);
           }
           provider.addItem(product);
         }

@@ -271,13 +271,13 @@ class _OrdersState extends State<Orders> {
                 ),
               ),
               Text(
-                '31/3/2012',
+                '31/3/2021',
                 style: TextStyle(
                   fontSize: 13,
                 ),
               ),
               Text(
-                '5/4/2012',
+                '15/4/2021',
                 style: TextStyle(
                   fontSize: 13,
                 ),
@@ -290,7 +290,7 @@ class _OrdersState extends State<Orders> {
                 child: Padding(
                   padding: const EdgeInsets.all(5.0),
                   child: Text(
-                    'Arrived',
+                    'Pending',
                     style: TextStyle(
                       fontSize: 12,
                     ),

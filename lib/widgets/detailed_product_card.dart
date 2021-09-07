@@ -21,7 +21,7 @@ class _DetailedProductCardState extends State<DetailedProductCard> {
 
   @override
   Widget build(BuildContext context) {
-    double priceAfterSale = (widget.product.price / 100) * (100 - widget.product.sale);
+    double sale = (1- (widget.product.discountPrice / widget.product.price)) * 100;
     return Card(
       elevation: 0,
       color: Colors.white,
@@ -39,6 +39,10 @@ class _DetailedProductCardState extends State<DetailedProductCard> {
                     width: 100,
                     height: 100,
                     color: Colors.grey[300],
+                    child: Image.asset(
+                      widget.product.images[0],
+                      fit: BoxFit.cover,
+                    ),
                   ),
                   SizedBox(width: 10,),
                   Expanded(
@@ -52,7 +56,7 @@ class _DetailedProductCardState extends State<DetailedProductCard> {
                           ),
                         ),
                         Text(
-                          '\$ ' + priceAfterSale.toStringAsFixed(2),
+                          '\$ ' + (widget.product.discountPrice * widget.product.quantityAddedInCart).toStringAsFixed(2),
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 16,
@@ -74,7 +78,7 @@ class _DetailedProductCardState extends State<DetailedProductCard> {
                               color: Color(0xffffecde),
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
-                                child: Text(widget.product.sale.toString() + '%'),
+                                child: Text(sale.ceil().toString() + '%'),
                               ),
                             )
                           ],

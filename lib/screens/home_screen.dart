@@ -67,7 +67,7 @@ class _HomeState extends State<Home> {
                 children: [
                   Icon(
                     Icons.search,
-                    color: Colors.black,
+                    color: Colors.grey[600],
                   )
                 ],
               ),
@@ -77,7 +77,7 @@ class _HomeState extends State<Home> {
         actions: [
           IconButton(
             onPressed: (){
-              Navigator.pushNamed(context, CartLoading.id);
+              Navigator.pushNamed(context, Cart.id);
             },
             icon: Icon(
               Icons.shopping_cart,

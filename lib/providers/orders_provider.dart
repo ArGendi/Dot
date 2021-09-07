@@ -6,15 +6,7 @@ import 'package:flutter/cupertino.dart';
 import '../constants.dart';
 
 class OrdersProvider extends ChangeNotifier {
-  List<Order> _openedOrders = [
-    new Order(products: [
-      new Product(name: 'product 1', price: 200, discountPrice: 180),
-      new Product(name: 'product 1', price: 200, discountPrice: 180)
-    ]),
-    new Order(products: [
-      new Product(name: 'product 1', price: 200, discountPrice: 180),
-    ])
-  ];
+  List<Order> _openedOrders = [];
   List<Order> _closedOrders = [];
   //DBHelper _dbHelper = new DBHelper();
 

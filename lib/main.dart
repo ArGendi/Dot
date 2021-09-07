@@ -4,8 +4,10 @@ import 'package:ecommerce/providers/active_user_provider.dart';
 import 'package:ecommerce/providers/all_products_provider.dart';
 import 'package:ecommerce/providers/app_language_provider.dart';
 import 'package:ecommerce/providers/cart_provider.dart';
+import 'package:ecommerce/providers/categories_provider.dart';
 import 'package:ecommerce/providers/orders_provider.dart';
 import 'package:ecommerce/providers/recently_viewed_provider.dart';
+import 'package:ecommerce/providers/sales_products_provider.dart';
 import 'package:ecommerce/providers/wishlist_provider.dart';
 import 'package:ecommerce/loading_screens/all_products_loading_screen.dart';
 import 'package:ecommerce/screens/all_products_screen.dart';
@@ -61,6 +63,12 @@ void main() async{
       ChangeNotifierProvider<OrdersProvider>(
         create: (context) => OrdersProvider(),
       ),
+      ChangeNotifierProvider<CategoriesProvider>(
+        create: (context) => CategoriesProvider(),
+      ),
+      ChangeNotifierProvider<SalesProvider>(
+        create: (context) => SalesProvider(),
+      ),
     ],
     child: MyApp(lang: lang,),
   ));
@@ -109,7 +117,7 @@ class _MyAppState extends State<MyApp> {
         return supportedLocales.first;
       },
       locale: Locale(provider.lang, ''),
-      home: Orders(),//widget.lang != null ? Loading() : Welcome(),
+      home: Loading(),//widget.lang != null ? Loading() : Welcome(),
       routes: {
         Welcome.id: (context) => Welcome(),
         Login.id: (context) => Login(),

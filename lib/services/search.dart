@@ -90,7 +90,7 @@ class Search extends SearchDelegate{
   @override
   Widget buildResults(BuildContext context) {
     var provider = Provider.of<AllProductsProvider>(context);
-    List<Product> filteredList = provider.items.where((element) => element.name.contains(query)).toList();
+    List<Product> filteredList = provider.items.where((element) => element.name.toLowerCase().contains(query)).toList();
     return Padding(
       padding: const EdgeInsets.all(20.0),
       child: GridView.builder(
@@ -120,78 +120,106 @@ class Search extends SearchDelegate{
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    return Padding(
+    var provider = Provider.of<AllProductsProvider>(context);
+    List<Product> filteredList = provider.items.where((element) => element.name.toLowerCase().contains(query)).toList();
+    if(query.isNotEmpty)
+      return Padding(
       padding: const EdgeInsets.all(20.0),
-      child: ListView(
+      child: GridView.builder(
+        physics: const NeverScrollableScrollPhysics(),
         shrinkWrap: true,
-        children: [
-          panel('Most checked', () {}),
-          SizedBox(height: 10,),
-          GridView.builder(
-            physics: const NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              crossAxisSpacing: 5,
-              mainAxisSpacing: 5,
-            ),
-            itemCount: mostChecked.length,
-            itemBuilder: (BuildContext context, int index){
-              return ProductCard(
-                product: mostChecked[index],
-                onClick: (){},
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          crossAxisSpacing: 5,
+          mainAxisSpacing: 5,
+        ),
+        itemCount: filteredList.length,
+        itemBuilder: (BuildContext context, int index){
+          return ProductCard(
+            product: filteredList[index],
+            onClick: (){
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ProductDetails(product: filteredList[index])),
               );
             },
-          ),
-          SizedBox(height: 10,),
-          panel('General product', () {}),
-          SizedBox(height: 10,),
-          GridView.builder(
-            physics: const NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              crossAxisSpacing: 5,
-              mainAxisSpacing: 5,
-            ),
-            itemCount: general.length,
-            itemBuilder: (BuildContext context, int index){
-              return ProductCard(
-                product: general[index],
-                onClick: (){},
-              );
-            },
-          ),
-          SizedBox(height: 10,),
-          //ad banner
-          Container(
-            width: double.infinity,
-            height: 150,
-            color: Colors.white,
-            child: Text(' Advert banner'),
-          ),
-          SizedBox(height: 10,),
-          panel('Most viewed', () {}),
-          SizedBox(height: 10,),
-          GridView.builder(
-            physics: const NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              crossAxisSpacing: 5,
-              mainAxisSpacing: 5,
-            ),
-            itemCount: mostViewed.length,
-            itemBuilder: (BuildContext context, int index){
-              return ProductCard(
-                product: mostViewed[index],
-                onClick: (){},
-              );
-            },
-          ),
-        ],
+          );
+        },
       ),
     );
+    else return Container();
+    // return Padding(
+    //   padding: const EdgeInsets.all(20.0),
+    //   child: ListView(
+    //     shrinkWrap: true,
+    //     children: [
+    //       panel('Most checked', () {}),
+    //       SizedBox(height: 10,),
+    //       GridView.builder(
+    //         physics: const NeverScrollableScrollPhysics(),
+    //         shrinkWrap: true,
+    //         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+    //           crossAxisCount: 2,
+    //           crossAxisSpacing: 5,
+    //           mainAxisSpacing: 5,
+    //         ),
+    //         itemCount: mostChecked.length,
+    //         itemBuilder: (BuildContext context, int index){
+    //           return ProductCard(
+    //             product: mostChecked[index],
+    //             onClick: (){},
+    //           );
+    //         },
+    //       ),
+    //       SizedBox(height: 10,),
+    //       panel('General product', () {}),
+    //       SizedBox(height: 10,),
+    //       GridView.builder(
+    //         physics: const NeverScrollableScrollPhysics(),
+    //         shrinkWrap: true,
+    //         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+    //           crossAxisCount: 2,
+    //           crossAxisSpacing: 5,
+    //           mainAxisSpacing: 5,
+    //         ),
+    //         itemCount: general.length,
+    //         itemBuilder: (BuildContext context, int index){
+    //           return ProductCard(
+    //             product: general[index],
+    //             onClick: (){},
+    //           );
+    //         },
+    //       ),
+    //       SizedBox(height: 10,),
+    //       //ad banner
+    //       Container(
+    //         width: double.infinity,
+    //         height: 150,
+    //         color: Colors.white,
+    //         child: Text(' Advert banner'),
+    //       ),
+    //       SizedBox(height: 10,),
+    //       panel('Most viewed', () {}),
+    //       SizedBox(height: 10,),
+    //       GridView.builder(
+    //         physics: const NeverScrollableScrollPhysics(),
+    //         shrinkWrap: true,
+    //         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+    //           crossAxisCount: 2,
+    //           crossAxisSpacing: 5,
+    //           mainAxisSpacing: 5,
+    //         ),
+    //         itemCount: mostViewed.length,
+    //         itemBuilder: (BuildContext context, int index){
+    //           return ProductCard(
+    //             product: mostViewed[index],
+    //             onClick: (){},
+    //           );
+    //         },
+    //       ),
+    //     ],
+    //   ),
+    // );
     throw UnimplementedError();
   }
 

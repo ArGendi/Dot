@@ -30,7 +30,7 @@
   "App version": "أصدار التطبيق",
   "Hello !!": "أهلا !!",
   "We are happy to be here :)": "نحن سعداء بوجودك هنا",
-  "Sign in now": "تسجيل الدخول الأن",
+  "Sign up now": "تسجيل الدخول الأن",
   "My orders": "طلباتي",
   "Messages": "الرسائل",
   "Product wishlist": "قائمة المفضلة",
@@ -41,5 +41,10 @@
   "About Us": "معلومات عنا",
   "Settings": "الأعدادات",
   "Info about the app": "معلومات عن التطبيق",
-  "My settings": "أعداداتي الخاصة"
+  "My settings": "أعداداتي الخاصة",
+  "Sales": "الخصومات",
+  "Fashion": "الموضة",
+  "Electric": "الأجهزة الكهربائية",
+  "Perfumes": "العطور",
+  "New deals": "الجديد"
 }

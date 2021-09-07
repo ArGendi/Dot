@@ -1,8 +1,15 @@
 import 'package:ecommerce/constants.dart';
 import 'package:ecommerce/models/product.dart';
+import 'package:ecommerce/providers/all_products_provider.dart';
+import 'package:ecommerce/providers/recently_viewed_provider.dart';
 import 'package:ecommerce/screens/cart_screen.dart';
+import 'package:ecommerce/screens/product_details_screen.dart';
 import 'package:ecommerce/services/search.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../app_localization.dart';
 
 class Shop extends StatefulWidget {
   const Shop({Key? key}) : super(key: key);
@@ -12,30 +19,32 @@ class Shop extends StatefulWidget {
 }
 
 class _ShopState extends State<Shop> {
-  List<String> shops = ['Fashion', 'Food', 'Furniture', 'Electrical'];
-  List<List<Product>> allProducts = [
-    [
-      new Product(name: 'name', price: 220, sale: 10),
-      new Product(name: 'name', price: 400, sale: 20),
-      new Product(name: 'name', price: 220, sale: 10),
-      new Product(name: 'name', price: 400, sale: 20),
-    ],
-    [
-      new Product(name: 'name', price: 220, sale: 10),
-      new Product(name: 'name', price: 400, sale: 20),
-    ],
-    [
-      new Product(name: 'name', price: 220, sale: 10),
-      new Product(name: 'name', price: 400, sale: 20),
-    ],
-    [
-      new Product(name: 'name', price: 220, sale: 10),
-      new Product(name: 'name', price: 400, sale: 20),
-    ],
-  ];
+  List<String> shops = ['Fashion'];
+  // List<List<Product>> allProducts = [
+  //   [
+  //     new Product(name: 'name', price: 220, sale: 10),
+  //     new Product(name: 'name', price: 400, sale: 20),
+  //     new Product(name: 'name', price: 220, sale: 10),
+  //     new Product(name: 'name', price: 400, sale: 20),
+  //   ],
+  //   [
+  //     new Product(name: 'name', price: 220, sale: 10),
+  //     new Product(name: 'name', price: 400, sale: 20),
+  //   ],
+  //   [
+  //     new Product(name: 'name', price: 220, sale: 10),
+  //     new Product(name: 'name', price: 400, sale: 20),
+  //   ],
+  //   [
+  //     new Product(name: 'name', price: 220, sale: 10),
+  //     new Product(name: 'name', price: 400, sale: 20),
+  //   ],
+  // ];
 
   @override
   Widget build(BuildContext context) {
+    var provider = Provider.of<AllProductsProvider>(context);
+    var localization = AppLocalization.of(context);
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       child: ListView.builder(
@@ -51,7 +60,7 @@ class _ShopState extends State<Shop> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(shops[index],),
+                    Text(localization!.translate(shops[index]).toString(),),
                     Divider(
                       height: 20,
                       color: Colors.grey,
@@ -62,21 +71,34 @@ class _ShopState extends State<Shop> {
                       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 3,
                           crossAxisSpacing: 5,
-                          mainAxisSpacing: 5,
+                          mainAxisSpacing: 15,
                           childAspectRatio: 0.7
                       ),
-                      itemCount: allProducts[index].length,
+                      itemCount: 4,
                       itemBuilder: (BuildContext context, int i){
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Expanded(
-                              child: Container(
-                                color: Colors.grey[200],
+                        return InkWell(
+                          onTap: (){
+                            Provider.of<RecentlyViewedProvider>(context, listen: false).addItem(provider.items[i], true);
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => ProductDetails(product: provider.items[i])),
+                            );
+                          },
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Expanded(
+                                child: Container(
+                                  color: Colors.grey[200],
+                                  child: Image.asset(
+                                    provider.items[i].images[0],
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
                               ),
-                            ),
-                            Text(allProducts[index][i].name)
-                          ],
+                              Text(provider.items[i].name)
+                            ],
+                          ),
                         );
                       },
                     )

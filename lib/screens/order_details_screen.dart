@@ -78,6 +78,10 @@ class _OrderDetailsState extends State<OrderDetails> {
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(5),
                   ),
+                  child: Image.asset(
+                    order.products[index].images[0],
+                    fit: BoxFit.cover,
+                  ),
                 ),
                 SizedBox(width: 10,),
                 Column(
@@ -125,7 +129,7 @@ class _OrderDetailsState extends State<OrderDetails> {
               child: Padding(
                 padding: const EdgeInsets.all(5.0),
                 child: Text(
-                  'Arrived',
+                  'Pending',
                   style: TextStyle(
                     fontSize: 12,
                   ),

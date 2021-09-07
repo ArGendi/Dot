@@ -32,6 +32,7 @@ class _RecentlyViewedBannerState extends State<RecentlyViewedBanner> {
                     width: 80,
                     height: 80,
                     color: Colors.grey[200],
+                    child: Image.asset(recentlyViewedProvider.items[index].images[0]),
                   ),
                   SizedBox(height: 5,),
                   Text('\$ ' + recentlyViewedProvider.items[index].discountPrice.toStringAsFixed(2)),

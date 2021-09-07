@@ -12,15 +12,18 @@ class PaymentInfo extends StatelessWidget {
     var cartProvider = Provider.of<CartProvider>(context);
     double delivery = 15;
     double sum = 0;
-    for(var item in cartProvider.items)
-      sum += item.discountPrice;
+    int itemsQuantity = 0;
+    for(var item in cartProvider.items) {
+      sum += item.discountPrice * item.quantityAddedInCart;
+      itemsQuantity += item.quantityAddedInCart;
+    }
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
         Text(
-          'Items: ' + cartProvider.items.length.toString(),
+          'Items: ' + itemsQuantity.toString(),
           style: TextStyle(
             fontSize: 16,
           ),

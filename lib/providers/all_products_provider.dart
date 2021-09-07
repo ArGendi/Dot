@@ -3,10 +3,7 @@ import 'package:ecommerce/models/user.dart';
 import 'package:flutter/cupertino.dart';
 
 class AllProductsProvider extends ChangeNotifier {
-  List<Product> _items = [
-    new Product(name: 'product 1', price: 200),
-    new Product(name: 'product 2', price: 200),
-  ];
+  List<Product> _items = [];
 
   List<Product> get items => _items;
 

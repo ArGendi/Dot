@@ -2,7 +2,9 @@ import 'dart:typed_data';
 
 import 'package:ecommerce/loading_screens/cart_loading_screen.dart';
 import 'package:ecommerce/models/product.dart';
+import 'package:ecommerce/providers/all_products_provider.dart';
 import 'package:ecommerce/providers/cart_provider.dart';
+import 'package:ecommerce/providers/recently_viewed_provider.dart';
 import 'package:ecommerce/providers/wishlist_provider.dart';
 import 'package:ecommerce/screens/cart_screen.dart';
 import 'package:ecommerce/screens/wishlist_screen.dart';
@@ -82,14 +84,15 @@ class _ProductDetailsState extends State<ProductDetails> {
                 Icons.add_shopping_cart,
                 color: Colors.white,
               ),
-              Text(
-                !_addedToCart ? 'Add to cart' : 'Done :)',
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold
-                ),
-              ),
+              !_addedToCart ?
+                Text(
+                  'Add to cart',
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold
+                  ),
+                ) : Icon(Icons.check, color: Colors.white,),
               Icon(
                 Icons.add_shopping_cart,
                 color: widget.product.availabilityInStock != 0 ? primaryColor : Colors.grey,
@@ -126,7 +129,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                 controller: controller,
                 children: [
                   for(var image in widget.product.images)
-                    Image.memory(Uint8List.fromList(image),),
+                    Image.asset(image),
                 ],
                 onPageChanged: (value){
                   setState(() {
@@ -370,6 +373,7 @@ class _ProductDetailsState extends State<ProductDetails> {
   // }
 
   Widget similarProductsCard(){
+    var provider = Provider.of<AllProductsProvider>(context);
     return Card(
       elevation: 0,
       color: Colors.white,
@@ -379,50 +383,61 @@ class _ProductDetailsState extends State<ProductDetails> {
           scrollDirection: Axis.horizontal,
           child: Row(
             children: [
-              for(int index = 0; index < _similarProducts.length; index+=1)
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        width: 120,
-                        height: 100,
-                        color: Colors.grey[200],
-                      ),
-                      Text(
-                        _similarProducts[index].name,
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
+              for(int index = 0; index < 4; index+=1)
+                if(provider.items[index].name != widget.product.name)
+                InkWell(
+                  onTap: (){
+                    Provider.of<RecentlyViewedProvider>(context, listen: false).addItem(provider.items[index], false);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => ProductDetails(product: provider.items[index])),
+                    );
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          width: 120,
+                          height: 100,
+                          color: Colors.grey[200],
+                          child: Image.asset(provider.items[index].images[0]),
                         ),
-                      ),
-                      Text(
-                        '\$ ' + ((_similarProducts[index].price / 100) * (100 - _similarProducts[index].sale)).toStringAsFixed(2),
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
+                        Text(
+                          provider.items[index].name,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      ),
-                      //SizedBox(height: 5,),
-                      Row(
-                        children: [
-                          Text(
-                            '\$ ' + _similarProducts[index].price.toStringAsFixed(2),
-                            style: TextStyle(
-                              decoration: TextDecoration.lineThrough,
-                            ),
+                        Text(
+                          '\$ ' + provider.items[index].discountPrice.toStringAsFixed(2),
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
                           ),
-                          SizedBox(width: 5,),
-                          Card(
-                            elevation: 0,
-                            color: Color(0xffffecde),
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                              child: Text(_similarProducts[index].sale.toString() + '%'),
+                        ),
+                        //SizedBox(height: 5,),
+                        Row(
+                          children: [
+                            Text(
+                              '\$ ' + provider.items[index].price.toStringAsFixed(2),
+                              style: TextStyle(
+                                decoration: TextDecoration.lineThrough,
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                    ],
+                            SizedBox(width: 5,),
+                            Card(
+                              elevation: 0,
+                              color: Color(0xffffecde),
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                child: Text(((1-(provider.items[index].discountPrice / provider.items[index].price))*100).truncate().toString() + '%'),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 )
             ],
@@ -538,7 +553,7 @@ class _ProductDetailsState extends State<ProductDetails> {
         actions: [
           IconButton(
             onPressed: (){
-              Navigator.pushNamed(context, CartLoading.id);
+              Navigator.pushNamed(context, Cart.id);
             },
             icon: Icon(
               Icons.shopping_cart,

@@ -30,7 +30,7 @@
   "App version": "App version",
   "Hello !!": "Hello !!",
   "We are happy to be here :)": "We are happy to be here :)",
-  "Sign in now": "Sign in now",
+  "Sign up now": "Sign in now",
   "My orders": "My orders",
   "Messages": "Messages",
   "Product wishlist": "Product wishlist",
@@ -41,5 +41,10 @@
   "About Us": "About Us",
   "Settings": "Settings",
   "Info about the app": "Info about the app",
-  "My settings": "My settings"
+  "My settings": "My settings",
+  "Sales": "Sales",
+  "Fashion": "Fashion",
+  "Electric": "Electric",
+  "Perfumes": "Perfumes",
+  "New deals": "New deals"
 }

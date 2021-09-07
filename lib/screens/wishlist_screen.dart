@@ -56,6 +56,7 @@ class _WishlistState extends State<Wishlist> {
               DetailedProductCard(
                 product: reversedItems[index],
                 onDelete: (){
+                  reversedItems[index].isFavourite = false;
                   deleteItemFromWishlist(reversedItems[index]);
                 },
                 onClick: () {

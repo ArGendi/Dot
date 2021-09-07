@@ -1,4 +1,6 @@
+import 'package:ecommerce/models/order.dart';
 import 'package:ecommerce/providers/cart_provider.dart';
+import 'package:ecommerce/providers/orders_provider.dart';
 import 'package:ecommerce/widgets/custom_textfield.dart';
 import 'package:ecommerce/widgets/payment_info.dart';
 import 'package:flutter/cupertino.dart';
@@ -19,6 +21,7 @@ class _CheckoutState extends State<Checkout> {
   bool _isCreditCard = true;
   bool _saveCreditCard = false;
   bool _savePayPal = false;
+  bool _validate = false;
   final _creditFormKey = GlobalKey<FormState>();
   final _paypalFormKey = GlobalKey<FormState>();
   String _cardNumber = '';
@@ -249,7 +252,7 @@ class _CheckoutState extends State<Checkout> {
           ),
           SizedBox(height: 20,),
           CustomButton(
-            text: 'Validate orders',
+            text: !_validate ? 'Validate orders' : "Done",
             onclick: _onCreditCardSubmit,
           ),
         ],
@@ -325,7 +328,7 @@ class _CheckoutState extends State<Checkout> {
           ),
           SizedBox(height: 20,),
           CustomButton(
-            text: 'Validate orders',
+            text: !_validate ? 'Validate orders' : "Done",
             onclick: _onPayPalSubmit,
           ),
         ],
@@ -340,6 +343,12 @@ class _CheckoutState extends State<Checkout> {
       _creditFormKey.currentState!.save();
       print(_nameOnCard);
       print(_cvc);
+      Order order = new Order(products: []);
+      order.products = [...Provider.of<CartProvider>(context, listen: false).items];
+      Provider.of<OrdersProvider>(context, listen: false).addItemInOpenedOrders(order);
+      setState(() {
+        _validate = true;
+      });
     }
   }
 
@@ -350,6 +359,12 @@ class _CheckoutState extends State<Checkout> {
       _paypalFormKey.currentState!.save();
       print(_paypalEmail);
       print(_password);
+      Order order = new Order(products: []);
+      order.products = [...Provider.of<CartProvider>(context, listen: false).items];
+      Provider.of<OrdersProvider>(context, listen: false).addItemInOpenedOrders(order);
+      setState(() {
+        _validate = true;
+      });
     }
   }
 

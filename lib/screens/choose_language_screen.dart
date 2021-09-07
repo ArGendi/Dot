@@ -1,3 +1,4 @@
+import 'package:ecommerce/loading_screens/loading_screen.dart';
 import 'package:ecommerce/providers/app_language_provider.dart';
 import 'package:ecommerce/screens/home_screen.dart';
 import 'package:ecommerce/services/helper_function.dart';
@@ -138,7 +139,7 @@ class _ChooseLanguageState extends State<ChooseLanguage> {
               Provider.of<AppLanguageProvider>(context, listen: false).changeLang(lang);
               await HelpFunction.saveUserLanguage(lang);
               Navigator.of(context)
-                  .pushNamedAndRemoveUntil(Home.id, (Route<dynamic> route) => false);
+                  .pushNamedAndRemoveUntil(Loading.id, (Route<dynamic> route) => false);
             },
           ),
         ],

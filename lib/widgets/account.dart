@@ -4,7 +4,10 @@ import 'package:ecommerce/loading_screens/recently_viewed_loading_screen.dart';
 import 'package:ecommerce/loading_screens/wishlist_loading_screen.dart';
 import 'package:ecommerce/providers/active_user_provider.dart';
 import 'package:ecommerce/screens/cart_screen.dart';
+import 'package:ecommerce/screens/login_screen.dart';
+import 'package:ecommerce/screens/orders_screen.dart';
 import 'package:ecommerce/screens/recently_viewed_screen.dart';
+import 'package:ecommerce/screens/signup_screen.dart';
 import 'package:ecommerce/screens/wishlist_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -96,9 +99,11 @@ class _AccountWidgetState extends State<AccountWidget> {
                 ),
                 if(activeUserProvider.activeUser.email.isEmpty)
                 InkWell(
-                  onTap: (){},
+                  onTap: (){
+                    Navigator.pushNamed(context, SignUp.id);
+                  },
                   child: Text(
-                    localization.translate('Sign in now').toString(),
+                    localization.translate('Sign up now').toString(),
                     style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
@@ -121,17 +126,19 @@ class _AccountWidgetState extends State<AccountWidget> {
           padding: const EdgeInsets.symmetric(vertical: 20.0),
           child: Column(
             children: [
-              itemInsideCard(localization.translate('My orders').toString(), Icons.assignment, (){}),
-              itemInsideCard(localization.translate('Messages').toString(), Icons.email, (){}),
+              itemInsideCard(localization.translate('My orders').toString(), Icons.assignment, (){
+                Navigator.pushNamed(context, Orders.id);
+              }),
+              //itemInsideCard(localization.translate('Messages').toString(), Icons.email, (){}),
               //itemInsideCard('Notifications', Icons.notifications, (){}),
               itemInsideCard(localization.translate('Product wishlist').toString(), Icons.shopping_bag_rounded, (){
-                Navigator.pushNamed(context, WishlistLoading.id);
+                Navigator.pushNamed(context, Wishlist.id);
               }),
               itemInsideCard(localization.translate('Recently viewed').toString(), Icons.visibility, (){
-                Navigator.pushNamed(context, RecentlyViewedLoading.id);
+                Navigator.pushNamed(context, RecentlyViewed.id);
               }),
               itemInsideCard(localization.translate('My cart').toString(), Icons.shopping_cart, (){
-                Navigator.pushNamed(context, CartLoading.id);
+                Navigator.pushNamed(context, Cart.id);
               }),
             ],
           )

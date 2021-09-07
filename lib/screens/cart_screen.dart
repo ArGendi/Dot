@@ -77,8 +77,6 @@ class _CartState extends State<Cart> {
             child: ListView.builder(
               itemCount: cartProvider.items.length,
               itemBuilder: (context, index){
-                // double priceAfterSale = (cartProvider.items[index].price / 100) * (100 - cartProvider.items[index].sale);
-                // Color? color = getColor(cartProvider.items[index].color);
                 return Column(
                   children: [
                     Row(
@@ -87,6 +85,10 @@ class _CartState extends State<Cart> {
                           width: 100,
                           height: 140,
                           color: Colors.white,
+                          child: Image.asset(
+                            cartProvider.items[index].images[0],
+                            fit: BoxFit.cover,
+                          ),
                         ),
                         SizedBox(width: 10,),
                         Expanded(
@@ -180,7 +182,7 @@ class _CartState extends State<Cart> {
                                     ),
                                   ),
                                   Text(
-                                    '\$ ' + cartProvider.items[index].discountPrice.toStringAsFixed(2),
+                                    '\$ ' + (cartProvider.items[index].discountPrice * cartProvider.items[index].quantityAddedInCart).toStringAsFixed(2),
                                     style: TextStyle(
                                       fontSize: 18,
                                       fontWeight: FontWeight.bold,

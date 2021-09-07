@@ -10,7 +10,8 @@ class Product{
   int price = 0;
   int sale = 0;
   int discountPrice = 0;
-  List<List<int>> images = [];
+  //List<List<int>> images = [];
+  List<String> images = [];
   int rate = 0;
   bool isFavourite = false;
   int availabilityInStock = 12;
@@ -31,6 +32,7 @@ class Product{
   List<Review> reviews = [];
   String orderDate = '';
   String deliveryDate = '';
+  String categoryId = '';
 
   Product({this.name = 'product', this.price = 0, this.sale = 0, this.rate =0,this.isFavourite=false, this.availabilityInStock=0,
           this.quantityAddedInCart = 0, this.website = '', this.weight = 0, this.size = '', this.productLine = '', this.productCountry = '',
@@ -40,7 +42,7 @@ class Product{
     rate = json['rating'];
     id = json['_id'];
     name = json['name'];
-    subCategory = json['subcategory'];
+    //subCategory = json['subcategory'];
     price = json['originalPrice'];
     discountPrice = json['discountPrice'];
     //sale = json['discountPrice'];
@@ -58,6 +60,7 @@ class Product{
     tax = json['tax'];
     unitPrice = json['unitPrice'];
     shippingDays = json['shippingDays'];
-    seller = json['seller'];
+    //seller = json['seller'];
+    categoryId = json['subcategory']['category'];
   }
 }
