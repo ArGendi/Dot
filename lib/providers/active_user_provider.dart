@@ -11,4 +11,9 @@ class ActiveUserProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  setCountry(String country){
+    _activeUser.country = country;
+    notifyListeners();
+  }
+
 }

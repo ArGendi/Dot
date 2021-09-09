@@ -11,18 +11,21 @@ class RecentlyViewedProvider extends ChangeNotifier {
   List<Product> get items => _items;
 
   addItem(Product product, bool insertInDB){
-    _items.add(product);
-    notifyListeners();
-    if(insertInDB)
-      _dbHelper.insert(recentlyViewedTable, {
-        'id': product.id,
-      });
+    if(!product.isViewed) {
+      product.isViewed = true;
+      _items.add(product);
+      notifyListeners();
+      if (insertInDB)
+        _dbHelper.insert(recentlyViewedTable, {
+          'id': product.id,
+        });
+    }
   }
 
   removeItem(Product product){
     _items.remove(product);
     notifyListeners();
-    _dbHelper.deleteRow(wishlistTable, product.id);
+    _dbHelper.deleteRow(recentlyViewedTable, product.id);
   }
 
 }

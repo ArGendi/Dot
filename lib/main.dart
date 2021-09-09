@@ -34,6 +34,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'app_localization.dart';
 import 'loading_screens/cart_loading_screen.dart';
+import 'loading_screens/orders_loading_screen.dart';
 import 'loading_screens/wishlist_loading_screen.dart';
 import 'models/product.dart';
 
@@ -129,7 +130,6 @@ class _MyAppState extends State<MyApp> {
         RecentlyViewed.id: (context) => RecentlyViewed(),
         Loading.id: (context) => Loading(),
         ForgetPassword.id: (context) => ForgetPassword(),
-        AllProducts.id: (context) => AllProducts(),
         WishlistLoading.id: (context) => WishlistLoading(),
         CartLoading.id: (context) => CartLoading(),
         RecentlyViewedLoading.id: (context) => RecentlyViewedLoading(),

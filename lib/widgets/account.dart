@@ -118,7 +118,7 @@ class _AccountWidgetState extends State<AccountWidget> {
     );
   }
 
-  Widget detailsCard(AppLocalization localization){
+  Widget detailsCard(AppLocalization localization, BuildContext context){
     return Card(
       elevation: 0,
       color: Colors.white,
@@ -132,13 +132,13 @@ class _AccountWidgetState extends State<AccountWidget> {
               //itemInsideCard(localization.translate('Messages').toString(), Icons.email, (){}),
               //itemInsideCard('Notifications', Icons.notifications, (){}),
               itemInsideCard(localization.translate('Product wishlist').toString(), Icons.shopping_bag_rounded, (){
-                Navigator.pushNamed(context, Wishlist.id);
+                Navigator.pushNamed(context, WishlistLoading.id);
               }),
               itemInsideCard(localization.translate('Recently viewed').toString(), Icons.visibility, (){
-                Navigator.pushNamed(context, RecentlyViewed.id);
+                Navigator.pushNamed(context, RecentlyViewedLoading.id);
               }),
               itemInsideCard(localization.translate('My cart').toString(), Icons.shopping_cart, (){
-                Navigator.pushNamed(context, Cart.id);
+                Navigator.pushNamed(context, CartLoading.id);
               }),
             ],
           )
@@ -225,7 +225,7 @@ class _AccountWidgetState extends State<AccountWidget> {
                 ),
               ),
               SizedBox(height: 10,),
-              detailsCard(localization),
+              detailsCard(localization, context),
               SizedBox(height: 10,),
               Text(
                 localization.translate('My settings').toString(),

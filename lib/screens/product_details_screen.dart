@@ -4,8 +4,10 @@ import 'package:ecommerce/loading_screens/cart_loading_screen.dart';
 import 'package:ecommerce/models/product.dart';
 import 'package:ecommerce/providers/all_products_provider.dart';
 import 'package:ecommerce/providers/cart_provider.dart';
+import 'package:ecommerce/providers/categories_provider.dart';
 import 'package:ecommerce/providers/recently_viewed_provider.dart';
 import 'package:ecommerce/providers/wishlist_provider.dart';
+import 'package:ecommerce/screens/all_products_screen.dart';
 import 'package:ecommerce/screens/cart_screen.dart';
 import 'package:ecommerce/screens/wishlist_screen.dart';
 import 'package:ecommerce/services/search.dart';
@@ -25,18 +27,12 @@ class ProductDetails extends StatefulWidget {
 }
 
 class _ProductDetailsState extends State<ProductDetails> {
-  bool _addedToCart = false;
   int _pageIndex = 0;
   final PageController controller = PageController(initialPage: 0);
   // String? _townDropdownValue = 'Select town';
   // String? _shopDropdownValue = 'Select our nearest shop';
   // List<String> _towns = ['Select town'];
   // List<String> _shops = ['Select our nearest shop'];
-  List<Product> _similarProducts = [
-    new Product(name: 'name', price: 220, sale: 10),
-    new Product(name: 'name', price: 400, sale: 20),
-    new Product(name: 'name', price: 400, sale: 20),
-  ];
 
   Widget rate(double rate){
     return Row(
@@ -61,12 +57,9 @@ class _ProductDetailsState extends State<ProductDetails> {
   Widget addToCartButton(BuildContext context){
     return InkWell(
       onTap: (){
-        if(widget.product.availabilityInStock > 0 && !_addedToCart) {
+        if(widget.product.availabilityInStock > 0 && !widget.product.addedToCart) {
           widget.product.quantityAddedInCart = 1;
           Provider.of<CartProvider>(context, listen: false).addItem(widget.product, true);
-          setState(() {
-            _addedToCart = true;
-          });
         }
       },
       child: Container(
@@ -84,7 +77,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                 Icons.add_shopping_cart,
                 color: Colors.white,
               ),
-              !_addedToCart ?
+              !widget.product.addedToCart ?
                 Text(
                   'Add to cart',
                   style: TextStyle(
@@ -161,7 +154,7 @@ class _ProductDetailsState extends State<ProductDetails> {
             ),
             SizedBox(height: 5,),
             Text(
-                '\$ ' + widget.product.discountPrice.toStringAsFixed(2),
+                widget.product.discountPrice.toStringAsFixed(2) + ' ' + widget.product.unitPrice,
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
@@ -172,7 +165,7 @@ class _ProductDetailsState extends State<ProductDetails> {
             Row(
               children: [
                 Text(
-                  '\$ ' + widget.product.price.toStringAsFixed(2),
+                  widget.product.price.toStringAsFixed(2) + ' ' + widget.product.unitPrice,
                   style: TextStyle(
                     decoration: TextDecoration.lineThrough,
                   ),
@@ -188,7 +181,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                 ),
               ],
             ),
-            Text('delivery from \$15 around Dot shop',),
+            //Text('delivery from \$15',),
             SizedBox(height: 10,),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -372,8 +365,7 @@ class _ProductDetailsState extends State<ProductDetails> {
   //   );
   // }
 
-  Widget similarProductsCard(){
-    var provider = Provider.of<AllProductsProvider>(context);
+  Widget similarProductsCard(List<Product> similarProducts){
     return Card(
       elevation: 0,
       color: Colors.white,
@@ -383,14 +375,14 @@ class _ProductDetailsState extends State<ProductDetails> {
           scrollDirection: Axis.horizontal,
           child: Row(
             children: [
-              for(int index = 0; index < 4; index+=1)
-                if(provider.items[index].name != widget.product.name)
+              for(int index = 0; index < similarProducts.length; index+=1)
+                if(similarProducts[index].id != widget.product.id)
                 InkWell(
                   onTap: (){
-                    Provider.of<RecentlyViewedProvider>(context, listen: false).addItem(provider.items[index], false);
+                    Provider.of<RecentlyViewedProvider>(context, listen: false).addItem(similarProducts[index], false);
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => ProductDetails(product: provider.items[index])),
+                      MaterialPageRoute(builder: (context) => ProductDetails(product: similarProducts[index])),
                     );
                   },
                   child: Padding(
@@ -402,16 +394,18 @@ class _ProductDetailsState extends State<ProductDetails> {
                           width: 120,
                           height: 100,
                           color: Colors.grey[200],
-                          child: Image.asset(provider.items[index].images[0]),
+                          child: similarProducts[index].images.isNotEmpty ?
+                                Image.asset(similarProducts[index].images[0]) :
+                                Container(),
                         ),
                         Text(
-                          provider.items[index].name,
+                          similarProducts[index].name,
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                         Text(
-                          '\$ ' + provider.items[index].discountPrice.toStringAsFixed(2),
+                          similarProducts[index].discountPrice.toString() + ' ' + similarProducts[index].unitPrice,
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                           ),
@@ -420,7 +414,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                         Row(
                           children: [
                             Text(
-                              '\$ ' + provider.items[index].price.toStringAsFixed(2),
+                              similarProducts[index].price.toStringAsFixed(2),
                               style: TextStyle(
                                 decoration: TextDecoration.lineThrough,
                               ),
@@ -431,7 +425,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                               color: Color(0xffffecde),
                               child: Padding(
                                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                                child: Text(((1-(provider.items[index].discountPrice / provider.items[index].price))*100).truncate().toString() + '%'),
+                                child: Text(((1-(similarProducts[index].discountPrice / similarProducts[index].price))*100).ceil().toString() + '%'),
                               ),
                             ),
                           ],
@@ -526,6 +520,8 @@ class _ProductDetailsState extends State<ProductDetails> {
   @override
   Widget build(BuildContext context) {
     var cartProvider = Provider.of<CartProvider>(context);
+    var categoriesProvider = Provider.of<CategoriesProvider>(context);
+    List<Product> similarProducts = categoriesProvider.items[widget.product.categoryIndex].products;
     return Scaffold(
       backgroundColor: Colors.grey.shade200,
       appBar: AppBar(
@@ -543,7 +539,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                 children: [
                   Icon(
                     Icons.search,
-                    color: Colors.black,
+                    color: Colors.grey[600],
                   )
                 ],
               ),
@@ -553,7 +549,7 @@ class _ProductDetailsState extends State<ProductDetails> {
         actions: [
           IconButton(
             onPressed: (){
-              Navigator.pushNamed(context, Cart.id);
+              Navigator.pushNamed(context, CartLoading.id);
             },
             icon: Icon(
               Icons.shopping_cart,
@@ -594,7 +590,12 @@ class _ProductDetailsState extends State<ProductDetails> {
                         ),
                       ),
                       InkWell(
-                        onTap: (){},
+                        onTap: (){
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => AllProducts(products: similarProducts)),
+                          );
+                        },
                         child: Text(
                           'See all >',
                           style: TextStyle(
@@ -606,7 +607,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                     ],
                   ),
                   SizedBox(height: 10,),
-                  similarProductsCard(),
+                  similarProductsCard(similarProducts),
                   SizedBox(height: 15,),
                   Text(
                     'Reviews',

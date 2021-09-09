@@ -29,11 +29,12 @@ class _OrdersLoadingState extends State<OrdersLoading> {
   Future<void> getData() async{
     setState(() {_loadingFailed = false;});
     var provider = Provider.of<OrdersProvider>(context, listen: false);
-    if(provider.openedOrders.isEmpty && provider.closedOrders.isEmpty) {
+    if(provider.items.isEmpty) {
       String? token = await HelpFunction.getUserToken();
       var response = await _webServices.getWithBearerToken(
-          'https://souk--server.herokuapp.com/api/orders/myorders', token.toString());
+          serverUrl + 'api/orders/myorders', token.toString());
       if (response.statusCode == 200) {
+        print('getting all orders');
         var body = jsonDecode(response.body);
         for(var item in body){
           Order order = new Order(products: []);
@@ -42,19 +43,23 @@ class _OrdersLoadingState extends State<OrdersLoading> {
             product.id = productItem['_id'];
             product.name = productItem['name'];
             //------------------ image --------------------
-            product.discountPrice = productItem['name'];
+            product.discountPrice = productItem['price'];
             product.quantityAddedInCart = productItem['qty'];
             order.products.add(product);
           }
+          DateTime date = DateTime.parse(item['createdAt']);
+          var newDate = new DateTime(date.year, date.month, date.day + 15);
           order.orderDate = item['createdAt'].split('T')[0];
-          order.orderDate = item['updateAt'].split('T')[0];
+          print(order.orderDate);
+          order.deliveryDate = newDate.toString().split(' ')[0];
+          print(order.deliveryDate);
           order.status = item['deliverStatus'];
-          //-------------- filter orders to opened and closed ----------------
+          provider.addItem(order);
         }
         Navigator.pushReplacementNamed(context, Orders.id);
       }
       else {
-        print('error get all products');
+        print('error get all orders');
         setState(() {_loadingFailed = true;});
       }
     }

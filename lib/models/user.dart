@@ -11,7 +11,7 @@ class AppUser {
   String token = '';
 
   AppUser({this.firstName = '', this.lastName = '', this.email = '', this.password = '',
-        this.id = '', this.token = '', this.imageUrl = ''});
+        this.id = '', this.token = '', this.imageUrl = '', this.country = ''});
 
   setFromJson(Map<String, dynamic> json){
     id = json['_id'];

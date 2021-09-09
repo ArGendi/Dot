@@ -1,6 +1,9 @@
+import 'package:ecommerce/models/info.dart';
 import 'package:ecommerce/models/order.dart';
+import 'package:ecommerce/providers/active_user_provider.dart';
 import 'package:ecommerce/providers/cart_provider.dart';
 import 'package:ecommerce/providers/orders_provider.dart';
+import 'package:ecommerce/services/web_services.dart';
 import 'package:ecommerce/widgets/custom_textfield.dart';
 import 'package:ecommerce/widgets/payment_info.dart';
 import 'package:flutter/cupertino.dart';
@@ -11,7 +14,8 @@ import '../constants.dart';
 import 'custom_button.dart';
 
 class Checkout extends StatefulWidget {
-  const Checkout({Key? key}) : super(key: key);
+  final Info info;
+  const Checkout({Key? key, required this.info}) : super(key: key);
 
   @override
   _CheckoutState createState() => _CheckoutState();
@@ -31,6 +35,8 @@ class _CheckoutState extends State<Checkout> {
   String _paypalEmail = '';
   String _password = '';
   String _amount = '';
+  WebServices _webServices = new WebServices();
+  List<Map<String, dynamic>> _orderItems = [];
 
 
   _setCardNumber(String cardNumber) {
@@ -228,29 +234,6 @@ class _CheckoutState extends State<Checkout> {
             ],
           ),
           SizedBox(height: 20,),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Flexible(
-                child: Text(
-                  'I want to save credit card info to pay for future purchases',
-                  style: TextStyle(
-                    fontSize: 16,
-                  ),
-                ),
-              ),
-              CupertinoSwitch(
-                activeColor: primaryColor,
-                value: _saveCreditCard,
-                onChanged: (bool value) {
-                  setState(() {
-                    _saveCreditCard = !_saveCreditCard;
-                  });
-                },
-              ),
-            ],
-          ),
-          SizedBox(height: 20,),
           CustomButton(
             text: !_validate ? 'Validate orders' : "Done",
             onclick: _onCreditCardSubmit,
@@ -304,29 +287,6 @@ class _CheckoutState extends State<Checkout> {
             whiteColor: true,
           ),
           SizedBox(height: 20,),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Flexible(
-                child: Text(
-                  'I want to save PayPal info to pay for future purchases',
-                  style: TextStyle(
-                    fontSize: 16,
-                  ),
-                ),
-              ),
-              CupertinoSwitch(
-                activeColor: primaryColor,
-                value: _savePayPal,
-                onChanged: (bool value) {
-                  setState(() {
-                    _savePayPal = !_savePayPal;
-                  });
-                },
-              ),
-            ],
-          ),
-          SizedBox(height: 20,),
           CustomButton(
             text: !_validate ? 'Validate orders' : "Done",
             onclick: _onPayPalSubmit,
@@ -336,16 +296,39 @@ class _CheckoutState extends State<Checkout> {
     );
   }
 
-  _onCreditCardSubmit(){
+  _onCreditCardSubmit() async{
     FocusScope.of(context).unfocus();
     bool valid = _creditFormKey.currentState!.validate();
     if(valid){
       _creditFormKey.currentState!.save();
       print(_nameOnCard);
       print(_cvc);
+      var cartProvider = Provider.of<CartProvider>(context);
+      double delivery = 15;
+      double sum = 0;
+      int itemsQuantity = 0;
+      for(var item in cartProvider.items) {
+        _orderItems.add({
+          'name': item.name,
+          'qty': item.quantityAddedInCart,
+          'price': item.discountPrice,
+          'product': item.id,
+        });
+      }
+
       Order order = new Order(products: []);
       order.products = [...Provider.of<CartProvider>(context, listen: false).items];
-      Provider.of<OrdersProvider>(context, listen: false).addItemInOpenedOrders(order);
+      String token = Provider.of<ActiveUserProvider>(context, listen: false).activeUser.token;
+      var response = await _webServices.postWithBearerToken('https://souk--server.herokuapp.com/api/orders', token, {
+        'orderItems': _orderItems,
+        'shippingAddress': {
+          'address': widget.info.address,
+          'city': widget.info.city,
+          'postalCode': widget.info.postalCode,
+          //'country': widget.info.c
+        }
+      });
+      Provider.of<OrdersProvider>(context, listen: false).addItem(order);
       setState(() {
         _validate = true;
       });
@@ -361,7 +344,7 @@ class _CheckoutState extends State<Checkout> {
       print(_password);
       Order order = new Order(products: []);
       order.products = [...Provider.of<CartProvider>(context, listen: false).items];
-      Provider.of<OrdersProvider>(context, listen: false).addItemInOpenedOrders(order);
+      Provider.of<OrdersProvider>(context, listen: false).addItem(order);
       setState(() {
         _validate = true;
       });

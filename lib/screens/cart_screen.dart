@@ -22,16 +22,16 @@ class Cart extends StatefulWidget {
 class _CartState extends State<Cart> {
   bool _isRecentlyViewedAppears = true;
 
-  Color? getColor(String colorName){
-    Map<String, Color> map = {
-      'red': Colors.red,
-      'blue': Colors.blue,
-      'white': Colors.white,
-      'black': Colors.black,
-    };
-    if(map[colorName] == null) return Colors.grey[200];
-    return map[colorName];
-  }
+  // Color? getColor(String colorName){
+  //   Map<String, Color> map = {
+  //     'red': Colors.red,
+  //     'blue': Colors.blue,
+  //     'white': Colors.white,
+  //     'black': Colors.black,
+  //   };
+  //   if(map[colorName] == null) return Colors.grey[200];
+  //   return map[colorName];
+  // }
 
   removeProduct(BuildContext ctx, Product product){
     Provider.of<CartProvider>(ctx, listen: false).removeItem(product);
@@ -62,7 +62,7 @@ class _CartState extends State<Cart> {
     );
   }
 
-  Widget filledCart(CartProvider cartProvider, RecentlyViewedProvider recentlyViewedProvider){
+  Widget filledCart(CartProvider cartProvider, RecentlyViewedProvider recentlyViewedProvider, BuildContext context){
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -85,10 +85,11 @@ class _CartState extends State<Cart> {
                           width: 100,
                           height: 140,
                           color: Colors.white,
-                          child: Image.asset(
+                          child: cartProvider.items[index].images.isNotEmpty?
+                          Image.network(
                             cartProvider.items[index].images[0],
                             fit: BoxFit.cover,
-                          ),
+                          ) : Container(),
                         ),
                         SizedBox(width: 10,),
                         Expanded(
@@ -245,7 +246,9 @@ class _CartState extends State<Cart> {
                 ),
                 CustomButton(
                   text: 'Validate orders',
-                  onclick: _checkoutBottomSheet,
+                  onclick: (){
+                    _checkoutBottomSheet(context);
+                  },
                 )
               ],
             ),
@@ -255,7 +258,7 @@ class _CartState extends State<Cart> {
     );
   }
 
-  _checkoutBottomSheet() {
+  _checkoutBottomSheet(BuildContext context) {
     showModalBottomSheet(
       backgroundColor: Colors.grey[200],
         isScrollControlled: true,
@@ -294,7 +297,8 @@ class _CartState extends State<Cart> {
           ),
         ),
       ),
-      body: cartProvider.items.isNotEmpty ? filledCart(cartProvider, recentlyViewedProvider) : emptyCart(),
+      body: cartProvider.items.isNotEmpty ? filledCart(cartProvider, recentlyViewedProvider, context) :
+          emptyCart(),
     );
   }
 }

@@ -2,7 +2,9 @@ import 'dart:convert';
 
 import 'package:ecommerce/helpers/db_helper.dart';
 import 'package:ecommerce/models/product.dart';
+import 'package:ecommerce/providers/all_products_provider.dart';
 import 'package:ecommerce/providers/cart_provider.dart';
+import 'package:ecommerce/providers/recently_viewed_provider.dart';
 import 'package:ecommerce/screens/cart_screen.dart';
 import 'package:ecommerce/services/currency.dart';
 import 'package:ecommerce/services/web_services.dart';
@@ -23,37 +25,57 @@ class CartLoading extends StatefulWidget {
 class _CartLoadingState extends State<CartLoading> {
   WebServices _webServices = new WebServices();
   DBHelper _dbHelper = new DBHelper();
-  bool _loadingFailed = false;
 
   Future<void> getData() async{
-    setState(() {_loadingFailed = false;});
     var provider = Provider.of<CartProvider>(context, listen: false);
+    var allProductsProvider = Provider.of<AllProductsProvider>(context, listen: false);
+    var recentlyViewedProvider = Provider.of<RecentlyViewedProvider>(context, listen: false);
     if(provider.items.isEmpty) {
       var data = await _dbHelper.getData(cartTable);
+      var recentlyViewedData = await _dbHelper.getData(recentlyViewedTable);
       print(data);
-      if(data.isEmpty) Navigator.pushReplacementNamed(context, Cart.id);
-      for(var product in data){
-        var response = await _webServices.get(
-            'https://souk--server.herokuapp.com/api/product/?slug=${product['id']}');
-        if (response.statusCode == 200) {
-          var body = jsonDecode(response.body);
-          Product product = new Product();
-          product.quantityAddedInCart = 1;
-          product.setProductFromJsom(body['data'][0]);
-          for(var image in body['data'][0]['images']) {
-            List<dynamic> imageData = image['data'];
-            List<int> buffer = imageData.cast<int>();
-           // product.images.add(buffer);
-          }
-          provider.addItem(product, false);
-          Navigator.pushReplacementNamed(context, Cart.id);
+      if(data.isEmpty) WidgetsBinding.instance!.addPostFrameCallback((_) {
+        Navigator.pushReplacementNamed(context, Cart.id);
+      });
+      for(var product in allProductsProvider.items){
+        for(int i=0; i<data.length; i+=1){
+          if(product.id == data[i]['id'])
+            provider.addItem(product, false);
         }
-        else {
-          print('error get all products');
-          setState(() {_loadingFailed = true;});
+        for(int i=0; i<recentlyViewedData.length; i+=1){
+          if(product.id == recentlyViewedData[i]['id'])
+            recentlyViewedProvider.addItem(product, false);
         }
       }
+      WidgetsBinding.instance!.addPostFrameCallback((_) {
+        Navigator.pushReplacementNamed(context, Cart.id);
+      });
+      // for(var product in data){
+      //   print(product['id']);
+      //   var response = await _webServices.get(
+      //       serverUrl + 'api/product/?slug=${product['id']}');
+      //   if (response.statusCode == 200) {
+      //     var body = jsonDecode(response.body);
+      //     Product product = new Product();
+      //     product.quantityAddedInCart = 1;
+      //     product.setProductFromJsom(body['data'][0]);
+      //     // for(var image in body['data'][0]['images']) {
+      //     //   List<dynamic> imageData = image['data'];
+      //     //   List<int> buffer = imageData.cast<int>();
+      //     //  // product.images.add(buffer);
+      //     // }
+      //     provider.addItem(product, false);
+      //     Navigator.pushReplacementNamed(context, Cart.id);
+      //   }
+      //   else {
+      //     print('error get all products');
+      //     setState(() {_loadingFailed = true;});
+      //   }
+      // }
     }
+    else WidgetsBinding.instance!.addPostFrameCallback((_) {
+      Navigator.pushReplacementNamed(context, Cart.id);
+    });
   }
 
   @override
@@ -67,30 +89,11 @@ class _CartLoadingState extends State<CartLoading> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: !_loadingFailed ? CircularProgressIndicator(
-          strokeWidth: 3,
-          valueColor: AlwaysStoppedAnimation<Color>(
-              primaryColor),
-        ) : Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                'Something went wrong :(',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              SizedBox(height: 20,),
-              CustomButton(
-                text: 'Try again',
-                onclick: getData,
-              )
-            ],
-          ),
-        ),
+          child: CircularProgressIndicator(
+            strokeWidth: 3,
+            valueColor: AlwaysStoppedAnimation<Color>(
+                primaryColor),
+          )
       ),
     );
   }

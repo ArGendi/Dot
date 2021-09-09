@@ -9,6 +9,7 @@ class HelpFunction {
   static String sharedPreferenceUserName = "USERNAME";
   static String sharedPreferenceUserEmail = "USEREMAIL";
   static String sharedPreferenceUserImage = "USERIMAGE";
+  static String sharedPreferenceUserCountry = "USERCOUNTRY";
 
   static Future<bool> saveUserLanguage(String lang) async {
     SharedPreferences preference = await SharedPreferences.getInstance();
@@ -68,6 +69,16 @@ class HelpFunction {
   static Future<String?> getUserImage() async {
     SharedPreferences preference = await SharedPreferences.getInstance();
     return preference.getString(sharedPreferenceUserImage);
+  }
+
+  static Future<bool> saveUserCountry(String country) async {
+    SharedPreferences preference = await SharedPreferences.getInstance();
+    return await preference.setString(sharedPreferenceUserCountry, country);
+  }
+
+  static Future<String?> getUserCountry() async {
+    SharedPreferences preference = await SharedPreferences.getInstance();
+    return preference.getString(sharedPreferenceUserCountry);
   }
 
 }

@@ -93,99 +93,20 @@ class _OrdersState extends State<Orders> {
             ),
           ),
           SizedBox(height: 20,),
-          Column(
-            children: [
-              Row(
+          ListView.builder(
+            shrinkWrap: true,
+            itemCount: provider.items.length,
+            itemBuilder: (context, index){
+              return Column(
                 children: [
-                  InkWell(
-                    onTap: (){
-                      setState(() {
-                        _isOpenedOrder = !_isOpenedOrder;
-                      });
-                    },
-                    child: Column(
-                      children: [
-                        Text(
-                          'Opened orders',
-                          style: TextStyle(
-                              fontSize: 16,
-                              //fontWeight: _isOpenedOrder ? FontWeight.bold : FontWeight.normal,
-                              color: _isOpenedOrder ? Colors.black : Colors.grey
-                          ),
-                        ),
-                        SizedBox(height: 5,),
-                        if(_isOpenedOrder)
-                          Container(
-                            width: 50,
-                            height: 1,
-                            color: Colors.black,
-                          ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(width: 20,),
-                  InkWell(
-                    onTap: (){
-                      setState(() {
-                        _isOpenedOrder = !_isOpenedOrder;
-                      });
-                    },
-                    child: Column(
-                      children: [
-                        Text(
-                          'Closed orders',
-                          style: TextStyle(
-                              fontSize: 16,
-                              //fontWeight: !_isOpenedOrder ? FontWeight.bold : FontWeight.normal,
-                              color: !_isOpenedOrder ? Colors.black : Colors.grey
-                          ),
-                        ),
-                        SizedBox(height: 5,),
-                        if(!_isOpenedOrder)
-                          Container(
-                              width: 50,
-                              height: 1,
-                              color: Colors.black
-                          ),
-                      ],
-                    ),
+                  orderCard(provider.items[index], index),
+                  Divider(
+                    height: 20,
+                    color: Colors.grey[500],
                   ),
                 ],
-              ),
-              SizedBox(height: 20,),
-              if(_isOpenedOrder)
-                ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: provider.openedOrders.length,
-                  itemBuilder: (context, index){
-                    return Column(
-                      children: [
-                        orderCard(provider.openedOrders[index], index),
-                        Divider(
-                          height: 20,
-                          color: Colors.grey[500],
-                        ),
-                      ],
-                    );
-                  },
-                ),
-              if(!_isOpenedOrder)
-                ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: provider.closedOrders.length,
-                  itemBuilder: (context, index){
-                    return Column(
-                      children: [
-                        orderCard(provider.closedOrders[index], index),
-                        Divider(
-                          height: 20,
-                          color: Colors.grey[500],
-                        ),
-                      ],
-                    );
-                  },
-                ),
-            ],
+              );
+            },
           ),
         ],
       ),
@@ -202,6 +123,7 @@ class _OrdersState extends State<Orders> {
       },
       child: Column(
         children: [
+          //dummy row
           if(index == 0)
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -271,13 +193,13 @@ class _OrdersState extends State<Orders> {
                 ),
               ),
               Text(
-                '31/3/2021',
+                order.orderDate,
                 style: TextStyle(
                   fontSize: 13,
                 ),
               ),
               Text(
-                '15/4/2021',
+                order.deliveryDate,
                 style: TextStyle(
                   fontSize: 13,
                 ),
@@ -290,7 +212,7 @@ class _OrdersState extends State<Orders> {
                 child: Padding(
                   padding: const EdgeInsets.all(5.0),
                   child: Text(
-                    'Pending',
+                    order.status,
                     style: TextStyle(
                       fontSize: 12,
                     ),
@@ -343,7 +265,7 @@ class _OrdersState extends State<Orders> {
           )
         ],
       ),
-      body: provider.openedOrders.isEmpty && provider.closedOrders.isEmpty ?
+      body: provider.items.isEmpty ?
              emptyOrders() : filledOrders(provider),
     );
   }

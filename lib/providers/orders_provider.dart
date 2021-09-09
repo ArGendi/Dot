@@ -6,31 +6,20 @@ import 'package:flutter/cupertino.dart';
 import '../constants.dart';
 
 class OrdersProvider extends ChangeNotifier {
-  List<Order> _openedOrders = [];
-  List<Order> _closedOrders = [];
+  List<Order> _items = [];
   //DBHelper _dbHelper = new DBHelper();
 
-  List<Order> get openedOrders => _openedOrders;
-  List<Order> get closedOrders => _closedOrders;
+  List<Order> get items => _items;
 
-  addItemInOpenedOrders(Order order){
-    _openedOrders.add(order);
+  addItem(Order order){
+    _items.add(order);
     notifyListeners();
   }
 
-  removeItemFromOpenedOrders(Order order){
-    _openedOrders.remove(order);
+  removeItem(Order order){
+    _items.remove(order);
     notifyListeners();
   }
 
-  addItemInClosedOrders(Order order){
-    _closedOrders.add(order);
-    notifyListeners();
-  }
-
-  removeItemFromClosedOrders(Order order){
-    _closedOrders.remove(order);
-    notifyListeners();
-  }
 
 }

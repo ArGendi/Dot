@@ -11,18 +11,21 @@ class CartProvider extends ChangeNotifier {
   List<Product> get items => _items;
 
   addItem(Product product, bool insertInDB){
-    _items.add(product);
-    notifyListeners();
-    if(insertInDB)
-      _dbHelper.insert(cartTable, {
-        'id': product.id,
-      });
+    if(!product.addedToCart) {
+      product.addedToCart = true;
+      _items.add(product);
+      notifyListeners();
+      if (insertInDB)
+        _dbHelper.insert(cartTable, {
+          'id': product.id,
+        });
+    }
   }
 
   removeItem(Product product){
     _items.remove(product);
     notifyListeners();
-    _dbHelper.deleteRow(wishlistTable, product.id);
+    _dbHelper.deleteRow(cartTable, product.id);
   }
 
   decreaseProductQuantity(int index){
@@ -32,6 +35,12 @@ class CartProvider extends ChangeNotifier {
   increaseProductQuantity(int index){
     _items[index].quantityAddedInCart += 1;
     notifyListeners();
+  }
+
+  removeAllItems(){
+    _items = [];
+    notifyListeners();
+    _dbHelper.deleteAllRows(cartTable);
   }
 
 }

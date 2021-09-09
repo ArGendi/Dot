@@ -52,4 +52,10 @@ class DBHelper {
     );
   }
 
+  Future<void> deleteAllRows(String table) async{
+    var dbClient = await db;
+    await dbClient!.execute("delete from "+ table);
+    //await dbClient!.delete(table);
+  }
+
 }

@@ -16,55 +16,49 @@ class OrderDetails extends StatefulWidget {
 class _OrderDetailsState extends State<OrderDetails> {
   Widget orderDetails(Order order, int index){
     return Column(
+      //crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if(index == 0)
-          Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Container(
-                  width: 80,
-                  height: 2,
-                  decoration: BoxDecoration(
-                    color: Colors.grey[200],
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                ),
-                SizedBox(width: 10,),
-                Text(
-                  '\$ ' + order.products[index].discountPrice.toStringAsFixed(2),
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.grey[200],
-                  ),
-                ),
-              ],
-            ),
-            Text(
-              'Date of order',
-              style: TextStyle(
-                fontSize: 11,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            Text(
-              'Delivery date',
-              style: TextStyle(
-                fontSize: 11,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            Text(
-              'status',
-              style: TextStyle(
-                fontSize: 11,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ],
-        ),
+        // if(index == 0)
+        //   Row(
+        //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        //   children: [
+        //     Row(
+        //       crossAxisAlignment: CrossAxisAlignment.center,
+        //       children: [
+        //         Container(
+        //           width: 80,
+        //           height: 2,
+        //           decoration: BoxDecoration(
+        //             color: Colors.grey[200],
+        //             borderRadius: BorderRadius.circular(5),
+        //           ),
+        //         ),
+        //         SizedBox(width: 10,),
+        //         Text(
+        //           '\$ ' + order.products[index].discountPrice.toStringAsFixed(2),
+        //           style: TextStyle(
+        //             fontWeight: FontWeight.bold,
+        //             color: Colors.grey[200],
+        //           ),
+        //         ),
+        //       ],
+        //     ),
+        //     Text(
+        //       'Delivery date',
+        //       style: TextStyle(
+        //         fontSize: 11,
+        //         fontWeight: FontWeight.bold,
+        //       ),
+        //     ),
+        //     Text(
+        //       'status',
+        //       style: TextStyle(
+        //         fontSize: 11,
+        //         fontWeight: FontWeight.bold,
+        //       ),
+        //     ),
+        //   ],
+        // ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -78,10 +72,10 @@ class _OrderDetailsState extends State<OrderDetails> {
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(5),
                   ),
-                  child: Image.asset(
+                  child: order.products[index].images.isNotEmpty ? Image.network(
                     order.products[index].images[0],
                     fit: BoxFit.cover,
-                  ),
+                  ) : Container(),
                 ),
                 SizedBox(width: 10,),
                 Column(
@@ -110,15 +104,9 @@ class _OrderDetailsState extends State<OrderDetails> {
               ],
             ),
             Text(
-              '31/3/2012',
+              order.deliveryDate,
               style: TextStyle(
-                fontSize: 12,
-              ),
-            ),
-            Text(
-              '5/4/2012',
-              style: TextStyle(
-                fontSize: 12,
+                fontSize: 13,
               ),
             ),
             Container(
@@ -129,7 +117,7 @@ class _OrderDetailsState extends State<OrderDetails> {
               child: Padding(
                 padding: const EdgeInsets.all(5.0),
                 child: Text(
-                  'Pending',
+                  order.status,
                   style: TextStyle(
                     fontSize: 12,
                   ),

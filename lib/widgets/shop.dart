@@ -1,6 +1,7 @@
 import 'package:ecommerce/constants.dart';
 import 'package:ecommerce/models/product.dart';
 import 'package:ecommerce/providers/all_products_provider.dart';
+import 'package:ecommerce/providers/categories_provider.dart';
 import 'package:ecommerce/providers/recently_viewed_provider.dart';
 import 'package:ecommerce/screens/cart_screen.dart';
 import 'package:ecommerce/screens/product_details_screen.dart';
@@ -19,36 +20,15 @@ class Shop extends StatefulWidget {
 }
 
 class _ShopState extends State<Shop> {
-  List<String> shops = ['Fashion'];
-  // List<List<Product>> allProducts = [
-  //   [
-  //     new Product(name: 'name', price: 220, sale: 10),
-  //     new Product(name: 'name', price: 400, sale: 20),
-  //     new Product(name: 'name', price: 220, sale: 10),
-  //     new Product(name: 'name', price: 400, sale: 20),
-  //   ],
-  //   [
-  //     new Product(name: 'name', price: 220, sale: 10),
-  //     new Product(name: 'name', price: 400, sale: 20),
-  //   ],
-  //   [
-  //     new Product(name: 'name', price: 220, sale: 10),
-  //     new Product(name: 'name', price: 400, sale: 20),
-  //   ],
-  //   [
-  //     new Product(name: 'name', price: 220, sale: 10),
-  //     new Product(name: 'name', price: 400, sale: 20),
-  //   ],
-  // ];
 
   @override
   Widget build(BuildContext context) {
-    var provider = Provider.of<AllProductsProvider>(context);
+    var provider = Provider.of<CategoriesProvider>(context);
     var localization = AppLocalization.of(context);
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       child: ListView.builder(
-        itemCount: shops.length,
+        itemCount: provider.items.length,
         itemBuilder: (context, index){
           return Padding(
             padding: const EdgeInsets.all(5.0),
@@ -60,7 +40,7 @@ class _ShopState extends State<Shop> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(localization!.translate(shops[index]).toString(),),
+                    Text(provider.items[index].name),
                     Divider(
                       height: 20,
                       color: Colors.grey,
@@ -74,14 +54,14 @@ class _ShopState extends State<Shop> {
                           mainAxisSpacing: 15,
                           childAspectRatio: 0.7
                       ),
-                      itemCount: 4,
+                      itemCount: provider.items[index].products.length,
                       itemBuilder: (BuildContext context, int i){
                         return InkWell(
                           onTap: (){
-                            Provider.of<RecentlyViewedProvider>(context, listen: false).addItem(provider.items[i], true);
+                            Provider.of<RecentlyViewedProvider>(context, listen: false).addItem(provider.items[index].products[i], true);
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => ProductDetails(product: provider.items[i])),
+                              MaterialPageRoute(builder: (context) => ProductDetails(product: provider.items[index].products[i])),
                             );
                           },
                           child: Column(
@@ -90,13 +70,14 @@ class _ShopState extends State<Shop> {
                               Expanded(
                                 child: Container(
                                   color: Colors.grey[200],
-                                  child: Image.asset(
-                                    provider.items[i].images[0],
+                                  child: provider.items[index].products[i].images.isNotEmpty ?
+                                  Image.asset(
+                                    provider.items[index].products[i].images[0],
                                     fit: BoxFit.cover,
-                                  ),
+                                  ) : Container(),
                                 ),
                               ),
-                              Text(provider.items[i].name)
+                              Text(provider.items[index].products[i].name)
                             ],
                           ),
                         );

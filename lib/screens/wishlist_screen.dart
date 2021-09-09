@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'cart_screen.dart';
+import 'home_screen.dart';
 
 class Wishlist extends StatefulWidget {
   static String id = 'wishlist';
@@ -38,7 +39,9 @@ class _WishlistState extends State<Wishlist> {
             'All your wishlist will be saved here in order to add them into the cart at anytime.',
           ),
           SizedBox(height: 30,),
-          CustomButton(text: 'Add new Product', onclick: (){}),
+          CustomButton(text: 'Add new Product', onclick: (){
+            Navigator.pushReplacementNamed(context, Home.id);
+          }),
         ],
       ),
     );

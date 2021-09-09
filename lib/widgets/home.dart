@@ -2,7 +2,10 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:ecommerce/constants.dart';
 import 'package:ecommerce/models/product.dart';
 import 'package:ecommerce/providers/all_products_provider.dart';
+import 'package:ecommerce/providers/categories_provider.dart';
 import 'package:ecommerce/providers/recently_viewed_provider.dart';
+import 'package:ecommerce/providers/sales_products_provider.dart';
+import 'package:ecommerce/screens/all_products_screen.dart';
 import 'package:ecommerce/screens/product_details_screen.dart';
 import 'package:ecommerce/widgets/deal_panel.dart';
 import 'package:ecommerce/widgets/product_card.dart';
@@ -21,14 +24,6 @@ class HomeWidget extends StatefulWidget {
 }
 
 class _HomeWidgetState extends State<HomeWidget> {
-  List top = [1,1,1,1,1];
-  List shops = [1,1,1,1];
-  List products = [
-    Product(name: 'name', price: 200, sale: 0),
-    Product(name: 'name', price: 200, sale: 0),
-    Product(name: 'name', price: 200, sale: 0),
-    Product(name: 'name', price: 200, sale: 0),
-  ];
   List<String> images = [
     'assets/images/home_banner_1.jpeg',
     'assets/images/home_banner_2.jpeg'
@@ -39,6 +34,8 @@ class _HomeWidgetState extends State<HomeWidget> {
   Widget build(BuildContext context) {
     var provider = Provider.of<AllProductsProvider>(context);
     var recentlyViewedProvider = Provider.of<RecentlyViewedProvider>(context);
+    var salesProvider = Provider.of<SalesProvider>(context);
+    var categoryProvider = Provider.of<CategoriesProvider>(context);
     var localization = AppLocalization.of(context);
     // Locale locale = Localizations.localeOf(context);
     // print(locale.toString());
@@ -95,53 +92,61 @@ class _HomeWidgetState extends State<HomeWidget> {
           // ),
         ),
         SizedBox(height: 10,),
-        // Padding(
-        //   padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
-        //   child: Column(
-        //     children: [
-        //       Container(
-        //         width: double.infinity,
-        //         decoration: BoxDecoration(
-        //             color: Colors.white,
-        //             borderRadius: BorderRadius.circular(5)
-        //         ),
-        //         child: Padding(
-        //           padding: const EdgeInsets.all(12.0),
-        //           child: Center(
-        //             child: Container(
-        //               height: 100,
-        //               child: ListView.builder(
-        //                 scrollDirection: Axis.horizontal,
-        //                 shrinkWrap: true,
-        //                 itemCount: shops.length,
-        //                 itemBuilder: (BuildContext context, int index) {
-        //                   return Padding(
-        //                     padding: const EdgeInsets.symmetric(horizontal: 8),
-        //                     child: Column(
-        //                       children: [
-        //                         CircleAvatar(
-        //                           backgroundColor: Colors.grey.shade300,
-        //                           radius: 30,
-        //                         ),
-        //                         SizedBox(height: 5,),
-        //                         Text(
-        //                           'Shop',
-        //                           style: TextStyle(
-        //                             fontWeight: FontWeight.bold,
-        //                           ),
-        //                         )
-        //                       ],
-        //                     ),
-        //                   );
-        //                 },
-        //               ),
-        //             ),
-        //           ),
-        //         ),
-        //       ),
-        //     ],
-        //   ),
-        // ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
+          child: Column(
+            children: [
+              Container(
+                width: double.infinity,
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(5)
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: Center(
+                    child: Container(
+                      height: 100,
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        shrinkWrap: true,
+                        itemCount: categoryProvider.items.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return InkWell(
+                            onTap: (){
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => AllProducts(products: categoryProvider.items[index].products)),
+                              );
+                            },
+                            child: Column(
+                              children: [
+                                CircleAvatar(
+                                  backgroundColor: Colors.grey.shade300,
+                                  radius: 30,
+                                  child: categoryProvider.items[index].image.isNotEmpty?
+                                        Image.network(categoryProvider.items[index].image) :
+                                        Container(),
+                                ),
+                                SizedBox(height: 5,),
+                                Text(
+                                  categoryProvider.items[index].name,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                )
+                              ],
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
         // Padding(
         //   padding: const EdgeInsets.symmetric(horizontal: 20.0),
         //   child: DealPanel(
@@ -187,35 +192,43 @@ class _HomeWidgetState extends State<HomeWidget> {
         //     seeAll: (){},
         //   ),
         // ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Container(
-            width: double.infinity,
-            decoration: BoxDecoration(
-              color: primaryColor,
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(10),
-                topRight: Radius.circular(10),
-              )
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    localization!.translate('Sales').toString(),
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
+        InkWell(
+          onTap: (){
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => AllProducts(products: salesProvider.items)),
+            );
+          },
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Container(
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: primaryColor,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(10),
+                  topRight: Radius.circular(10),
+                )
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      localization!.translate('Sales').toString(),
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ),
-                  Icon(
-                    Icons.arrow_forward_ios,
-                    color: Colors.white,
-                  ),
-                ],
+                    Icon(
+                      Icons.arrow_forward_ios,
+                      color: Colors.white,
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
@@ -230,118 +243,68 @@ class _HomeWidgetState extends State<HomeWidget> {
               crossAxisSpacing: 5,
               mainAxisSpacing: 5,
             ),
-            itemCount: 4,
+            itemCount: salesProvider.items.length >= 4 ? 4 : salesProvider.items.length,
             itemBuilder: (BuildContext context, int index){
-              List<Product> salesList = provider.items.where((element) => element.discountPrice < element.price).toList();
-              return InkWell(
-                onTap: (){
-                  Provider.of<RecentlyViewedProvider>(context, listen: false).addItem(products[index], true);
+              return ProductCard(
+                product: salesProvider.items[index],
+                onClick: (){
+                  Provider.of<RecentlyViewedProvider>(context, listen: false).addItem(salesProvider.items[index], true);
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => ProductDetails(product: salesList[index])),
+                    MaterialPageRoute(builder: (context) => ProductDetails(product: salesProvider.items[index],)),
                   );
                 },
-                child: ProductCard(
-                  product: salesList[index],
-                  onClick: (){
-                    Provider.of<RecentlyViewedProvider>(context, listen: false).addItem(salesList[index], false);
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => ProductDetails(product: salesList[index],)),
-                    );
-                  },
-                ),
               );
             },
           ),
         ),
-        //SizedBox(height: 20,),
-        Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            children: [
-              Row(
-                children: [
-                  Expanded(
-                    child: Container(
-                      //width: double.infinity,
-                      height: 150,
-                      color: primaryColor,
-                      child: Center(
-                        child: Text(
-                          localization.translate('Fashion').toString(),
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: 5,),
-                  Expanded(
-                    child: Container(
-                      //width: double.infinity,
-                      height: 150,
-                      color: primaryColor,
-                      child: Center(
-                        child: Text(
-                          localization.translate('Electric').toString(),
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 5,),
-              Row(
-                children: [
-                  Expanded(
-                    child: Container(
-                      //width: double.infinity,
-                      height: 150,
-                      color: primaryColor,
-                      child: Center(
-                        child: Text(
-                          localization.translate('Perfumes').toString(),
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: 5,),
-                  Expanded(
-                    child: Container(
-                      //width: double.infinity,
-                      height: 150,
-                      color: primaryColor,
-                      child: Center(
-                        child: Text(
-                          localization.translate('New deals').toString(),
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
+        SizedBox(height: 20,),
+        // Padding(
+        //   padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+        //   child: GridView.builder(
+        //     physics: const NeverScrollableScrollPhysics(),
+        //     shrinkWrap: true,
+        //     gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        //       crossAxisCount: 2,
+        //       crossAxisSpacing: 5,
+        //       mainAxisSpacing: 5,
+        //     ),
+        //     itemCount: categoryProvider.items.length >= 4 ? 4 : categoryProvider.items.length,
+        //     itemBuilder: (BuildContext context, int index){
+        //       return InkWell(
+        //         onTap: (){
+        //           Navigator.push(
+        //             context,
+        //             MaterialPageRoute(builder: (context) => AllProducts(products: categoryProvider.items[index].products)),
+        //           );
+        //         },
+        //         child: Container(
+        //           decoration: BoxDecoration(
+        //             border: Border.all(width: 3, color: primaryColor)
+        //           ),
+        //           child: Stack(
+        //             children: [
+        //               Image.asset(
+        //                 'assets/images/1.PNG',
+        //                 fit: BoxFit.cover,
+        //               ),
+        //               Center(
+        //                 child: Text(
+        //                   categoryProvider.items[index].name,
+        //                   style: TextStyle(
+        //                     color: Colors.white,
+        //                     fontSize: 20,
+        //                     fontWeight: FontWeight.bold,
+        //                   ),
+        //                 ),
+        //               ),
+        //             ],
+        //           ),
+        //         ),
+        //       );
+        //     },
+        //   ),
+        // ),
       ],
     );
   }

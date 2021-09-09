@@ -39,10 +39,10 @@ class _DetailedProductCardState extends State<DetailedProductCard> {
                     width: 100,
                     height: 100,
                     color: Colors.grey[300],
-                    child: Image.asset(
+                    child: widget.product.images.length > 0 ? Image.network(
                       widget.product.images[0],
                       fit: BoxFit.cover,
-                    ),
+                    ) : Container(),
                   ),
                   SizedBox(width: 10,),
                   Expanded(
@@ -56,18 +56,18 @@ class _DetailedProductCardState extends State<DetailedProductCard> {
                           ),
                         ),
                         Text(
-                          '\$ ' + (widget.product.discountPrice * widget.product.quantityAddedInCart).toStringAsFixed(2),
+                          widget.product.discountPrice.toStringAsFixed(2) + ' ' + widget.product.unitPrice,
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 16,
                           ),
                         ),
-                        if(widget.product.sale != 0)
+                        if(sale != 0)
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              '\$ ' + widget.product.price.toStringAsFixed(2),
+                              widget.product.price.toStringAsFixed(2) + ' ' + widget.product.unitPrice,
                               style: TextStyle(
                                 decoration: TextDecoration.lineThrough,
                                 fontSize: 16,
@@ -77,7 +77,7 @@ class _DetailedProductCardState extends State<DetailedProductCard> {
                               elevation: 0,
                               color: Color(0xffffecde),
                               child: Padding(
-                                padding: const EdgeInsets.all(8.0),
+                                padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4),
                                 child: Text(sale.ceil().toString() + '%'),
                               ),
                             )
@@ -117,12 +117,15 @@ class _DetailedProductCardState extends State<DetailedProductCard> {
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Center(
-                        child: Text(
-                          !_addedToCart ? 'Add to cart' : 'Added',
+                        child: !widget.product.addedToCart || !_addedToCart ? Text(
+                          'Add to cart',
                           style: TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
                           ),
+                        ) : Icon(
+                          Icons.check,
+                          color: Colors.white,
                         ),
                       ),
                     ),

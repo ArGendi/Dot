@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:ecommerce/helpers/db_helper.dart';
 import 'package:ecommerce/models/category.dart';
 import 'package:ecommerce/providers/categories_provider.dart';
 import 'package:ecommerce/providers/sales_products_provider.dart';
@@ -28,21 +29,22 @@ class _LoadingState extends State<Loading> {
   WebServices _webServices = new WebServices();
   bool _loadingFailed = false;
   List<dynamic> currencies = [];
+  DBHelper _dbHelper = new DBHelper();
 
   Future<bool> getCategories() async{
     setState(() {_loadingFailed = false;});
     var provider = Provider.of<CategoriesProvider>(context, listen: false);
     if(provider.items.isEmpty) {
       var response = await _webServices.get(
-          'https://souk--server.herokuapp.com/api/category');
+          serverUrl + 'api/category');
       if (response.statusCode == 200) {
         print('getting all categories');
         var body = jsonDecode(response.body);
-        for(var category in body['data']){
+        for(var categoryItem in body['data']){
           Category category = new Category(
-            id: body['_id'],
-            name: body['name'],
-            image: body['image'],
+            id: categoryItem['_id'],
+            name: categoryItem['name'],
+            image: categoryItem['image'],
           );
           provider.addItem(category);
         }
@@ -64,7 +66,7 @@ class _LoadingState extends State<Loading> {
     var salesProvider = Provider.of<SalesProvider>(context, listen: false);
     if(productsProvider.items.isEmpty) {
       var response = await _webServices.get(
-          'https://souk--server.herokuapp.com/api/product');
+          serverUrl + 'api/product');
       if (response.statusCode == 200) {
         print('getting all products');
         var body = jsonDecode(response.body);
@@ -78,8 +80,8 @@ class _LoadingState extends State<Loading> {
           // }
           productsProvider.addItem(product);
           int categoryIndex = categoryProvider.items.indexWhere((element) => element.id == product.categoryId);
-          if(categoryIndex > 0)
-            categoryProvider.items[categoryIndex].products.add(product);
+          product.categoryIndex = categoryIndex;
+          categoryProvider.items[categoryIndex].products.add(product);
           if(product.discountPrice < product.price)
             salesProvider.addItem(product);
         }
@@ -146,6 +148,7 @@ class _LoadingState extends State<Loading> {
     String? name = await HelpFunction.getUserName();
     String? token = await HelpFunction.getUserToken();
     String? image = await HelpFunction.getUserImage();
+    String? country = await HelpFunction.getUserCountry();
     print(id);
     print(token);
     AppUser user = new AppUser(
@@ -154,6 +157,7 @@ class _LoadingState extends State<Loading> {
       token: token != null ? token : '',
       firstName: name != null ? name : '',
       imageUrl: image != null ? image : '',
+      country: country != null ? country : '',
     );
     Provider.of<ActiveUserProvider>(context, listen: false).setActiveUser(user);
     bool recCategories = await getCategories();

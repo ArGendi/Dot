@@ -40,7 +40,7 @@ class ProductCard extends StatelessWidget {
                           product.name
                       ),
                       Text(
-                          '\$ ${product.discountPrice}'
+                          product.discountPrice.toString() + ' ' + product.unitPrice,
                       ),
                     ],
                   ),

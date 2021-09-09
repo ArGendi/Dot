@@ -1,3 +1,4 @@
+import 'package:ecommerce/models/info.dart';
 import 'package:ecommerce/providers/cart_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -10,8 +11,9 @@ class PaymentInfo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var cartProvider = Provider.of<CartProvider>(context);
-    double delivery = 15;
-    double sum = 0;
+    int delivery = 15;
+    int sum = 0;
+    int tax = 10;
     int itemsQuantity = 0;
     for(var item in cartProvider.items) {
       sum += item.discountPrice * item.quantityAddedInCart;
@@ -29,11 +31,19 @@ class PaymentInfo extends StatelessWidget {
           ),
         ),
         SizedBox(height: 5,),
+        Text(
+          'Subtotals: ' + sum.toStringAsFixed(2) + ' ' + cartProvider.items[0].unitPrice,
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        //SizedBox(height: 5,),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              'Subtotals: \$' + sum.toStringAsFixed(2),
+              'Tax: ' + tax.toStringAsFixed(2) + ' ' + cartProvider.items[0].unitPrice,
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
@@ -47,19 +57,18 @@ class PaymentInfo extends StatelessWidget {
             )
           ],
         ),
-        SizedBox(height: 5,),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              'Delivery: \$' + delivery.toStringAsFixed(2),
+              'Delivery: ' + delivery.toStringAsFixed(2) + ' ' + cartProvider.items[0].unitPrice,
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
               ),
             ),
             Text(
-              '\$ ' + (sum + delivery).toStringAsFixed(2),
+              (sum + delivery + tax).toStringAsFixed(2) + ' ' + cartProvider.items[0].unitPrice,
               style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold

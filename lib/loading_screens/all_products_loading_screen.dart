@@ -46,7 +46,7 @@ class _AllProductsLoadingState extends State<AllProductsLoading> {
         print('error get all products');
       }
     }
-    Navigator.pushReplacementNamed(context, AllProducts.id);
+    //Navigator.pushReplacementNamed(context, AllProducts.id);
   }
 
   @override

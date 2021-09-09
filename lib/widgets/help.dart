@@ -179,7 +179,7 @@ class _HelpWidgetState extends State<HelpWidget> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(localization.translate('Country').toString()),
-                      Text(activeUserProvider.activeUser.language),
+                      Text(activeUserProvider.activeUser.country),
                     ],
                   ),
                 ),

@@ -6,24 +6,18 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class AllProducts extends StatefulWidget {
-  static String id = 'all products';
-  const AllProducts({Key? key}) : super(key: key);
+  final List<Product> products;
+  const AllProducts({Key? key, required this.products}) : super(key: key);
 
   @override
   _AllProductsState createState() => _AllProductsState();
 }
 
 class _AllProductsState extends State<AllProducts> {
-  // List<Product> products = [
-  //   Product(name: 'name', price: 200, sale: 10),
-  //   Product(name: 'name', price: 200, sale: 0),
-  //   Product(name: 'name', price: 200, sale: 0),
-  //   Product(name: 'name', price: 200, sale: 0),
-  // ];
 
   @override
   Widget build(BuildContext context) {
-    var provider = Provider.of<AllProductsProvider>(context);
+    //var provider = Provider.of<AllProductsProvider>(context);
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -60,14 +54,14 @@ class _AllProductsState extends State<AllProducts> {
           crossAxisSpacing: 5,
           mainAxisSpacing: 5,
         ),
-        itemCount: provider.items.length,
+        itemCount: widget.products.length,
         itemBuilder: (BuildContext context, int index){
           return ProductCard(
-            product: provider.items[index],
+            product: widget.products[index],
             onClick: (){
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => ProductDetails(product: provider.items[index])),
+                MaterialPageRoute(builder: (context) => ProductDetails(product: widget.products[index])),
               );
             },
           );

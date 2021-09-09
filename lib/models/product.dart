@@ -16,7 +16,7 @@ class Product{
   bool isFavourite = false;
   int availabilityInStock = 12;
   String color = 'red';
-  int quantityAddedInCart = 0;
+  int quantityAddedInCart = 1;
   String sku = '';
   String mainMaterial = '';
   String model = '';
@@ -33,6 +33,9 @@ class Product{
   String orderDate = '';
   String deliveryDate = '';
   String categoryId = '';
+  int categoryIndex = -1;
+  bool addedToCart = false;
+  bool isViewed = false;
 
   Product({this.name = 'product', this.price = 0, this.sale = 0, this.rate =0,this.isFavourite=false, this.availabilityInStock=0,
           this.quantityAddedInCart = 0, this.website = '', this.weight = 0, this.size = '', this.productLine = '', this.productCountry = '',
@@ -62,5 +65,7 @@ class Product{
     shippingDays = json['shippingDays'];
     //seller = json['seller'];
     categoryId = json['subcategory']['category'];
+    weight = json['weight'];
+    quantityAddedInCart = json['minimumPurchaseQty'];
   }
 }
