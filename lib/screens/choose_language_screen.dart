@@ -1,6 +1,7 @@
 import 'package:ecommerce/loading_screens/loading_screen.dart';
 import 'package:ecommerce/providers/app_language_provider.dart';
 import 'package:ecommerce/screens/home_screen.dart';
+import 'package:ecommerce/screens/signup_screen.dart';
 import 'package:ecommerce/services/helper_function.dart';
 import 'package:ecommerce/widgets/subscribe_panel.dart';
 import 'package:flutter/material.dart';
@@ -138,8 +139,7 @@ class _ChooseLanguageState extends State<ChooseLanguage> {
               String lang = isEnglish ? 'en' : 'ar';
               Provider.of<AppLanguageProvider>(context, listen: false).changeLang(lang);
               await HelpFunction.saveUserLanguage(lang);
-              Navigator.of(context)
-                  .pushNamedAndRemoveUntil(Loading.id, (Route<dynamic> route) => false);
+              Navigator.pushNamed(context, SignUp.id);
             },
           ),
         ],

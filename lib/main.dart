@@ -37,9 +37,11 @@ import 'loading_screens/cart_loading_screen.dart';
 import 'loading_screens/orders_loading_screen.dart';
 import 'loading_screens/wishlist_loading_screen.dart';
 import 'models/product.dart';
+import 'package:timezone/data/latest.dart' as tz;
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
+  tz.initializeTimeZones();
   var lang = await HelpFunction.getUserLanguage();
   runApp(MultiProvider(
     providers: [
@@ -118,7 +120,7 @@ class _MyAppState extends State<MyApp> {
         return supportedLocales.first;
       },
       locale: Locale(provider.lang, ''),
-      home: Loading(),//widget.lang != null ? Loading() : Welcome(),
+      home: Welcome(),//widget.lang != null ? Loading() : Welcome(),
       routes: {
         Welcome.id: (context) => Welcome(),
         Login.id: (context) => Login(),

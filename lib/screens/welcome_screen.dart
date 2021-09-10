@@ -37,6 +37,7 @@ class _WelcomeState extends State<Welcome> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
+                Image.asset('assets/images/logo.png',),
               ],
             ),
           ),

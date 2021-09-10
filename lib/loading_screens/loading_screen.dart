@@ -3,6 +3,7 @@ import 'package:ecommerce/helpers/db_helper.dart';
 import 'package:ecommerce/models/category.dart';
 import 'package:ecommerce/providers/categories_provider.dart';
 import 'package:ecommerce/providers/sales_products_provider.dart';
+import 'package:ecommerce/services/notification_service.dart';
 import 'package:http/http.dart' as http;
 import 'package:ecommerce/constants.dart';
 import 'package:ecommerce/models/product.dart';
@@ -70,6 +71,7 @@ class _LoadingState extends State<Loading> {
       if (response.statusCode == 200) {
         print('getting all products');
         var body = jsonDecode(response.body);
+        double sale = 1.0;
         for(var item in body['data']){
           Product product = new Product();
           product.setProductFromJsom(item);
@@ -82,10 +84,21 @@ class _LoadingState extends State<Loading> {
           int categoryIndex = categoryProvider.items.indexWhere((element) => element.id == product.categoryId);
           product.categoryIndex = categoryIndex;
           categoryProvider.items[categoryIndex].products.add(product);
-          if(product.discountPrice < product.price)
+          if(product.discountPrice < product.price) {
             salesProvider.addItem(product);
+            if((product.discountPrice / product.price) < sale)
+              sale = (product.discountPrice / product.price);
+          }
         }
         print('set all products');
+        DateTime now = DateTime.now();
+        int iSale = ((1 - sale) * 100).truncate();
+        NotificationService.showScheduledNotification(
+          scheduledDate: DateTime(now.year, now.month, 20),
+          title: 'Sales',
+          body: 'Sales up to $iSale%, check it now',
+        );
+        print('notification set');
         return true;
       }
       else {
@@ -97,47 +110,47 @@ class _LoadingState extends State<Loading> {
     return true;
   }
 
-  fillProducts(){
-    var provider = Provider.of<AllProductsProvider>(context, listen: false);
-    Product product = new Product(
-      name: 'Product 1', price: 220, discountPrice: 150,
-      description: 'product 1 description',
-      sku: 'dh9ddh8dhjh3l3nf',
-      availabilityInStock: 12,
-      color: 'black',
-      mainMaterial: 'iron',
-      model: 'model 2',
-      productCountry: 'England',
-      productLine: 'n8hf8fg80fn0f',
-      size: "12 x 15 x 10",
-      weight: 10,
-      website: 'http://www.demo.com'
-    );
-    product.images.add('assets/images/1.PNG');
-    product.images.add('assets/images/2.PNG');
-    provider.addItem(product);
-    int num = 2;
-    for(int i=0; i<3; i++){
-      Product prod = new Product(
-          name: 'Product $num', price: 200, discountPrice: 190,
-          description: 'product $num description',
-          sku: 'dh9ddh8dhjh3l3nf',
-          availabilityInStock: 12,
-          color: 'black',
-          mainMaterial: 'iron',
-          model: 'model 2',
-          productCountry: 'England',
-          productLine: 'n8hf8fg80fn0f',
-          size: "12 x 15 x 10",
-          weight: 10,
-          website: 'http://www.demo.com'
-      );
-      num += 1;
-      prod.images.add('assets/images/$num.PNG');
-      provider.addItem(prod);
-    }
-
-  }
+  // fillProducts(){
+  //   var provider = Provider.of<AllProductsProvider>(context, listen: false);
+  //   Product product = new Product(
+  //     name: 'Product 1', price: 220, discountPrice: 150,
+  //     description: 'product 1 description',
+  //     sku: 'dh9ddh8dhjh3l3nf',
+  //     availabilityInStock: 12,
+  //     color: 'black',
+  //     mainMaterial: 'iron',
+  //     model: 'model 2',
+  //     productCountry: 'England',
+  //     productLine: 'n8hf8fg80fn0f',
+  //     size: "12 x 15 x 10",
+  //     weight: 10,
+  //     website: 'http://www.demo.com'
+  //   );
+  //   product.images.add('assets/images/1.PNG');
+  //   product.images.add('assets/images/2.PNG');
+  //   provider.addItem(product);
+  //   int num = 2;
+  //   for(int i=0; i<3; i++){
+  //     Product prod = new Product(
+  //         name: 'Product $num', price: 200, discountPrice: 190,
+  //         description: 'product $num description',
+  //         sku: 'dh9ddh8dhjh3l3nf',
+  //         availabilityInStock: 12,
+  //         color: 'black',
+  //         mainMaterial: 'iron',
+  //         model: 'model 2',
+  //         productCountry: 'England',
+  //         productLine: 'n8hf8fg80fn0f',
+  //         size: "12 x 15 x 10",
+  //         weight: 10,
+  //         website: 'http://www.demo.com'
+  //     );
+  //     num += 1;
+  //     prod.images.add('assets/images/$num.PNG');
+  //     provider.addItem(prod);
+  //   }
+  //
+  // }
 
   getLang() async{
     String? lang = await HelpFunction.getUserLanguage();
@@ -168,30 +181,31 @@ class _LoadingState extends State<Loading> {
     }
   }
 
-  dummy() async{
-    var response = await _webServices.get(
-        'https://souk--server.herokuapp.com/api/product/?slug=6130ad8a61c1854394055530');
-    if (response.statusCode == 200) {
-      print(response.body);
-    }
-    else {
-      print('error dummy');
-    }
-  }
-
-  loadCurrencies() async {
-    String uri = "https://api.exchangeratesapi.io/latest";
-    var response = await http
-        .get(Uri.parse(uri), headers: {"Accept": "application/json"});
-    var responseBody = json.decode(response.body);
-    Map curMap = responseBody['rates'];
-    print(response.body);
-  }
+  // dummy() async{
+  //   var response = await _webServices.get(
+  //       'https://souk--server.herokuapp.com/api/product/?slug=6130ad8a61c1854394055530');
+  //   if (response.statusCode == 200) {
+  //     print(response.body);
+  //   }
+  //   else {
+  //     print('error dummy');
+  //   }
+  // }
+  //
+  // loadCurrencies() async {
+  //   String uri = "https://api.exchangeratesapi.io/latest";
+  //   var response = await http
+  //       .get(Uri.parse(uri), headers: {"Accept": "application/json"});
+  //   var responseBody = json.decode(response.body);
+  //   Map curMap = responseBody['rates'];
+  //   print(response.body);
+  // }
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    NotificationService.init();
     getLang();
   }
 
