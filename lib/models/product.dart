@@ -39,7 +39,7 @@ class Product{
   bool isViewed = false;
   String image1 = '';
 
-  Product({this.name = 'product', this.price = 0, this.sale = 0, this.rate =0,this.isFavourite=false, this.availabilityInStock=0,
+  Product({this.name = '', this.price = 0, this.sale = 0, this.rate =0,this.isFavourite=false, this.availabilityInStock=0,
           this.quantityAddedInCart = 0, this.website = '', this.weight = 0, this.size = '', this.productLine = '', this.productCountry = '',
           this.model = '', this.mainMaterial = '', this.color = '', this.sku = '', this.description = '', this.discountPrice = 0});
 

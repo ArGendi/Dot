@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:ecommerce/helpers/db_helper.dart';
 import 'package:ecommerce/models/category.dart';
+import 'package:ecommerce/models/review.dart';
 import 'package:ecommerce/providers/categories_provider.dart';
 import 'package:ecommerce/providers/sales_products_provider.dart';
 import 'package:ecommerce/services/notification_service.dart';
@@ -79,6 +80,14 @@ class _LoadingState extends State<Loading> {
           bool validProduct = product.setProductFromJsom(item);
           if(!validProduct) continue;
           print('slug: ' + product.slug);
+
+          // for(var reviewItem in item['reviews']){
+          //   Review review = new Review(
+          //     rate: reviewItem['rating'],
+          //     content: reviewItem['comment'],
+          //   );
+          // }
+
           //print('image: ' + product.image1);
           // missing assign reviews
           // for(var image in item['images']) {

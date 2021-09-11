@@ -274,7 +274,9 @@ class _PersonalInfoState extends State<PersonalInfo> {
             SizedBox(height: 5,),
             CustomButton(
               text: localization.translate('Validate order').toString(),
-              onclick: _onPersonalInfoSubmit,
+              onclick: (){
+                _onPersonalInfoSubmit(localization);
+              },
               isLoading: _isLoading,
             ),
           ],

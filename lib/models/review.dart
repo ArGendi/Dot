@@ -4,6 +4,6 @@ class Review {
   int rate = 0;
   String content = '';
 
-  Review({required this.userName, required this.fromDate, required this.rate, required this.content});
+  Review({this.userName = '', this.fromDate = '', this.rate = 0, this.content = ''});
 
 }
