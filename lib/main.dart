@@ -120,7 +120,7 @@ class _MyAppState extends State<MyApp> {
         return supportedLocales.first;
       },
       locale: Locale(provider.lang, ''),
-      home: Welcome(),//widget.lang != null ? Loading() : Welcome(),
+      home: Loading(),//widget.lang != null ? Loading() : Welcome(),
       routes: {
         Welcome.id: (context) => Welcome(),
         Login.id: (context) => Login(),
@@ -136,6 +136,7 @@ class _MyAppState extends State<MyApp> {
         CartLoading.id: (context) => CartLoading(),
         RecentlyViewedLoading.id: (context) => RecentlyViewedLoading(),
         Orders.id: (context) => Orders(),
+        OrdersLoading.id: (context) => OrdersLoading(),
       },
     );
   }

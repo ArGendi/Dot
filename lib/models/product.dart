@@ -33,39 +33,50 @@ class Product{
   String orderDate = '';
   String deliveryDate = '';
   String categoryId = '';
+  String slug = '';
   int categoryIndex = -1;
   bool addedToCart = false;
   bool isViewed = false;
+  String image1 = '';
 
   Product({this.name = 'product', this.price = 0, this.sale = 0, this.rate =0,this.isFavourite=false, this.availabilityInStock=0,
           this.quantityAddedInCart = 0, this.website = '', this.weight = 0, this.size = '', this.productLine = '', this.productCountry = '',
           this.model = '', this.mainMaterial = '', this.color = '', this.sku = '', this.description = '', this.discountPrice = 0});
 
-  setProductFromJsom(Map<String, dynamic> json){
-    rate = json['rating'];
-    id = json['_id'];
-    name = json['name'];
-    //subCategory = json['subcategory'];
-    price = json['originalPrice'];
-    discountPrice = json['discountPrice'];
-    //sale = json['discountPrice'];
-    description = json['details'];
-    brand = json['brand'];
-    color = json['color'];
-    availabilityInStock = json['quantity'];
-    sku = json['sku'];
-    mainMaterial = json['mainMaterial'];
-    model = json['model'];
-    productCountry = json['productionCountry'];
-    productLine = json['productLine'];
-    size = json['size'];
-    website = json['website'];
-    tax = json['tax'];
-    unitPrice = json['unitPrice'];
-    shippingDays = json['shippingDays'];
-    //seller = json['seller'];
-    categoryId = json['subcategory']['category'];
-    weight = json['weight'];
-    quantityAddedInCart = json['minimumPurchaseQty'];
+  bool setProductFromJsom(Map<String, dynamic> json){
+    try{
+      rate = json['rating'];
+      id = json['_id'];
+      name = json['name'];
+      //subCategory = json['subcategory'];
+      price = json['originalPrice'];
+      discountPrice = json['discountPrice'];
+      //sale = json['discountPrice'];
+      description = json['details'];
+      brand = json['brand'];
+      color = json['color'];
+      availabilityInStock = json['quantity'];
+      sku = json['sku'];
+      mainMaterial = json['mainMaterial'];
+      model = json['model'];
+      productCountry = json['productionCountry'];
+      productLine = json['productLine'];
+      size = json['size'];
+      website = json['website'];
+      tax = json['tax'];
+      unitPrice = json['unitPrice'];
+      shippingDays = json['shippingDays'];
+      //seller = json['seller'];
+      categoryId = json['subcategory']['category'];
+      weight = json['weight'];
+      quantityAddedInCart = json['minimumPurchaseQty'];
+      slug = json['slug'];
+      image1 = json['images'][0];
+      return true;
+    }
+    catch(e){
+      print(e);
+      return false;
+    }
   }
 }

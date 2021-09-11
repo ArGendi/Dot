@@ -11,6 +11,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../app_localization.dart';
+
 class Cart extends StatefulWidget {
   static String id = 'cart';
   const Cart({Key? key}) : super(key: key);
@@ -37,7 +39,8 @@ class _CartState extends State<Cart> {
     Provider.of<CartProvider>(ctx, listen: false).removeItem(product);
   }
 
-  Widget emptyCart(){
+  Widget emptyCart(BuildContext context){
+    var localization = AppLocalization.of(context);
     return Padding(
       padding: const EdgeInsets.all(20.0),
       child: Column(
@@ -51,7 +54,7 @@ class _CartState extends State<Cart> {
           ),
           SizedBox(height: 10,),
           Text(
-            'Your cart is empty',
+            localization!.translate('Your cart is empty').toString(),
             style: TextStyle(
               fontSize: 18,
             ),
@@ -63,6 +66,7 @@ class _CartState extends State<Cart> {
   }
 
   Widget filledCart(CartProvider cartProvider, RecentlyViewedProvider recentlyViewedProvider, BuildContext context){
+    var localization = AppLocalization.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -122,7 +126,7 @@ class _CartState extends State<Cart> {
                               Row(
                                 children: [
                                   Text(
-                                    'color: ' + cartProvider.items[index].color,
+                                    localization!.translate('color').toString() + ': ' + cartProvider.items[index].color,
                                     style: TextStyle(
                                       fontSize: 16,
                                     ),
@@ -221,7 +225,7 @@ class _CartState extends State<Cart> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          'Recently Viewed',
+                          localization!.translate('Recently Viewed').toString(),
                           style: TextStyle(
                             //fontSize: 16,
                             fontWeight: FontWeight.bold,
@@ -245,7 +249,7 @@ class _CartState extends State<Cart> {
                   ],
                 ),
                 CustomButton(
-                  text: 'Validate orders',
+                  text: localization!.translate('Validate order').toString(),
                   onclick: (){
                     _checkoutBottomSheet(context);
                   },
@@ -298,7 +302,7 @@ class _CartState extends State<Cart> {
         ),
       ),
       body: cartProvider.items.isNotEmpty ? filledCart(cartProvider, recentlyViewedProvider, context) :
-          emptyCart(),
+          emptyCart(context),
     );
   }
 }

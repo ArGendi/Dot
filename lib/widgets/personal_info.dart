@@ -10,6 +10,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../app_localization.dart';
 import '../constants.dart';
 import 'checkout.dart';
 import 'custom_button.dart';
@@ -59,7 +60,7 @@ class _PersonalInfoState extends State<PersonalInfo> {
     _postalCode = postalCode;
   }
 
-  _onPersonalInfoSubmit() async{
+  _onPersonalInfoSubmit(AppLocalization localization) async{
     FocusScope.of(context).unfocus();
     bool valid = _personalFormKey.currentState!.validate();
     if(valid){
@@ -67,8 +68,8 @@ class _PersonalInfoState extends State<PersonalInfo> {
       print(_name);
       print(_postalCode);
       var cartProvider = Provider.of<CartProvider>(context, listen: false);
-      int delivery = 15;
-      int tax = 10;
+      int delivery = 0;
+      int tax = 0;
       int sum = 0;
       for(var item in cartProvider.items) {
         _orderItems.add({
@@ -79,6 +80,7 @@ class _PersonalInfoState extends State<PersonalInfo> {
           'image': "image",
         });
         sum += item.discountPrice * item.quantityAddedInCart;
+        tax += item.tax;
       }
       setState(() {_isLoading = true;});
       await HelpFunction.saveUserCountry(_country);
@@ -111,16 +113,16 @@ class _PersonalInfoState extends State<PersonalInfo> {
         for(var item in cartProvider.items)
           item.addedToCart = false;
         setState(() {_isLoading = false;});
-        showMsgDialog("Order submitted successfully :)");
+        showMsgDialog(localization.translate("Order submitted successfully :)").toString(), localization);
       }
       else {
         setState(() {_isLoading = false;});
-        showMsgDialog("Something went wrong try again !!");
+        showMsgDialog(localization.translate("Something went wrong try again !!").toString(), localization);
       }
     }
   }
 
-  showMsgDialog(String text){
+  showMsgDialog(String text, AppLocalization localization){
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -134,7 +136,7 @@ class _PersonalInfoState extends State<PersonalInfo> {
                     Navigator.pop(context);
                   },
                   child: Text(
-                    'Get it',
+                    localization.translate('Get it').toString(),
                     style: TextStyle(
                         color: primaryColor
                     ),
@@ -167,7 +169,7 @@ class _PersonalInfoState extends State<PersonalInfo> {
   //       });
   // }
 
-  Widget addPersonalInfo(){
+  Widget addPersonalInfo(AppLocalization localization){
     return Padding(
       padding: const EdgeInsets.all(20.0),
       child: Form(
@@ -176,84 +178,84 @@ class _PersonalInfoState extends State<PersonalInfo> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             CustomTextField(
-              text: 'Name',
+              text: localization.translate('Name').toString(),
               obscureText: false,
               textInputType: TextInputType.text,
               setValue: _setName,
               validation: (value){
-                if (value.isEmpty) return 'Enter your name';
+                if (value.isEmpty) return localization.translate('Enter your name').toString();
                 return null;
               },
               whiteColor: true,
             ),
             SizedBox(height: 5,),
             CustomTextField(
-              text: 'Address',
+              text: localization.translate('Address').toString(),
               obscureText: false,
               textInputType: TextInputType.text,
               setValue: _setAddress,
               validation: (value){
-                if (value.isEmpty) return 'Enter your address';
+                if (value.isEmpty) return localization.translate('Enter your address').toString();
                 return null;
               },
               whiteColor: true,
             ),
             SizedBox(height: 5,),
             CustomTextField(
-              text: 'Country',
+              text: localization.translate('Country').toString(),
               obscureText: false,
               textInputType: TextInputType.text,
               setValue: _setCountry,
               validation: (value){
-                if (value.isEmpty) return 'Enter your country';
+                if (value.isEmpty) return localization.translate('Enter your country').toString();
                 return null;
               },
               whiteColor: true,
             ),
             SizedBox(height: 5,),
             CustomTextField(
-              text: 'City',
+              text: localization.translate('City').toString(),
               obscureText: false,
               textInputType: TextInputType.text,
               setValue: _setCity,
               validation: (value){
-                if (value.isEmpty) return 'Enter your city';
+                if (value.isEmpty) return localization.translate('Enter your city').toString();
                 return null;
               },
               whiteColor: true,
             ),
             SizedBox(height: 5,),
             CustomTextField(
-              text: 'State',
+              text: localization.translate('State').toString(),
               obscureText: false,
               textInputType: TextInputType.text,
               setValue: _setState,
               validation: (value){
-                if (value.isEmpty) return 'Enter your state';
+                if (value.isEmpty) return localization.translate('Enter your state').toString();
                 return null;
               },
               whiteColor: true,
             ),
             SizedBox(height: 5,),
             CustomTextField(
-              text: 'Phone number',
+              text: localization.translate('Phone number').toString(),
               obscureText: false,
               textInputType: TextInputType.phone,
               setValue: _setPhoneNumber,
               validation: (value){
-                if (value.isEmpty) return 'Enter your Phone number';
+                if (value.isEmpty) return localization.translate('Enter your Phone number').toString();
                 return null;
               },
               whiteColor: true,
             ),
             SizedBox(height: 5,),
             CustomTextField(
-              text: 'Postal code',
+              text: localization.translate('Postal code').toString(),
               obscureText: false,
               textInputType: TextInputType.number,
               setValue: _setPostalCode,
               validation: (value){
-                if (value.isEmpty) return 'Enter your postal code';
+                if (value.isEmpty) return localization.translate('Enter your postal code').toString();
                 return null;
               },
               whiteColor: true,
@@ -264,14 +266,14 @@ class _PersonalInfoState extends State<PersonalInfo> {
                 Icon(Icons.monetization_on, color: primaryColor,),
                 SizedBox(width: 5,),
                 Text(
-                  'Cash on delivery',
+                  localization.translate('Cash on delivery').toString(),
                   style: TextStyle(),
                 ),
               ],
             ),
             SizedBox(height: 5,),
             CustomButton(
-              text: 'Validate Order',
+              text: localization.translate('Validate order').toString(),
               onclick: _onPersonalInfoSubmit,
               isLoading: _isLoading,
             ),
@@ -283,6 +285,7 @@ class _PersonalInfoState extends State<PersonalInfo> {
 
   @override
   Widget build(BuildContext context) {
+    var localization = AppLocalization.of(context);
     var cartProvider = Provider.of<CartProvider>(context);
     return Padding(
       padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
@@ -291,7 +294,7 @@ class _PersonalInfoState extends State<PersonalInfo> {
           mainAxisSize: MainAxisSize.min,
           children: [
             paymentInfoPart(context, cartProvider),
-            addPersonalInfo(),
+            addPersonalInfo(localization!),
           ],
         ),
       ),

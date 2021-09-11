@@ -45,7 +45,7 @@ class _LoadingState extends State<Loading> {
           Category category = new Category(
             id: categoryItem['_id'],
             name: categoryItem['name'],
-            image: categoryItem['image'],
+            //image: categoryItem['image'],
           );
           provider.addItem(category);
         }
@@ -74,7 +74,12 @@ class _LoadingState extends State<Loading> {
         double sale = 1.0;
         for(var item in body['data']){
           Product product = new Product();
-          product.setProductFromJsom(item);
+          print('--------------');
+          print(item['_id']);
+          bool validProduct = product.setProductFromJsom(item);
+          if(!validProduct) continue;
+          print('slug: ' + product.slug);
+          //print('image: ' + product.image1);
           // missing assign reviews
           // for(var image in item['images']) {
           //   List<dynamic> imageData = image['data'];

@@ -47,7 +47,6 @@ class _AllProductsState extends State<AllProducts> {
         ],
       ),
       body: GridView.builder(
-        physics: const NeverScrollableScrollPhysics(),
         shrinkWrap: true,
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,

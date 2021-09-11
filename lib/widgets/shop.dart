@@ -6,6 +6,7 @@ import 'package:ecommerce/providers/recently_viewed_provider.dart';
 import 'package:ecommerce/screens/cart_screen.dart';
 import 'package:ecommerce/screens/product_details_screen.dart';
 import 'package:ecommerce/services/search.dart';
+import 'package:ecommerce/widgets/product_card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -49,37 +50,22 @@ class _ShopState extends State<Shop> {
                       physics: const NeverScrollableScrollPhysics(),
                       shrinkWrap: true,
                       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 3,
+                          crossAxisCount: 2,
                           crossAxisSpacing: 5,
-                          mainAxisSpacing: 15,
+                          mainAxisSpacing: 5,
                           childAspectRatio: 0.7
                       ),
                       itemCount: provider.items[index].products.length,
                       itemBuilder: (BuildContext context, int i){
-                        return InkWell(
-                          onTap: (){
+                        return ProductCard(
+                          onClick: () {
                             Provider.of<RecentlyViewedProvider>(context, listen: false).addItem(provider.items[index].products[i], true);
                             Navigator.push(
                               context,
                               MaterialPageRoute(builder: (context) => ProductDetails(product: provider.items[index].products[i])),
                             );
                           },
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Expanded(
-                                child: Container(
-                                  color: Colors.grey[200],
-                                  child: provider.items[index].products[i].images.isNotEmpty ?
-                                  Image.asset(
-                                    provider.items[index].products[i].images[0],
-                                    fit: BoxFit.cover,
-                                  ) : Container(),
-                                ),
-                              ),
-                              Text(provider.items[index].products[i].name)
-                            ],
-                          ),
+                          product: provider.items[index].products[i],
                         );
                       },
                     )

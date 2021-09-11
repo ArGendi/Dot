@@ -1,6 +1,8 @@
 import 'package:ecommerce/constants.dart';
+import 'package:ecommerce/models/category.dart';
 import 'package:ecommerce/models/product.dart';
 import 'package:ecommerce/providers/all_products_provider.dart';
+import 'package:ecommerce/providers/categories_provider.dart';
 import 'package:ecommerce/screens/all_products_screen.dart';
 import 'package:ecommerce/screens/product_details_screen.dart';
 import 'package:ecommerce/widgets/product_card.dart';
@@ -121,30 +123,77 @@ class Search extends SearchDelegate{
   @override
   Widget buildSuggestions(BuildContext context) {
     var provider = Provider.of<AllProductsProvider>(context);
+    var categoriesProvider = Provider.of<CategoriesProvider>(context);
     List<Product> filteredList = provider.items.where((element) => element.name.toLowerCase().contains(query)).toList();
+    List<Category> filteredCategoryList = categoriesProvider.items.where((element) => element.name.toLowerCase().contains(query)).toList();
     if(query.isNotEmpty)
       return Padding(
       padding: const EdgeInsets.all(20.0),
-      child: GridView.builder(
-        physics: const NeverScrollableScrollPhysics(),
+      child: ListView(
         shrinkWrap: true,
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          crossAxisSpacing: 5,
-          mainAxisSpacing: 5,
-        ),
-        itemCount: filteredList.length,
-        itemBuilder: (BuildContext context, int index){
-          return ProductCard(
-            product: filteredList[index],
-            onClick: (){
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => ProductDetails(product: filteredList[index])),
+        children: [
+          ListView.builder(
+            shrinkWrap: true,
+            itemCount: filteredCategoryList.length,
+            itemBuilder: (context, index){
+              return InkWell(
+                onTap: (){
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => AllProducts(products: filteredCategoryList[index].products)),
+                  );
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    children: [
+                      Text(
+                        filteredCategoryList[index].name,
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(width: 10,),
+                      Text(
+                        'Category',
+                        style: TextStyle(
+                          color: Colors.grey,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               );
             },
-          );
-        },
+          ),
+          if(filteredCategoryList.isNotEmpty)
+          Divider(
+            height: 30,
+            color: Colors.grey,
+          ),
+          GridView.builder(
+            physics: const NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              crossAxisSpacing: 5,
+              mainAxisSpacing: 5,
+            ),
+            itemCount: filteredList.length,
+            itemBuilder: (BuildContext context, int index){
+              return ProductCard(
+                product: filteredList[index],
+                onClick: (){
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => ProductDetails(product: filteredList[index])),
+                  );
+                },
+              );
+            },
+          ),
+        ],
       ),
     );
     else return Container();

@@ -1,8 +1,16 @@
+import 'dart:convert';
+
 import 'package:ecommerce/models/product.dart';
+import 'package:ecommerce/providers/active_user_provider.dart';
+import 'package:ecommerce/providers/all_products_provider.dart';
+import 'package:ecommerce/services/web_services.dart';
 import 'package:ecommerce/widgets/custom_button.dart';
 import 'package:ecommerce/widgets/custom_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:provider/provider.dart';
+
+import '../constants.dart';
 
 class FeedBack extends StatefulWidget {
   final Product product;
@@ -17,16 +25,57 @@ class _FeedBackState extends State<FeedBack> {
   String _comment = '';
   double _rate = 3.0;
   final _formKey = GlobalKey<FormState>();
+  WebServices _webServices = new WebServices();
 
   _setComment(String comment) {
     _comment = comment;
   }
 
-  _onSubmit() async{
+  showMsgDialog(String text){
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: Text(text),
+          actions: [
+            Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: TextButton(
+                  onPressed: (){
+                    Navigator.pop(context);
+                  },
+                  child: Text(
+                    'Close',
+                    style: TextStyle(
+                        color: primaryColor
+                    ),
+                  )
+              ),
+            )
+          ],
+        );
+      },
+    );
+  }
+
+  _onSubmit(BuildContext context) async{
     FocusScope.of(context).unfocus();
     _formKey.currentState!.save();
     print(_comment);
     print(_rate);
+    var token = Provider.of<ActiveUserProvider>(context, listen: false).activeUser.token;
+    var response = await _webServices.postWithBearerToken('https://souk-team-server.herokuapp.com/api/review/${widget.product.slug}',
+        token, {
+          "rating": _rate,
+          "comment": _comment,
+        });
+    if(response.statusCode >=200 && response.statusCode < 300){
+      showMsgDialog('Thanks for your review :)');
+    }
+    else {
+      var body = jsonDecode(response.body);
+      showMsgDialog(body['err']);
+    }
   }
 
   @override
@@ -49,6 +98,10 @@ class _FeedBackState extends State<FeedBack> {
                   width: 200,
                   height: 200,
                   color: Colors.grey[300],
+                  child: widget.product.images.length > 0 ? Image.network(
+                    widget.product.images[0],
+                    fit: BoxFit.cover,
+                  ) : Container(),
                 ),
                 SizedBox(height: 10,),
                 Text(
@@ -110,7 +163,9 @@ class _FeedBackState extends State<FeedBack> {
                 SizedBox(height: 10,),
                 CustomButton(
                   text: 'Submit',
-                  onclick: _onSubmit,
+                  onclick: (){
+                    _onSubmit(context);
+                  },
                 )
               ],
             ),

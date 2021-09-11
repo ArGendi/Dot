@@ -1,5 +1,6 @@
 import 'package:ecommerce/constants.dart';
 import 'package:ecommerce/loading_screens/cart_loading_screen.dart';
+import 'package:ecommerce/loading_screens/orders_loading_screen.dart';
 import 'package:ecommerce/loading_screens/recently_viewed_loading_screen.dart';
 import 'package:ecommerce/loading_screens/wishlist_loading_screen.dart';
 import 'package:ecommerce/providers/active_user_provider.dart';
@@ -127,7 +128,7 @@ class _AccountWidgetState extends State<AccountWidget> {
           child: Column(
             children: [
               itemInsideCard(localization.translate('My orders').toString(), Icons.assignment, (){
-                Navigator.pushNamed(context, Orders.id);
+                Navigator.pushNamed(context, OrdersLoading.id);
               }),
               //itemInsideCard(localization.translate('Messages').toString(), Icons.email, (){}),
               //itemInsideCard('Notifications', Icons.notifications, (){}),

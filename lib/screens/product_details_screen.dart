@@ -122,7 +122,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                 controller: controller,
                 children: [
                   for(var image in widget.product.images)
-                    Image.asset(image),
+                    Image.network(image),
                 ],
                 onPageChanged: (value){
                   setState(() {

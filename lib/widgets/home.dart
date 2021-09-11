@@ -107,7 +107,7 @@ class _HomeWidgetState extends State<HomeWidget> {
                   child: Center(
                     child: Container(
                       height: 100,
-                      child: ListView.builder(
+                      child: categoryProvider.items.length > 0 ? ListView.builder(
                         scrollDirection: Axis.horizontal,
                         shrinkWrap: true,
                         itemCount: categoryProvider.items.length,
@@ -119,26 +119,40 @@ class _HomeWidgetState extends State<HomeWidget> {
                                 MaterialPageRoute(builder: (context) => AllProducts(products: categoryProvider.items[index].products)),
                               );
                             },
-                            child: Column(
-                              children: [
-                                CircleAvatar(
-                                  backgroundColor: Colors.grey.shade300,
-                                  radius: 30,
-                                  child: categoryProvider.items[index].image.isNotEmpty?
-                                        Image.network(categoryProvider.items[index].image) :
-                                        Container(),
-                                ),
-                                SizedBox(height: 5,),
-                                Text(
-                                  categoryProvider.items[index].name,
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 8),
+                              child: Column(
+                                children: [
+                                  Container(
+                                    width: 50,
+                                    height: 50,
+                                    decoration: BoxDecoration(
+                                      color: Colors.grey[300],
+                                      borderRadius: BorderRadius.circular(100),
+                                    ),
+                                    child: categoryProvider.items[index].image.isNotEmpty ?
+                                    Image.network(categoryProvider.items[index].image) : Container(),
                                   ),
-                                )
-                              ],
+                                  SizedBox(height: 5,),
+                                  Text(
+                                    categoryProvider.items[index].name,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  )
+                                ],
+                              ),
                             ),
                           );
                         },
+                      ) : Center(
+                        child: Text(
+                          'No categories yet !!',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                       ),
                     ),
                   ),
@@ -192,72 +206,92 @@ class _HomeWidgetState extends State<HomeWidget> {
         //     seeAll: (){},
         //   ),
         // ),
-        InkWell(
-          onTap: (){
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => AllProducts(products: salesProvider.items)),
-            );
-          },
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Container(
-              width: double.infinity,
-              decoration: BoxDecoration(
-                color: primaryColor,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(10),
-                  topRight: Radius.circular(10),
-                )
-              ),
+        if(salesProvider.items.length > 0)
+        Column(
+          children: [
+            InkWell(
+              onTap: (){
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => AllProducts(products: salesProvider.items)),
+                );
+              },
               child: Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      localization!.translate('Sales').toString(),
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Container(
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: primaryColor,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(10),
+                      topRight: Radius.circular(10),
+                    )
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          localization!.translate('Sales').toString(),
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Icon(
+                          Icons.arrow_forward_ios,
+                          color: Colors.white,
+                        ),
+                      ],
                     ),
-                    Icon(
-                      Icons.arrow_forward_ios,
-                      color: Colors.white,
-                    ),
-                  ],
+                  ),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: GridView.builder(
+                physics: const NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 5,
+                  mainAxisSpacing: 5,
+                ),
+                itemCount: salesProvider.items.length >= 4 ? 4 : salesProvider.items.length,
+                itemBuilder: (BuildContext context, int index){
+                  return ProductCard(
+                    product: salesProvider.items[index],
+                    onClick: (){
+                      Provider.of<RecentlyViewedProvider>(context, listen: false).addItem(salesProvider.items[index], true);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => ProductDetails(product: salesProvider.items[index],)),
+                      );
+                    },
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
+        if(salesProvider.items.length == 0)
+          Container(
+            width: double.infinity,
+            height: 100,
+            child: Center(
+              child: Text(
+                'Wait for upcoming sales',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white
                 ),
               ),
             ),
           ),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: GridView.builder(
-            physics: const NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              crossAxisSpacing: 5,
-              mainAxisSpacing: 5,
-            ),
-            itemCount: salesProvider.items.length >= 4 ? 4 : salesProvider.items.length,
-            itemBuilder: (BuildContext context, int index){
-              return ProductCard(
-                product: salesProvider.items[index],
-                onClick: (){
-                  Provider.of<RecentlyViewedProvider>(context, listen: false).addItem(salesProvider.items[index], true);
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => ProductDetails(product: salesProvider.items[index],)),
-                  );
-                },
-              );
-            },
-          ),
-        ),
         SizedBox(height: 20,),
         // Padding(
         //   padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
