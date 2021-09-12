@@ -1,20 +1,20 @@
 {
   "project_info": {
-    "project_number": "386581987558",
-    "project_id": "dotnow-39ee6",
-    "storage_bucket": "dotnow-39ee6.appspot.com"
+    "project_number": "18423614813",
+    "project_id": "dotnow-38c00",
+    "storage_bucket": "dotnow-38c00.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:386581987558:android:e4e080265dc15267187b27",
+        "mobilesdk_app_id": "1:18423614813:android:05ca04cf01255a135e6cb4",
         "android_client_info": {
           "package_name": "com.herokuapp.dotnow"
         }
       },
       "oauth_client": [
         {
-          "client_id": "386581987558-73nkdtdtmaivcfd7k8p92ilhsgala7mr.apps.googleusercontent.com",
+          "client_id": "18423614813-co9o8nob4t40kejoukc2u13s9igt8ovi.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.herokuapp.dotnow",
@@ -22,20 +22,20 @@
           }
         },
         {
-          "client_id": "386581987558-81s3nmfkonhnvi8asdgl039g1e99qh68.apps.googleusercontent.com",
+          "client_id": "18423614813-jm5r9iq6a8q1ip1cf8rjdgdt8nk9rt2s.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyC9kH0y2yxlyQxsqiN357-7bEfPx5B9TmQ"
+          "current_key": "AIzaSyCQUKkxeCQ1t1yW_EXXiCCx5YcMAipnRXQ"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "386581987558-81s3nmfkonhnvi8asdgl039g1e99qh68.apps.googleusercontent.com",
+              "client_id": "18423614813-jm5r9iq6a8q1ip1cf8rjdgdt8nk9rt2s.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
