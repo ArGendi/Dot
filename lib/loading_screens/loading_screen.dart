@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:connectivity/connectivity.dart';
 import 'package:ecommerce/helpers/db_helper.dart';
 import 'package:ecommerce/models/category.dart';
 import 'package:ecommerce/models/review.dart';
@@ -124,6 +125,13 @@ class _LoadingState extends State<Loading> {
     return true;
   }
 
+  Future<bool> internetConnection() async{
+    var connectivityResult = await (Connectivity().checkConnectivity());
+    if(connectivityResult == ConnectivityResult.none)
+      return false;
+    else return true;
+  }
+
   // fillProducts(){
   //   var provider = Provider.of<AllProductsProvider>(context, listen: false);
   //   Product product = new Product(
@@ -166,7 +174,17 @@ class _LoadingState extends State<Loading> {
   //
   // }
 
-  getLang() async{
+  startPoint() async{
+    bool valid = await internetConnection();
+    if(valid){
+      getData();
+    }
+    else setState(() {
+      _loadingFailed = true;
+    });
+  }
+
+  getData() async{
     String? lang = await HelpFunction.getUserLanguage();
     if(lang != null)
       Provider.of<AppLanguageProvider>(context, listen: false).changeLang(lang);
@@ -220,7 +238,7 @@ class _LoadingState extends State<Loading> {
     // TODO: implement initState
     super.initState();
     NotificationService.init();
-    getLang();
+    getData();
   }
 
   @override
@@ -246,7 +264,12 @@ class _LoadingState extends State<Loading> {
               SizedBox(height: 20,),
               CustomButton(
                 text: 'Try again',
-                onclick: getLang,
+                onclick: (){
+                  setState(() {
+                    _loadingFailed = false;
+                  });
+                  startPoint();
+                },
               )
             ],
           ),

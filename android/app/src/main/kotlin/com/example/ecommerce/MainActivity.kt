@@ -1,4 +1,4 @@
-package com.example.ecommerce
+package com.herokuapp.dotnow
 
 import io.flutter.embedding.android.FlutterActivity
 

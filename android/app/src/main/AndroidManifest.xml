@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.ecommerce">
+    package="com.herokuapp.dotnow">
    <application
         android:label="DotNow"
         android:icon="@mipmap/ic_launcher">
