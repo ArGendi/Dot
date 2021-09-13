@@ -70,5 +70,14 @@
   "Your cart is empty": "Your cart is empty",
   "Order submitted successfully :)": "Order submitted successfully :)",
   "Something went wrong try again !!": "Something went wrong try again !!",
-  "Get it": "Get it"
+  "Get it": "Get it",
+  "Date of order": "Date of order",
+  "Delivery date": "Delivery date",
+  "status": "status",
+  "Items": "Items",
+  "Item": "Item",
+  "There is no orders for now": "There is no orders for now",
+  "All your orders will be saved here in order to view their status at anytime.": "All your orders will be saved here in order to view their status at anytime.",
+  "Continue shopping": "Continue shopping",
+  "Orders": "Orders"
 }

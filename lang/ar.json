@@ -70,5 +70,14 @@
   "Your cart is empty": "العربة فارغة",
   "Order submitted successfully :)": "طب ارسال الطلب بنجاح :)",
   "Something went wrong try again !!": "حدث خطأ من فضلك أعد المحاولة !!",
-  "Get it": "أغلاق"
+  "Get it": "أغلاق",
+  "Date of order": "معاد الطلب",
+  "Delivery date": "معاد التسليم",
+  "status": "الحالة",
+  "Items": "منتجات",
+  "Item": "منتج",
+  "There is no orders for now": "لا يوجد طلبات حتي الأن",
+  "All your orders will be saved here in order to view their status at anytime.": "كل الطلبات ستعرض هنا في حالة متابعتها في اي وقت",
+  "Continue shopping": "استكمال التسوق",
+  "Orders": "الطلبات"
 }

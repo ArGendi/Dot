@@ -19,7 +19,6 @@ import 'package:ecommerce/screens/forget_password_screen.dart';
 import 'package:ecommerce/screens/home_screen.dart';
 import 'package:ecommerce/loading_screens/loading_screen.dart';
 import 'package:ecommerce/screens/login_screen.dart';
-import 'package:ecommerce/screens/no_content.dart';
 import 'package:ecommerce/screens/order_details_screen.dart';
 import 'package:ecommerce/screens/orders_screen.dart';
 import 'package:ecommerce/screens/product_details_screen.dart';
@@ -35,7 +34,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import 'app_localization.dart';
 import 'loading_screens/cart_loading_screen.dart';
 import 'loading_screens/orders_loading_screen.dart';
@@ -45,7 +43,7 @@ import 'package:timezone/data/latest.dart' as tz;
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  //await Firebase.initializeApp();
   tz.initializeTimeZones();
   var id = await HelpFunction.getUserid();
   runApp(MultiProvider(
@@ -125,7 +123,7 @@ class _MyAppState extends State<MyApp> {
         return supportedLocales.first;
       },
       locale: Locale(provider.lang, ''),
-      home: No(),//widget.id != null ? Loading() : Welcome(),
+      home: Loading(),//widget.id != null ? Loading() : Welcome(),
       routes: {
         Welcome.id: (context) => Welcome(),
         Login.id: (context) => Login(),
