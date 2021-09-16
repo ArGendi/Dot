@@ -108,6 +108,7 @@ class _LoginState extends State<Login> {
         await HelpFunction.saveUserToken(body['token']);
         await HelpFunction.saveUserEmail(body['email']);
         await HelpFunction.saveUserName(body['firstName']);
+        await HelpFunction.saveUserImage('');
         Provider.of<ActiveUserProvider>(context, listen: false).setActiveUser(user);
         setState(() {_isLoading = false;});
         print('login done');

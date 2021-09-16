@@ -16,6 +16,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../app_localization.dart';
 import '../constants.dart';
 
 class ProductDetails extends StatefulWidget {
@@ -54,7 +55,7 @@ class _ProductDetailsState extends State<ProductDetails> {
     Provider.of<WishlistProvider>(context, listen: false).removeItem(widget.product);
   }
 
-  Widget addToCartButton(BuildContext context){
+  Widget addToCartButton(BuildContext context, AppLocalization localization){
     return InkWell(
       onTap: (){
         if(widget.product.availabilityInStock > 0 && !widget.product.addedToCart) {
@@ -79,7 +80,7 @@ class _ProductDetailsState extends State<ProductDetails> {
               ),
               !widget.product.addedToCart ?
                 Text(
-                  'Add to cart',
+                  localization.translate('Add to cart').toString(),
                   style: TextStyle(
                       color: Colors.white,
                       fontSize: 18,
@@ -97,10 +98,10 @@ class _ProductDetailsState extends State<ProductDetails> {
     );
   }
 
-  Widget firstCard(){
+  Widget firstCard(AppLocalization localization){
     double temp = (1 - (widget.product.discountPrice / widget.product.price)) * 100;
     int sale = temp.truncate();
-    int totalRate = 0;
+    double totalRate = 0;
     for(var review in widget.product.reviews){
       totalRate += review.rate;
     }
@@ -191,7 +192,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                   children: [
                     rate(finalRate),
                     Text(
-                      '(' + widget.product.reviews.length.toString() + ' reviews)',
+                      '(' + widget.product.reviews.length.toString() + ' ' + localization.translate('reviews').toString() + ')',
                       style: TextStyle(
                         color: Colors.blue,
                         fontSize: 16,
@@ -225,7 +226,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'In stock',
+                    localization.translate('In stock').toString(),
                     style: TextStyle(
                       fontSize: 16,
                     ),
@@ -240,7 +241,7 @@ class _ProductDetailsState extends State<ProductDetails> {
               ),
             if(widget.product.availabilityInStock == 0)
               Text(
-                'Out of stock',
+                localization.translate('Out of stock').toString(),
                 style: TextStyle(
                   fontSize: 16,
                   color: Colors.red,
@@ -266,7 +267,7 @@ class _ProductDetailsState extends State<ProductDetails> {
     );
   }
 
-  Widget productDescriptionCard(){
+  Widget productDescriptionCard(AppLocalization localization){
     return Card(
       elevation: 0,
       color: Colors.white,
@@ -276,7 +277,7 @@ class _ProductDetailsState extends State<ProductDetails> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Details',
+              localization.translate('Details').toString(),
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
@@ -289,7 +290,7 @@ class _ProductDetailsState extends State<ProductDetails> {
             Text(widget.product.description,),
             SizedBox(height: 20,),
             Text(
-              'Product specifications',
+              localization.translate('Product specifications').toString(),
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
@@ -300,14 +301,14 @@ class _ProductDetailsState extends State<ProductDetails> {
               color: Colors.grey,
             ),
             productSpecification('SKU', widget.product.sku),
-            productSpecification('Color', widget.product.color),
-            productSpecification('Main material', widget.product.mainMaterial),
-            productSpecification('Model', widget.product.model),
-            productSpecification('Product country', widget.product.productCountry),
-            productSpecification('Product line', widget.product.productLine),
-            productSpecification('Size', widget.product.size + ' (L x W x H cm)'),
-            productSpecification('Weight', widget.product.weight.toStringAsFixed(1) + ' (kg)'),
-            productSpecification('Website', widget.product.website),
+            productSpecification(localization.translate('Color').toString(), widget.product.color),
+            productSpecification(localization.translate('Main material').toString(), widget.product.mainMaterial),
+            productSpecification(localization.translate('Model').toString(), widget.product.model),
+            productSpecification(localization.translate('Product country').toString(), widget.product.productCountry),
+            productSpecification(localization.translate('Product line').toString(), widget.product.productLine),
+            productSpecification(localization.translate('Size').toString(), widget.product.size + ' (L x W x H cm)'),
+            productSpecification(localization.translate('Weight').toString(), widget.product.weight.toStringAsFixed(1) + ' (kg)'),
+            productSpecification(localization.translate('Website').toString(), widget.product.website),
             // SizedBox(height: 20,),
             // Text(
             //   'information about delivery',
@@ -441,7 +442,7 @@ class _ProductDetailsState extends State<ProductDetails> {
     );
   }
 
-  Widget reviews(){
+  Widget reviews(AppLocalization localization){
     return Card(
       elevation: 0,
       color: Colors.white,
@@ -463,20 +464,13 @@ class _ProductDetailsState extends State<ProductDetails> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          widget.product.reviews[index].userName,
+                          widget.product.reviews[index].email,
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                         //SizedBox(height: 5,),
-                        Text(
-                          widget.product.reviews[index].fromDate,
-                          style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.grey
-                          ),
-                        ),
                         SizedBox(height: 5,),
                         Row(
                           children: [
@@ -512,13 +506,14 @@ class _ProductDetailsState extends State<ProductDetails> {
         )
       ) : Center(child: Padding(
         padding: const EdgeInsets.all(15.0),
-        child: Text('No reviews yet'),
+        child: Text(localization.translate('No reviews yet').toString()),
       ),),
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    var localization = AppLocalization.of(context);
     var cartProvider = Provider.of<CartProvider>(context);
     var categoriesProvider = Provider.of<CategoriesProvider>(context);
     List<Product> similarProducts = categoriesProvider.items[widget.product.categoryIndex].products;
@@ -567,23 +562,23 @@ class _ProductDetailsState extends State<ProductDetails> {
               child: ListView(
                 shrinkWrap: true,
                 children: [
-                  firstCard(),
+                  firstCard(localization!),
                   SizedBox(height: 15,),
                   Text(
-                    'Product description',
+                    localization.translate('Product specifications').toString(),
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   SizedBox(height: 5,),
-                  productDescriptionCard(),
+                  productDescriptionCard(localization),
                   SizedBox(height: 15,),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'Similar products',
+                        localization.translate('Similar products').toString(),
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
@@ -597,7 +592,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                           );
                         },
                         child: Text(
-                          'See all >',
+                          localization.translate('See all >').toString(),
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
@@ -610,14 +605,14 @@ class _ProductDetailsState extends State<ProductDetails> {
                   similarProductsCard(similarProducts),
                   SizedBox(height: 15,),
                   Text(
-                    'Reviews',
+                    localization.translate('Reviews').toString(),
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   SizedBox(height: 10,),
-                  reviews(),
+                  reviews(localization),
                 ],
               ),
             ),
@@ -627,7 +622,7 @@ class _ProductDetailsState extends State<ProductDetails> {
             child: Padding(
               padding: const EdgeInsets.all(12.0),
               child: Column(
-                children: [addToCartButton(context)],
+                children: [addToCartButton(context, localization)],
               ),
             ),
           ),

@@ -68,7 +68,7 @@ class _PersonalInfoState extends State<PersonalInfo> {
       print(_name);
       print(_postalCode);
       var cartProvider = Provider.of<CartProvider>(context, listen: false);
-      int delivery = 0;
+      //int delivery = 0;
       int tax = 0;
       int sum = 0;
       for(var item in cartProvider.items) {
@@ -95,7 +95,7 @@ class _PersonalInfoState extends State<PersonalInfo> {
           'country': _country
         },
         'paymentMethod': 'Cash on delivery',
-        'totalPrice': (sum + delivery + tax),
+        'totalPrice': (sum + tax),
         'phoneNumber': _phoneNumber,
       });
       print(response.statusCode);

@@ -1,34 +1,41 @@
 {
   "project_info": {
-    "project_number": "386581987558",
-    "firebase_url": "https://dotnow-39ee6-default-rtdb.firebaseio.com",
-    "project_id": "dotnow-39ee6",
-    "storage_bucket": "dotnow-39ee6.appspot.com"
+    "project_number": "446862039461",
+    "project_id": "dotnowonline",
+    "storage_bucket": "dotnowonline.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:386581987558:android:e4e080265dc15267187b27",
+        "mobilesdk_app_id": "1:446862039461:android:844229a2f81cd4af99304c",
         "android_client_info": {
-          "package_name": "com.herokuapp.dotnow"
+          "package_name": "online.dotnow.dot_now"
         }
       },
       "oauth_client": [
         {
-          "client_id": "386581987558-81s3nmfkonhnvi8asdgl039g1e99qh68.apps.googleusercontent.com",
+          "client_id": "446862039461-ko72gr1hskip3meb8cldhk2s72ohakk2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "online.dotnow.dot_now",
+            "certificate_hash": "15028a01bdbd34304b9b82d0420c058a389d475d"
+          }
+        },
+        {
+          "client_id": "446862039461-ickle413g1cgnvamraokst9mvjm12pvj.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyC9kH0y2yxlyQxsqiN357-7bEfPx5B9TmQ"
+          "current_key": "AIzaSyBDmzc8sOFscVGdoY4HjB7XuAS4_0nyno4"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "386581987558-81s3nmfkonhnvi8asdgl039g1e99qh68.apps.googleusercontent.com",
+              "client_id": "446862039461-ickle413g1cgnvamraokst9mvjm12pvj.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

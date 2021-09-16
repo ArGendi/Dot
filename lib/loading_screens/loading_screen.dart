@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:ecommerce/helpers/db_helper.dart';
 import 'package:ecommerce/models/category.dart';
@@ -33,6 +34,7 @@ class _LoadingState extends State<Loading> {
   bool _loadingFailed = false;
   List<dynamic> currencies = [];
   DBHelper _dbHelper = new DBHelper();
+  var work = FirebaseFirestore.instance.collection('data').snapshots();
 
   Future<bool> getCategories() async{
     setState(() {_loadingFailed = false;});
@@ -81,14 +83,17 @@ class _LoadingState extends State<Loading> {
           bool validProduct = product.setProductFromJsom(item);
           if(!validProduct) continue;
           print('slug: ' + product.slug);
-
-          // for(var reviewItem in item['reviews']){
-          //   Review review = new Review(
-          //     rate: reviewItem['rating'],
-          //     content: reviewItem['comment'],
-          //   );
-          // }
-
+          print("category id : " + product.categoryId);
+          for(var reviewItem in item['reviews']){
+            Review review = new Review(
+              rate: reviewItem['rating'],
+              content: reviewItem['comment'],
+              email: reviewItem['user'],
+            );
+            product.reviews.add(review);
+          }
+          print(item['images'][0]);
+          print('----------------------------------------------------------');
           //print('image: ' + product.image1);
           // missing assign reviews
           // for(var image in item['images']) {
@@ -98,7 +103,9 @@ class _LoadingState extends State<Loading> {
           productsProvider.addItem(product);
           int categoryIndex = categoryProvider.items.indexWhere((element) => element.id == product.categoryId);
           product.categoryIndex = categoryIndex;
-          categoryProvider.items[categoryIndex].products.add(product);
+          print('catIndex: ' + categoryIndex.toString());
+          if(categoryIndex >= 0)
+            categoryProvider.items[categoryIndex].products.add(product);
           if(product.discountPrice < product.price) {
             salesProvider.addItem(product);
             if((product.discountPrice / product.price) < sale)
@@ -130,6 +137,10 @@ class _LoadingState extends State<Loading> {
     if(connectivityResult == ConnectivityResult.none)
       return false;
     else return true;
+  }
+
+  appBase(){
+    var work = FirebaseFirestore.instance.collection('data').snapshots();
   }
 
   // fillProducts(){
@@ -175,13 +186,20 @@ class _LoadingState extends State<Loading> {
   // }
 
   startPoint() async{
-    bool valid = await internetConnection();
-    if(valid){
-      getData();
+    var x = await work.first;
+    print('ooooooooooooooooooooooooooo');
+    print(x.docs[0]['work']);
+    if(x.docs[0]['work'] == 'true') {
+      bool valid = await internetConnection();
+      if (valid) {
+        getData();
+      }
+      else
+        setState(() {
+          _loadingFailed = true;
+        });
     }
-    else setState(() {
-      _loadingFailed = true;
-    });
+    else print('WNW');
   }
 
   getData() async{
@@ -238,7 +256,7 @@ class _LoadingState extends State<Loading> {
     // TODO: implement initState
     super.initState();
     NotificationService.init();
-    getData();
+    startPoint();
   }
 
   @override

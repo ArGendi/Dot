@@ -109,7 +109,7 @@ class _SignUpState extends State<SignUp> {
     if(valid){
       _formKey.currentState!.save();
       setState(() {_isLoading = true;});
-      var response = await _webServices.post('https://souk--server.herokuapp.com/api/users/verifyemail', {
+      var response = await _webServices.post(serverUrl + 'api/users/verifyemail', {
         "name": _firstName,
         "email": _email.trim(),
       });
@@ -123,6 +123,7 @@ class _SignUpState extends State<SignUp> {
         );
         setState(() {_isLoading = false;});
         print('go to verify');
+        print(response.body);
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => VerifyEmail(

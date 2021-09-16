@@ -5,6 +5,8 @@ import 'package:ecommerce/widgets/product_card.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'cart_screen.dart';
+
 class AllProducts extends StatefulWidget {
   final List<Product> products;
   const AllProducts({Key? key, required this.products}) : super(key: key);
@@ -38,7 +40,9 @@ class _AllProductsState extends State<AllProducts> {
         ),
         actions: [
           IconButton(
-            onPressed: (){},
+            onPressed: (){
+              Navigator.pushNamed(context, Cart.id);
+            },
             icon: Icon(
               Icons.shopping_cart,
               color: Colors.white,

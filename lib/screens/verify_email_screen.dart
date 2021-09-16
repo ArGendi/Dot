@@ -9,6 +9,7 @@ import 'package:ecommerce/widgets/custom_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../constants.dart';
 import '../loading_screens/loading_screen.dart';
 
 class VerifyEmail extends StatefulWidget {
@@ -41,7 +42,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
         print(widget.user.firstName);
         print(widget.user.password);
         setState(() {_isLoading = true;});
-        var response = await _webServices.post('https://souk--server.herokuapp.com/api/users', {
+        var response = await _webServices.post(serverUrl + 'api/users', {
           "firstName": widget.user.firstName,
           "lastName": widget.user.lastName,
           "email": widget.user.email.trim(),
@@ -55,6 +56,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
           await HelpFunction.saveUserToken(body['token']);
           await HelpFunction.saveUserEmail(body['email']);
           await HelpFunction.saveUserName(body['firstName']);
+          await HelpFunction.saveUserImage('');
           Provider.of<ActiveUserProvider>(context, listen: false).setActiveUser(user);
           setState(() {_isLoading = false;});
           print('sign up done');

@@ -67,6 +67,7 @@ class _OrdersLoadingState extends State<OrdersLoading> {
         setState(() {_loadingFailed = true;});
       }
     }
+    else Navigator.pushReplacementNamed(context, Orders.id);
   }
 
   @override

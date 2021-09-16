@@ -1,4 +1,4 @@
-package com.herokuapp.dotnow
+package online.dotnow.dot_now
 
 import io.flutter.embedding.android.FlutterActivity
 
