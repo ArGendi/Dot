@@ -25,6 +25,7 @@ import 'package:ecommerce/screens/orders_screen.dart';
 import 'package:ecommerce/screens/product_details_screen.dart';
 import 'package:ecommerce/screens/recently_viewed_screen.dart';
 import 'package:ecommerce/screens/signup_screen.dart';
+import 'package:ecommerce/screens/splash_screen.dart';
 import 'package:ecommerce/screens/welcome_screen.dart';
 import 'package:ecommerce/screens/wishlist_screen.dart';
 import 'package:ecommerce/services/helper_function.dart';
@@ -124,7 +125,7 @@ class _MyAppState extends State<MyApp> {
         return supportedLocales.first;
       },
       locale: Locale(provider.lang, ''),
-      home: Loading(),//widget.id != null ? Loading() : Welcome(),
+      home: Splash(),//widget.id != null ? Loading() : Welcome(),
       routes: {
         Welcome.id: (context) => Welcome(),
         Login.id: (context) => Login(),

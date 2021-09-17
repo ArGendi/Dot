@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
 class No extends StatefulWidget {
@@ -10,22 +11,30 @@ class No extends StatefulWidget {
 
 class _NoState extends State<No> {
   var work = FirebaseFirestore.instance.collection('data').snapshots();
+  final databaseRef = FirebaseDatabase.instance.reference();
+
+  void addData(String data) async{
+    print(1);
+    await databaseRef.push().set({'name': data, 'comment': 'true'});
+    print('lol');
+  }
+
+  void printFirebase(){
+    databaseRef.once().then((DataSnapshot snapshot) {
+      print('Data : ${snapshot.value}');
+    });
+  }
+
+  lol() async{
+    var x = await work.first.then((value) => value);
+    print('ooooooooooooooooooooooooooo');
+    print(x.docs[0]['lol']);
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: StreamBuilder(
-        stream: work,
-        builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-          if(snapshot.hasError)
-            return Center(child: Text('error'));
-          if(snapshot.connectionState == ConnectionState.waiting)
-            return Center(child: Text('Loading..'));
-
-          final data = snapshot.requireData;
-          return Center(child: Text(data.docs[0]['work'].toString()));
-        },
-      ),
+      body: Center(),
     );
   }
 }

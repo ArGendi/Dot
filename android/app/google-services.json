@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "446862039461",
+    "firebase_url": "https://dotnowonline-default-rtdb.europe-west1.firebasedatabase.app",
     "project_id": "dotnowonline",
     "storage_bucket": "dotnowonline.appspot.com"
   },

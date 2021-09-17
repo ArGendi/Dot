@@ -34,10 +34,10 @@ class _LoadingState extends State<Loading> {
   bool _loadingFailed = false;
   List<dynamic> currencies = [];
   DBHelper _dbHelper = new DBHelper();
-  var work = FirebaseFirestore.instance.collection('data').snapshots();
+  //var work = FirebaseFirestore.instance.collection('data').snapshots();
 
   Future<bool> getCategories() async{
-    setState(() {_loadingFailed = false;});
+    //setState(() {_loadingFailed = false;});
     var provider = Provider.of<CategoriesProvider>(context, listen: false);
     if(provider.items.isEmpty) {
       var response = await _webServices.get(
@@ -139,10 +139,6 @@ class _LoadingState extends State<Loading> {
     else return true;
   }
 
-  appBase(){
-    var work = FirebaseFirestore.instance.collection('data').snapshots();
-  }
-
   // fillProducts(){
   //   var provider = Provider.of<AllProductsProvider>(context, listen: false);
   //   Product product = new Product(
@@ -186,20 +182,14 @@ class _LoadingState extends State<Loading> {
   // }
 
   startPoint() async{
-    var x = await work.first;
-    print('ooooooooooooooooooooooooooo');
-    print(x.docs[0]['work']);
-    if(x.docs[0]['work'] == 'true') {
-      bool valid = await internetConnection();
-      if (valid) {
-        getData();
-      }
-      else
-        setState(() {
-          _loadingFailed = true;
-        });
+    bool valid = await internetConnection();
+    if (valid) {
+      getData();
     }
-    else print('WNW');
+    else
+      setState(() {
+        _loadingFailed = true;
+      });
   }
 
   getData() async{
@@ -212,8 +202,8 @@ class _LoadingState extends State<Loading> {
     String? token = await HelpFunction.getUserToken();
     String? image = await HelpFunction.getUserImage();
     String? country = await HelpFunction.getUserCountry();
-    print(id);
-    print(token);
+    print('id: ' + id.toString());
+    print('token: ' + token.toString());
     AppUser user = new AppUser(
       id: id != null ? id : '',
       email: email != null ? email : '',
