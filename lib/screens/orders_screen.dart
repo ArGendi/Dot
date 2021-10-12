@@ -11,6 +11,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../app_localization.dart';
+import 'home_screen.dart';
+
 class Orders extends StatefulWidget {
   static String id = 'orders';
   const Orders({Key? key}) : super(key: key);
@@ -24,7 +27,7 @@ class _OrdersState extends State<Orders> {
   int _pageIndex = 0;
   final PageController controller = PageController(initialPage: 0);
 
-  Widget emptyOrders(){
+  Widget emptyOrders(AppLocalization localization){
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -35,7 +38,7 @@ class _OrdersState extends State<Orders> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                'There is no orders for now',
+                localization.translate('There is no orders for now').toString(),
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
@@ -43,11 +46,13 @@ class _OrdersState extends State<Orders> {
               ),
               SizedBox(height: 10,),
               Text(
-                'All your orders will be saved here in order to view their status at anytime.',
+                localization.translate('All your orders will be saved here in order to view their status at anytime.').toString(),
                 textAlign: TextAlign.center,
               ),
               SizedBox(height: 30,),
-              CustomButton(text: 'Continue shopping', onclick: (){}),
+              CustomButton(text: localization.translate('Continue shopping').toString(), onclick: (){
+                Navigator.popUntil(context, ModalRoute.withName(Home.id));
+              }),
             ],
           ),
         ),
@@ -61,7 +66,7 @@ class _OrdersState extends State<Orders> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Recently Viewed',
+                  localization.translate('Recently viewed').toString(),
                   style: TextStyle(
                     //fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -80,13 +85,13 @@ class _OrdersState extends State<Orders> {
     );
   }
 
-  Widget filledOrders(OrdersProvider provider){
+  Widget filledOrders(OrdersProvider provider, AppLocalization localization){
     return Padding(
       padding: const EdgeInsets.all(20.0),
       child: Column(
         children: [
           Text(
-            'Orders',
+            localization.translate('Orders').toString(),
             style: TextStyle(
                 fontSize: 22,
               fontWeight: FontWeight.bold
@@ -99,7 +104,7 @@ class _OrdersState extends State<Orders> {
             itemBuilder: (context, index){
               return Column(
                 children: [
-                  orderCard(provider.items[index], index),
+                  orderCard(provider.items[index], index, localization),
                   Divider(
                     height: 20,
                     color: Colors.grey[500],
@@ -113,7 +118,7 @@ class _OrdersState extends State<Orders> {
     );
   }
 
-  Widget orderCard(Order order, int index){
+  Widget orderCard(Order order, int index, AppLocalization localization){
     return InkWell(
       onTap: (){
         Navigator.push(
@@ -137,21 +142,21 @@ class _OrdersState extends State<Orders> {
                   ),
                 ),
                 Text(
-                  'Date of order',
+                  localization.translate('Date of order').toString(),
                   style: TextStyle(
                     fontSize: 11,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 Text(
-                  'Delivery date',
+                  localization.translate('Delivery date').toString(),
                   style: TextStyle(
                     fontSize: 11,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 Text(
-                  'status',
+                  localization.translate('status').toString(),
                   style: TextStyle(
                     fontSize: 11,
                     fontWeight: FontWeight.bold,
@@ -182,7 +187,8 @@ class _OrdersState extends State<Orders> {
                         ),
                       ),
                       Text(
-                        order.products.length > 1 ? 'Items' : 'Item',
+                        order.products.length > 1 ? localization.translate('Items').toString() :
+                        localization.translate('Item').toString(),
                         style: TextStyle(
                           //fontSize: 12,
                           color: Colors.white
@@ -229,6 +235,7 @@ class _OrdersState extends State<Orders> {
   @override
   Widget build(BuildContext context) {
     var provider = Provider.of<OrdersProvider>(context);
+    var localization = AppLocalization.of(context);
     return Scaffold(
       backgroundColor: Colors.grey[200],
       appBar: AppBar(
@@ -246,7 +253,7 @@ class _OrdersState extends State<Orders> {
                 children: [
                   Icon(
                     Icons.search,
-                    color: Colors.black,
+                    color: Colors.grey[600],
                   )
                 ],
               ),
@@ -266,7 +273,7 @@ class _OrdersState extends State<Orders> {
         ],
       ),
       body: provider.items.isEmpty ?
-             emptyOrders() : filledOrders(provider),
+             emptyOrders(localization!) : filledOrders(provider, localization!),
     );
   }
 }

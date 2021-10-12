@@ -3,8 +3,10 @@ import 'dart:convert';
 import 'package:ecommerce/helpers/db_helper.dart';
 import 'package:ecommerce/models/order.dart';
 import 'package:ecommerce/models/product.dart';
+import 'package:ecommerce/providers/active_user_provider.dart';
 import 'package:ecommerce/providers/orders_provider.dart';
 import 'package:ecommerce/screens/orders_screen.dart';
+import 'package:ecommerce/screens/signup_screen.dart';
 import 'package:ecommerce/services/helper_function.dart';
 import 'package:ecommerce/services/web_services.dart';
 import 'package:ecommerce/widgets/custom_button.dart';
@@ -27,8 +29,10 @@ class _OrdersLoadingState extends State<OrdersLoading> {
   bool _loadingFailed = false;
 
   Future<void> getData() async{
-    setState(() {_loadingFailed = false;});
     var provider = Provider.of<OrdersProvider>(context, listen: false);
+    var activeUserProvider = Provider.of<ActiveUserProvider>(context, listen: false);
+    if(activeUserProvider.activeUser.id.isEmpty)
+      Navigator.pushReplacementNamed(context, SignUp.id);
     if(provider.items.isEmpty) {
       String? token = await HelpFunction.getUserToken();
       var response = await _webServices.getWithBearerToken(
@@ -63,6 +67,7 @@ class _OrdersLoadingState extends State<OrdersLoading> {
         setState(() {_loadingFailed = true;});
       }
     }
+    else Navigator.pushReplacementNamed(context, Orders.id);
   }
 
   @override
@@ -95,7 +100,10 @@ class _OrdersLoadingState extends State<OrdersLoading> {
               SizedBox(height: 20,),
               CustomButton(
                 text: 'Try again',
-                onclick: getData,
+                onclick: (){
+                  setState(() {_loadingFailed = false;});
+                  getData();
+                },
               )
             ],
           ),

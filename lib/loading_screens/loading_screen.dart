@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:connectivity/connectivity.dart';
 import 'package:ecommerce/helpers/db_helper.dart';
 import 'package:ecommerce/models/category.dart';
 import 'package:ecommerce/models/review.dart';
@@ -32,9 +34,10 @@ class _LoadingState extends State<Loading> {
   bool _loadingFailed = false;
   List<dynamic> currencies = [];
   DBHelper _dbHelper = new DBHelper();
+  //var work = FirebaseFirestore.instance.collection('data').snapshots();
 
   Future<bool> getCategories() async{
-    setState(() {_loadingFailed = false;});
+    //setState(() {_loadingFailed = false;});
     var provider = Provider.of<CategoriesProvider>(context, listen: false);
     if(provider.items.isEmpty) {
       var response = await _webServices.get(
@@ -80,14 +83,17 @@ class _LoadingState extends State<Loading> {
           bool validProduct = product.setProductFromJsom(item);
           if(!validProduct) continue;
           print('slug: ' + product.slug);
-
-          // for(var reviewItem in item['reviews']){
-          //   Review review = new Review(
-          //     rate: reviewItem['rating'],
-          //     content: reviewItem['comment'],
-          //   );
-          // }
-
+          print("category id : " + product.categoryId);
+          for(var reviewItem in item['reviews']){
+            Review review = new Review(
+              rate: reviewItem['rating'],
+              content: reviewItem['comment'],
+              email: reviewItem['user'],
+            );
+            product.reviews.add(review);
+          }
+          print(item['images'][0]);
+          print('----------------------------------------------------------');
           //print('image: ' + product.image1);
           // missing assign reviews
           // for(var image in item['images']) {
@@ -97,7 +103,9 @@ class _LoadingState extends State<Loading> {
           productsProvider.addItem(product);
           int categoryIndex = categoryProvider.items.indexWhere((element) => element.id == product.categoryId);
           product.categoryIndex = categoryIndex;
-          categoryProvider.items[categoryIndex].products.add(product);
+          print('catIndex: ' + categoryIndex.toString());
+          if(categoryIndex >= 0)
+            categoryProvider.items[categoryIndex].products.add(product);
           if(product.discountPrice < product.price) {
             salesProvider.addItem(product);
             if((product.discountPrice / product.price) < sale)
@@ -122,6 +130,13 @@ class _LoadingState extends State<Loading> {
       }
     }
     return true;
+  }
+
+  Future<bool> internetConnection() async{
+    var connectivityResult = await (Connectivity().checkConnectivity());
+    if(connectivityResult == ConnectivityResult.none)
+      return false;
+    else return true;
   }
 
   // fillProducts(){
@@ -166,7 +181,18 @@ class _LoadingState extends State<Loading> {
   //
   // }
 
-  getLang() async{
+  startPoint() async{
+    bool valid = await internetConnection();
+    if (valid) {
+      getData();
+    }
+    else
+      setState(() {
+        _loadingFailed = true;
+      });
+  }
+
+  getData() async{
     String? lang = await HelpFunction.getUserLanguage();
     if(lang != null)
       Provider.of<AppLanguageProvider>(context, listen: false).changeLang(lang);
@@ -176,8 +202,8 @@ class _LoadingState extends State<Loading> {
     String? token = await HelpFunction.getUserToken();
     String? image = await HelpFunction.getUserImage();
     String? country = await HelpFunction.getUserCountry();
-    print(id);
-    print(token);
+    print('id: ' + id.toString());
+    print('token: ' + token.toString());
     AppUser user = new AppUser(
       id: id != null ? id : '',
       email: email != null ? email : '',
@@ -220,7 +246,7 @@ class _LoadingState extends State<Loading> {
     // TODO: implement initState
     super.initState();
     NotificationService.init();
-    getLang();
+    startPoint();
   }
 
   @override
@@ -246,7 +272,12 @@ class _LoadingState extends State<Loading> {
               SizedBox(height: 20,),
               CustomButton(
                 text: 'Try again',
-                onclick: getLang,
+                onclick: (){
+                  setState(() {
+                    _loadingFailed = false;
+                  });
+                  startPoint();
+                },
               )
             ],
           ),

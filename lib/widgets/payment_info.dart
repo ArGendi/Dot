@@ -13,7 +13,7 @@ class PaymentInfo extends StatelessWidget {
   Widget build(BuildContext context) {
     var localization = AppLocalization.of(context);
     var cartProvider = Provider.of<CartProvider>(context);
-    int delivery = 0;
+    //int delivery = 0;
     int sum = 0;
     int tax = 0;
     int itemsQuantity = 0;
@@ -63,15 +63,18 @@ class PaymentInfo extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
+            // Text(
+            //   localization.translate('Delivery: ').toString() + delivery.toStringAsFixed(2) + ' ' + cartProvider.items[0].unitPrice,
+            //   style: TextStyle(
+            //     fontSize: 16,
+            //     fontWeight: FontWeight.bold,
+            //   ),
+            // ),
             Text(
-              localization.translate('Delivery: ').toString() + delivery.toStringAsFixed(2) + ' ' + cartProvider.items[0].unitPrice,
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-              ),
+              localization.translate('Total doesn\'t include delivery price').toString()
             ),
             Text(
-              (sum + delivery + tax).toStringAsFixed(2) + ' ' + cartProvider.items[0].unitPrice,
+              (sum + tax).toStringAsFixed(2) + ' ' + cartProvider.items[0].unitPrice,
               style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold

@@ -225,7 +225,7 @@ class _CartState extends State<Cart> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          localization!.translate('Recently Viewed').toString(),
+                          localization!.translate('Recently viewed').toString(),
                           style: TextStyle(
                             //fontSize: 16,
                             fontWeight: FontWeight.bold,

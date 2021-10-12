@@ -1,4 +1,4 @@
-package com.example.ecommerce
+package online.dotnow.dot_now
 
 import io.flutter.embedding.android.FlutterActivity
 
